@@ -11,6 +11,7 @@ import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Wallet } from 'lucide-react';
 
 export default function EmergencyCardPage() {
     const userId = "user123" // Placeholder user ID
@@ -39,11 +40,17 @@ export default function EmergencyCardPage() {
             <p className="text-center text-sm text-muted-foreground">
               Test your QR code by scanning it or visiting the public link.
             </p>
-            <Button asChild variant="secondary" className="w-full">
-              <Link href={`/emergency-access/${userId}`} target="_blank">
-                View Public Page
-              </Link>
-            </Button>
+            <div className="w-full space-y-2">
+                <Button asChild variant="secondary" className="w-full">
+                <Link href={`/emergency-access/${userId}`} target="_blank">
+                    View Public Page
+                </Link>
+                </Button>
+                <Button variant="outline" className="w-full">
+                    <Wallet className="mr-2 h-4 w-4" />
+                    Add to Wallet / Widget
+                </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
