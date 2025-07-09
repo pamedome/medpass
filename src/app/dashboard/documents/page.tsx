@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
-import { MoreHorizontal, PlusCircle, Share2, Trash2 } from 'lucide-react';
+import { MoreHorizontal, PlusCircle, Share2, Trash2, FileText } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -70,6 +71,7 @@ const documents = [
 type Document = typeof documents[0];
 
 export default function DocumentsPage() {
+  const router = useRouter();
   const [isShareOpen, setShareOpen] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
 
@@ -140,6 +142,10 @@ export default function DocumentsPage() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem onSelect={() => router.push(`/dashboard/documents/${doc.id}`)}>
+                            <FileText className="mr-2 h-4 w-4" />
+                            View
+                        </DropdownMenuItem>
                         <DropdownMenuItem onSelect={() => handleShare(doc)}>
                           <Share2 className="mr-2 h-4 w-4" />
                           Share
