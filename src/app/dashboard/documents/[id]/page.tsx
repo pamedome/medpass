@@ -4,6 +4,7 @@ import { useState } from 'react';
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -73,13 +74,16 @@ export default function DocumentDetailsPage({ params }: { params: { id: string }
       <div className="mx-auto max-w-5xl">
         <Card>
           <CardHeader>
-            <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <CardTitle className="flex items-center gap-2 text-2xl">
                   <FileText className="h-6 w-6" /> {documentDetails.name}
                 </CardTitle>
+                <CardDescription className="mt-2">
+                  Issued by {documentDetails.reportInfo.issuedBy} from {documentDetails.reportInfo.facility} on {documentDetails.date}.
+                </CardDescription>
               </div>
-              <div className="flex gap-2">
+              <div className="flex shrink-0 gap-2">
                 <Button variant="outline" size="sm">
                   <Printer className="mr-2 h-4 w-4" /> Print
                 </Button>
@@ -93,40 +97,25 @@ export default function DocumentDetailsPage({ params }: { params: { id: string }
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <Card>
-                  <CardHeader>
-                      <CardTitle className="text-lg">Patient Information</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                      <InfoItem label="Full Name" value={documentDetails.patientInfo.name} />
-                      <InfoItem label="Date of Birth" value={documentDetails.patientInfo.dob} />
-                      <InfoItem label="Patient ID" value={documentDetails.patientInfo.patientId} />
-                  </CardContent>
-              </Card>
-              <Card>
-                  <CardHeader>
-                      <CardTitle className="text-lg">Report Details</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                      <InfoItem label="Report ID" value={documentDetails.reportInfo.reportId} />
-                      <InfoItem label="Report Date" value={documentDetails.date} />
-                      <InfoItem label="Report Time" value={documentDetails.reportInfo.time} />
-                      <InfoItem label="Issuing Physician" value={documentDetails.reportInfo.issuedBy} />
-                      <InfoItem label="Facility" value={documentDetails.reportInfo.facility} />
-                       <div>
-                          <p className="text-sm font-medium text-muted-foreground">Tags</p>
-                          <div className="mt-1 flex flex-wrap gap-1">
-                              {documentDetails.tags.map((tag) => (
-                                  <Badge key={tag} variant="secondary">{tag}</Badge>
-                              ))}
-                          </div>
-                      </div>
-                  </CardContent>
-              </Card>
+            <div className="rounded-lg border p-4">
+                <div className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3 lg:grid-cols-4">
+                    <InfoItem label="Patient Name" value={documentDetails.patientInfo.name} />
+                    <InfoItem label="Date of Birth" value={documentDetails.patientInfo.dob} />
+                    <InfoItem label="Patient ID" value={documentDetails.patientInfo.patientId} />
+                    <InfoItem label="Report ID" value={documentDetails.reportInfo.reportId} />
+                    <InfoItem label="Report Date" value={`${documentDetails.date} at ${documentDetails.reportInfo.time}`} />
+                    <InfoItem label="Issuing Physician" value={documentDetails.reportInfo.issuedBy} />
+                    <InfoItem label="Facility" value={documentDetails.reportInfo.facility} />
+                     <div className="lg:col-span-1 sm:col-span-3 col-span-2">
+                        <p className="text-sm font-medium text-muted-foreground">Tags</p>
+                        <div className="mt-1 flex flex-wrap gap-1">
+                            {documentDetails.tags.map((tag) => (
+                                <Badge key={tag} variant="secondary">{tag}</Badge>
+                            ))}
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <Separator />
             
              <div className="space-y-4">
               <h3 className="text-lg font-semibold">Vital Signs</h3>
