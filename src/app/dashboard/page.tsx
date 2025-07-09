@@ -172,12 +172,12 @@ export default function DashboardPage() {
     { icon: Atom, title: 'Cross-Browser Testing', due: 'Dec 6, 2024', color: 'text-purple-500' },
   ];
 
-  const teamMembers = [
-    { name: 'Alexandra Deff', role: 'Working on Github Project Repository', avatar: 'https://placehold.co/40x40.png', hint: 'woman portrait', status: 'Completed', statusColor: 'bg-green-500' },
-    { name: 'Edwin Adenike', role: 'Working on Integrate User Authentication System', avatar: 'https://placehold.co/40x40.png', hint: 'man glasses', status: 'In Progress', statusColor: 'bg-yellow-500' },
-    { name: 'Isaac Oluwatemilorun', role: 'Working on Develop Search and Filter Functionality', avatar: 'https://placehold.co/40x40.png', hint: 'man headset', status: 'Pending', statusColor: 'bg-orange-500' },
-    { name: 'David Oshodi', role: 'Working on Responsive Layout for Homepage', avatar: 'https://placehold.co/40x40.png', hint: 'man smiling', status: 'In Progress', statusColor: 'bg-yellow-500' },
-  ]
+  const appointments = [
+    { name: 'Dr. Sarah Johnson', specialty: 'Cardiologist', avatar: 'https://placehold.co/40x40.png', hint: 'woman doctor smiling', date: 'Dec 1, 2024', time: '10:00 AM' },
+    { name: 'Dr. Michael Lee', specialty: 'Dermatologist', avatar: 'https://placehold.co/40x40.png', hint: 'man doctor portrait', date: 'Dec 5, 2024', time: '02:30 PM' },
+    { name: 'Dr. Emily Chen', specialty: 'Pediatrician', avatar: 'https://placehold.co/40x40.png', hint: 'woman doctor glasses', date: 'Dec 10, 2024', time: '11:15 AM' },
+    { name: 'Dr. David Oshodi', specialty: 'General Practitioner', avatar: 'https://placehold.co/40x40.png', hint: 'man smiling', date: 'Dec 12, 2024', time: '09:00 AM' },
+  ];
 
   return (
     <div className="flex flex-1 flex-col gap-6">
@@ -256,27 +256,27 @@ export default function DashboardPage() {
        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             <Card className="lg:col-span-2">
                 <CardHeader className="flex-row items-center justify-between">
-                    <CardTitle>Team Collaboration</CardTitle>
-                    <Button variant="outline" size="sm"><Plus className="mr-2 h-4 w-4"/> Add Member</Button>
+                    <CardTitle>Doctor's Appointments</CardTitle>
+                    <Button variant="outline" size="sm"><Plus className="mr-2 h-4 w-4"/> Schedule New</Button>
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-4">
-                        {teamMembers.map((member, index) => (
+                        {appointments.map((appointment, index) => (
                             <div key={index} className="flex items-center justify-between">
                                 <div className="flex items-center gap-4">
                                     <Avatar>
-                                        <AvatarImage src={member.avatar} data-ai-hint={member.hint}/>
-                                        <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                                        <AvatarImage src={appointment.avatar} data-ai-hint={appointment.hint}/>
+                                        <AvatarFallback>{appointment.name.replace("Dr. ", "").split(' ').map(n=>n[0]).join('')}</AvatarFallback>
                                     </Avatar>
                                     <div>
-                                        <p className="font-semibold">{member.name}</p>
-                                        <p className="text-sm text-muted-foreground">{member.role}</p>
+                                        <p className="font-semibold">{appointment.name}</p>
+                                        <p className="text-sm text-muted-foreground">{appointment.specialty}</p>
                                     </div>
                                 </div>
-                                <Badge variant="outline" className="font-normal">
-                                    <span className={`w-2 h-2 rounded-full mr-2 ${member.statusColor}`} />
-                                    {member.status}
-                                </Badge>
+                                <div className="text-right">
+                                    <p className="text-sm font-medium">{appointment.date}</p>
+                                    <p className="text-sm text-muted-foreground">{appointment.time}</p>
+                                </div>
                             </div>
                         ))}
                     </div>
