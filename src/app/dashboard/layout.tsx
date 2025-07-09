@@ -147,7 +147,7 @@ export default function DashboardLayout({
                     >
                         <Avatar className="h-9 w-9">
                         <AvatarImage
-                            src="https://placehold.co/100x100.png"
+                            src="https://placehold.co/100x100/E0E0E0/BDBDBD.png"
                             alt="User"
                             data-ai-hint="user avatar"
                         />

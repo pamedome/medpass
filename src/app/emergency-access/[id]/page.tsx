@@ -36,7 +36,7 @@ export default function EmergencyAccessPage({ params }: { params: { id: string }
         <CardHeader className="text-center">
             <div className="flex flex-col items-center gap-4">
                 <Avatar className="h-24 w-24 border-4 border-primary">
-                    <AvatarImage src="https://placehold.co/100x100.png" alt="User" data-ai-hint="person portrait"/>
+                    <AvatarImage src="https://placehold.co/100x100/E0E0E0/BDBDBD.png" alt="User" data-ai-hint="person portrait"/>
                     <AvatarFallback className="text-4xl">JD</AvatarFallback>
                 </Avatar>
                 <CardTitle className="text-3xl font-bold">{emergencyInfo.name}</CardTitle>
