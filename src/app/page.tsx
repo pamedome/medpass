@@ -51,15 +51,16 @@ export default function LoginPage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
-       <div className="flex flex-col items-center justify-center gap-4">
-        <Link href="/" className="flex items-center gap-2">
-            <Logo className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold tracking-tight">MedPass</span>
-        </Link>
-        <Card className="w-full max-w-sm">
+       <div className="w-full max-w-sm">
+        <div className="mb-6 flex flex-col items-center text-center">
+            <Logo className="h-12 w-12 text-primary" />
+            <h1 className="mt-4 text-3xl font-bold tracking-tight">MedPass</h1>
+            <p className="mt-1 text-muted-foreground">Welcome back! Sign in to continue.</p>
+        </div>
+        <Card>
           <CardHeader>
-            <CardTitle className="text-2xl">Login</CardTitle>
-            <CardDescription>
+            <CardTitle className="sr-only">Login</CardTitle>
+            <CardDescription className="sr-only">
               Enter your email below to login to your account.
             </CardDescription>
           </CardHeader>
@@ -115,13 +116,13 @@ export default function LoginPage() {
               </CardFooter>
             </form>
           </Form>
-          <div className="mb-6 px-6 text-center text-sm text-muted-foreground">
+        </Card>
+        <div className="mt-6 text-center text-sm text-muted-foreground">
             Don&apos;t have an account?{' '}
             <Link href="/signup" className="underline hover:text-primary">
               Sign up
             </Link>
           </div>
-        </Card>
       </div>
     </main>
   );
