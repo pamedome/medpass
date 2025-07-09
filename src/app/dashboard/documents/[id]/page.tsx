@@ -173,15 +173,17 @@ export default function DocumentDetailsPage({ params }: { params: { id: string }
             <Separator />
 
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold">Physician's Assessment</h3>
-              <p className="text-muted-foreground">{documentDetails.assessment}</p>
-            </div>
-
-            <Separator />
-
-            <div className="space-y-2">
-              <h3 className="text-lg font-semibold">Recommendations & Follow-up</h3>
-              <p className="text-muted-foreground">{documentDetails.recommendations}</p>
+              <h3 className="text-lg font-semibold">Physician's Notes</h3>
+              <div className="rounded-lg border p-4 space-y-4">
+                <div>
+                  <h4 className="font-semibold">Assessment</h4>
+                  <p className="text-muted-foreground">{documentDetails.assessment}</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold">Recommendations & Follow-up</h4>
+                  <p className="text-muted-foreground">{documentDetails.recommendations}</p>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
