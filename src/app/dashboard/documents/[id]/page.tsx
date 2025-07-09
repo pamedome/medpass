@@ -4,7 +4,6 @@ import { useState } from 'react';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -79,9 +78,6 @@ export default function DocumentDetailsPage({ params }: { params: { id: string }
                 <CardTitle className="flex items-center gap-2 text-2xl">
                   <FileText className="h-6 w-6" /> {documentDetails.name}
                 </CardTitle>
-                <CardDescription>
-                  A detailed view of your medical document.
-                </CardDescription>
               </div>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm">
