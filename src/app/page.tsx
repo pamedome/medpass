@@ -67,6 +67,11 @@ export default function LoginPage() {
     router.push('/dashboard');
   }
 
+  const handleSocialLogin = () => {
+    // Simulate successful social login
+    router.push('/dashboard');
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
        <div className="w-full max-w-sm">
@@ -148,13 +153,13 @@ export default function LoginPage() {
         </div>
 
         <div className="grid grid-cols-3 gap-3">
-          <Button variant="outline" size="icon" aria-label="Sign in with Google">
+          <Button variant="outline" size="icon" aria-label="Sign in with Google" onClick={handleSocialLogin}>
             <GoogleIcon className="h-5 w-5" />
           </Button>
-          <Button variant="outline" size="icon" aria-label="Sign in with Apple">
+          <Button variant="outline" size="icon" aria-label="Sign in with Apple" onClick={handleSocialLogin}>
             <AppleIcon className="h-5 w-5" />
           </Button>
-          <Button variant="outline" size="icon" aria-label="Sign in with Outlook">
+          <Button variant="outline" size="icon" aria-label="Sign in with Outlook" onClick={handleSocialLogin}>
             <OutlookIcon className="h-5 w-5" />
           </Button>
         </div>
