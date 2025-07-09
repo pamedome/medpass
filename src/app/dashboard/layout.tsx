@@ -67,7 +67,7 @@ export default function DashboardLayout({
           <div className="flex h-16 items-center gap-2.5 px-3">
             <Logo className="size-9 shrink-0 text-primary" />
             <span className="min-w-0 text-xl font-semibold">
-              Donezo
+              MedPass
             </span>
           </div>
         </SidebarHeader>
