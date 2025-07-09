@@ -78,7 +78,7 @@ export default function DashboardLayout({
                 <SidebarMenu>
                     {menuItems.map((item) => (
                     <SidebarMenuItem key={item.href}>
-                        <Link href={item.href} legacyBehavior passHref>
+                        <Link href={item.href}>
                         <SidebarMenuButton
                             isActive={pathname === item.href}
                             tooltip={item.label}
@@ -96,7 +96,7 @@ export default function DashboardLayout({
                 <SidebarMenu>
                     {generalItems.map((item) => (
                     <SidebarMenuItem key={item.label}>
-                        <Link href={item.href} legacyBehavior passHref>
+                        <Link href={item.href}>
                         <SidebarMenuButton
                             isActive={pathname.startsWith(item.href) && item.href !== '/'}
                             tooltip={item.label}
@@ -167,14 +167,14 @@ export default function DashboardLayout({
                         <User className="mr-2 h-4 w-4" />
                         <span>Profile</span>
                     </DropdownMenuItem>
-                    <Link href="/dashboard/settings" passHref>
+                    <Link href="/dashboard/settings">
                         <DropdownMenuItem>
                             <Settings className="mr-2 h-4 w-4" />
                             <span>Settings</span>
                         </DropdownMenuItem>
                     </Link>
                     <DropdownMenuSeparator />
-                    <Link href="/" passHref>
+                    <Link href="/">
                         <DropdownMenuItem>
                         <LogOut className="mr-2 h-4 w-4" />
                         <span>Logout</span>
