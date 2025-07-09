@@ -35,6 +35,7 @@ import {
 } from '@/components/ui/chart';
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const AnalyticsChart = () => {
   const chartConfig: ChartConfig = {
@@ -173,10 +174,10 @@ export default function DashboardPage() {
   ];
 
   const appointments = [
-    { name: 'Dr. Sarah Johnson', specialty: 'Cardiologist', avatar: 'https://placehold.co/40x40.png', hint: 'woman doctor smiling', date: 'Dec 1, 2024', time: '10:00 AM' },
-    { name: 'Dr. Michael Lee', specialty: 'Dermatologist', avatar: 'https://placehold.co/40x40.png', hint: 'man doctor portrait', date: 'Dec 5, 2024', time: '02:30 PM' },
-    { name: 'Dr. Emily Chen', specialty: 'Pediatrician', avatar: 'https://placehold.co/40x40.png', hint: 'woman doctor glasses', date: 'Dec 10, 2024', time: '11:15 AM' },
-    { name: 'Dr. David Oshodi', specialty: 'General Practitioner', avatar: 'https://placehold.co/40x40.png', hint: 'man smiling', date: 'Dec 12, 2024', time: '09:00 AM' },
+    { id: 'appt-1', name: 'Dr. Sarah Johnson', specialty: 'Cardiologist', avatar: 'https://placehold.co/40x40.png', hint: 'woman doctor smiling', date: 'Dec 1, 2024', time: '10:00 AM' },
+    { id: 'appt-2', name: 'Dr. Michael Lee', specialty: 'Dermatologist', avatar: 'https://placehold.co/40x40.png', hint: 'man doctor portrait', date: 'Dec 5, 2024', time: '02:30 PM' },
+    { id: 'appt-3', name: 'Dr. Emily Chen', specialty: 'Pediatrician', avatar: 'https://placehold.co/40x40.png', hint: 'woman doctor glasses', date: 'Dec 10, 2024', time: '11:15 AM' },
+    { id: 'appt-4', name: 'Dr. David Oshodi', specialty: 'General Practitioner', avatar: 'https://placehold.co/40x40.png', hint: 'man smiling', date: 'Dec 12, 2024', time: '09:00 AM' },
   ];
 
   return (
@@ -260,24 +261,26 @@ export default function DashboardPage() {
                     <Button variant="outline" size="sm"><Plus className="mr-2 h-4 w-4"/> Schedule New</Button>
                 </CardHeader>
                 <CardContent>
-                    <div className="space-y-4">
-                        {appointments.map((appointment, index) => (
-                            <div key={index} className="flex items-center justify-between">
-                                <div className="flex items-center gap-4">
-                                    <Avatar>
-                                        <AvatarImage src={appointment.avatar} data-ai-hint={appointment.hint}/>
-                                        <AvatarFallback>{appointment.name.replace("Dr. ", "").split(' ').map(n=>n[0]).join('')}</AvatarFallback>
-                                    </Avatar>
-                                    <div>
-                                        <p className="font-semibold">{appointment.name}</p>
-                                        <p className="text-sm text-muted-foreground">{appointment.specialty}</p>
+                    <div className="space-y-1">
+                        {appointments.map((appointment) => (
+                            <Link href={`/dashboard/appointments/${appointment.id}`} key={appointment.id} className="block -mx-2">
+                                <div className="flex items-center justify-between rounded-md p-2 hover:bg-muted">
+                                    <div className="flex items-center gap-4">
+                                        <Avatar>
+                                            <AvatarImage src={appointment.avatar} data-ai-hint={appointment.hint}/>
+                                            <AvatarFallback>{appointment.name.replace("Dr. ", "").split(' ').map(n=>n[0]).join('')}</AvatarFallback>
+                                        </Avatar>
+                                        <div>
+                                            <p className="font-semibold">{appointment.name}</p>
+                                            <p className="text-sm text-muted-foreground">{appointment.specialty}</p>
+                                        </div>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-sm font-medium">{appointment.date}</p>
+                                        <p className="text-sm text-muted-foreground">{appointment.time}</p>
                                     </div>
                                 </div>
-                                <div className="text-right">
-                                    <p className="text-sm font-medium">{appointment.date}</p>
-                                    <p className="text-sm text-muted-foreground">{appointment.time}</p>
-                                </div>
-                            </div>
+                            </Link>
                         ))}
                     </div>
                 </CardContent>
