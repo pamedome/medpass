@@ -38,6 +38,7 @@ const documentDetails = {
     reportId: 'RPT-98765',
     issuedBy: 'Dr. Emily Carter',
     facility: 'Central City Clinic',
+    time: '09:45 AM',
   },
   vitalSigns: {
     bloodPressure: '120/80 mmHg',
@@ -79,7 +80,7 @@ export default function DocumentDetailsPage({ params }: { params: { id: string }
                   <FileText className="h-6 w-6" /> {documentDetails.name}
                 </CardTitle>
                 <CardDescription>
-                  Report Date: {documentDetails.date}
+                  A detailed view of your medical document.
                 </CardDescription>
               </div>
               <div className="flex gap-2">
@@ -113,6 +114,8 @@ export default function DocumentDetailsPage({ params }: { params: { id: string }
                   </CardHeader>
                   <CardContent className="space-y-4">
                       <InfoItem label="Report ID" value={documentDetails.reportInfo.reportId} />
+                      <InfoItem label="Report Date" value={documentDetails.date} />
+                      <InfoItem label="Report Time" value={documentDetails.reportInfo.time} />
                       <InfoItem label="Issuing Physician" value={documentDetails.reportInfo.issuedBy} />
                       <InfoItem label="Facility" value={documentDetails.reportInfo.facility} />
                        <div>
