@@ -2,22 +2,12 @@
 
 import * as React from 'react';
 import {
-  ArrowUpRight,
-  BarChart2,
   Calendar,
-  MoreHorizontal,
   Plus,
-  Shuffle,
   TrendingUp,
-  FunctionSquare,
-  Gem,
-  Atom,
-  Users,
   Video,
-  Clock,
 } from 'lucide-react';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -34,7 +24,6 @@ import {
   ChartConfig,
 } from '@/components/ui/chart';
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
-import Image from 'next/image';
 import Link from 'next/link';
 
 const AnalyticsChart = () => {
@@ -165,14 +154,6 @@ export default function DashboardPage() {
     },
   ];
 
-  const projectItems = [
-    { icon: Shuffle, title: 'Develop API Endpoints', due: 'Nov 28, 2024', color: 'text-blue-500' },
-    { icon: TrendingUp, title: 'Onboarding Flow', due: 'Nov 28, 2024', color: 'text-green-500' },
-    { icon: FunctionSquare, title: 'Build Dashboard', due: 'Nov 30, 2024', color: 'text-yellow-500' },
-    { icon: Gem, title: 'Optimize Page Load', due: 'Dec 5, 2024', color: 'text-orange-500' },
-    { icon: Atom, title: 'Cross-Browser Testing', due: 'Dec 6, 2024', color: 'text-purple-500' },
-  ];
-
   const appointments = [
     { id: 'appt-1', name: 'Dr. Sarah Johnson', specialty: 'Cardiologist', avatar: 'https://placehold.co/40x40/A9D5E5/333333.png', hint: 'woman doctor smiling', date: 'Dec 1, 2024', time: '10:00 AM' },
     { id: 'appt-2', name: 'Dr. Michael Lee', specialty: 'Dermatologist', avatar: 'https://placehold.co/40x40/F3D6E4/333333.png', hint: 'man doctor portrait', date: 'Dec 5, 2024', time: '02:30 PM' },
@@ -190,7 +171,6 @@ export default function DashboardPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline"><Plus className="mr-2 h-4 w-4" /> Add Project</Button>
           <Button>Import Data</Button>
         </div>
       </div>
@@ -297,56 +277,6 @@ export default function DashboardPage() {
                         <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-orange-400" /> Pending</div>
                      </div>
                 </CardContent>
-            </Card>
-       </div>
-
-       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-            <Card className="lg:col-span-2">
-                <CardHeader className="flex-row items-center justify-between">
-                    <CardTitle>Project</CardTitle>
-                     <Button variant="outline" size="sm"><Plus className="mr-2 h-4 w-4"/> New</Button>
-                </CardHeader>
-                <CardContent>
-                    {projectItems.map((item, index) => (
-                        <div key={index} className="flex items-center justify-between py-3 border-b last:border-none">
-                            <div className="flex items-center gap-4">
-                                <div className={`p-2 rounded-lg bg-secondary ${item.color}`}>
-                                    <item.icon className="h-5 w-5 text-background" />
-                                </div>
-                                <div>
-                                    <p className="font-semibold">{item.title}</p>
-                                    <p className="text-sm text-muted-foreground">Due date: {item.due}</p>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-1">
-                               <Users className="h-4 w-4 text-muted-foreground"/>
-                               <span className="text-sm text-muted-foreground">4</span>
-                               <Button variant="ghost" size="icon"><MoreHorizontal /></Button>
-                            </div>
-                        </div>
-                    ))}
-                </CardContent>
-            </Card>
-            <Card className="relative overflow-hidden">
-                <Image src="https://placehold.co/600x400.png" alt="Abstract background" data-ai-hint="abstract waves" fill className="object-cover opacity-20"/>
-                 <div className="relative z-10 h-full flex flex-col">
-                    <CardHeader>
-                        <CardTitle className="text-white">Time Tracker</CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex-1 flex flex-col items-center justify-center text-white">
-                        <div className="text-6xl font-bold tracking-widest">
-                            01:24:08
-                        </div>
-                        <div className="flex gap-4 mt-4">
-                            <Button size="icon" className="rounded-full h-14 w-14 bg-white/20 backdrop-blur-sm hover:bg-white/30">
-                                <Clock className="h-8 w-8"/>
-                            </Button>
-                            <Button size="icon" className="rounded-full h-14 w-14 bg-red-500 hover:bg-red-600">
-                                <Plus className="h-8 w-8 rotate-45"/>
-                            </Button>
-                        </div>
-                    </CardContent>
-                 </div>
             </Card>
        </div>
     </div>
