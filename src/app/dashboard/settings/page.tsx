@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -5,6 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Github } from 'lucide-react';
 
 export default function SettingsPage() {
+  const [isGithubConnected, setIsGithubConnected] = useState(false);
+
   return (
     <div className="grid gap-6">
        <Card>
@@ -39,12 +44,22 @@ export default function SettingsPage() {
               <Github className="h-8 w-8 text-primary" />
               <div>
                 <h3 className="font-semibold">GitHub</h3>
-                <p className="text-sm text-muted-foreground">
-                  Connect to sync repositories and track team collaboration.
-                </p>
+                {isGithubConnected ? (
+                   <p className="text-sm text-muted-foreground">
+                    Your account is connected to GitHub.
+                  </p>
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    Connect to sync repositories and track team collaboration.
+                  </p>
+                )}
               </div>
             </div>
-            <Button>Connect Account</Button>
+            {isGithubConnected ? (
+              <Button variant="outline" onClick={() => setIsGithubConnected(false)}>Disconnect</Button>
+            ) : (
+              <Button onClick={() => setIsGithubConnected(true)}>Connect Account</Button>
+            )}
           </div>
         </CardContent>
       </Card>
