@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   Card,
   CardContent,
@@ -11,28 +12,86 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Download, Printer, Share2 } from 'lucide-react';
+import { Download, Printer, Share2, ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { ShareDialog } from '@/components/share-dialog';
 
-// Mock data - in a real app, this would be fetched based on the [id] param
-const appointmentDetails = {
-  doctorName: 'Dr. Sarah Johnson',
-  specialty: 'Cardiologist',
-  date: 'December 1, 2024',
-  time: '10:00 AM',
-  diagnosis: 'Stable Angina',
-  notes: 'Patient presented with intermittent chest discomfort, consistent with previous episodes. EKG showed no acute changes. Blood pressure is well-controlled on current medication. Discussed lifestyle modifications, including a low-sodium diet and increased physical activity. No changes to medication at this time.',
-  medications: [
-    { name: 'Lisinopril', dosage: '10mg', frequency: 'Once daily' },
-    { name: 'Aspirin', dosage: '81mg', frequency: 'Once daily' },
-  ],
-  followUp: 'Scheduled for a routine check-up in 6 months. Patient to monitor symptoms and report any significant increase in frequency or severity of chest pain.',
-};
+// Mock data for all appointments
+const allAppointments = [
+  {
+    id: 'appt-1',
+    doctorName: 'Dr. Sarah Johnson',
+    specialty: 'Cardiologist',
+    date: 'December 1, 2024',
+    time: '10:00 AM',
+    diagnosis: 'Stable Angina',
+    notes: 'Patient presented with intermittent chest discomfort, consistent with previous episodes. EKG showed no acute changes. Blood pressure is well-controlled on current medication. Discussed lifestyle modifications, including a low-sodium diet and increased physical activity. No changes to medication at this time.',
+    medications: [
+      { name: 'Lisinopril', dosage: '10mg', frequency: 'Once daily' },
+      { name: 'Aspirin', dosage: '81mg', frequency: 'Once daily' },
+    ],
+    followUp: 'Scheduled for a routine check-up in 6 months. Patient to monitor symptoms and report any significant increase in frequency or severity of chest pain.',
+  },
+  {
+    id: 'appt-2',
+    doctorName: 'Dr. Michael Lee',
+    specialty: 'Dermatologist',
+    date: 'December 5, 2024',
+    time: '02:30 PM',
+    diagnosis: 'Eczema',
+    notes: 'Patient reports persistent dry, itchy patches on elbows and knees. Examination confirms atopic dermatitis. Prescribed a topical corticosteroid cream and recommended use of a hypoallergenic moisturizer.',
+    medications: [
+      { name: 'Triamcinolone Acetonide Cream', dosage: '0.1%', frequency: 'Twice daily' },
+    ],
+    followUp: 'Follow up in 4 weeks to assess response to treatment.',
+  },
+  {
+    id: 'appt-3',
+    doctorName: 'Dr. Emily Chen',
+    specialty: 'Pediatrician',
+    date: 'December 10, 2024',
+    time: '11:15 AM',
+    diagnosis: 'Otitis Media',
+    notes: 'Child presented with ear pain and low-grade fever. Examination of the right ear shows a bulging, red tympanic membrane, consistent with a middle ear infection. Prescribed amoxicillin.',
+    medications: [
+      { name: 'Amoxicillin', dosage: '250mg/5mL', frequency: 'Twice daily for 7 days' },
+    ],
+    followUp: 'Return if symptoms do not improve in 48-72 hours or if they worsen.',
+  },
+    { 
+    id: 'appt-4', 
+    doctorName: 'Dr. David Oshodi', 
+    specialty: 'General Practitioner', 
+    date: 'Dec 12, 2024', 
+    time: '09:00 AM',
+    diagnosis: 'Common Cold (Viral URI)',
+    notes: 'Patient reports cough, sore throat, and nasal congestion for the past 3 days. No fever. Lungs are clear. Diagnosis is a common cold. Recommended rest, hydration, and over-the-counter symptom relief.',
+    medications: [],
+    followUp: 'No follow-up necessary unless symptoms persist for more than 10 days or worsen significantly.',
+  },
+];
 const reportName = "Appointment Report";
 
 export default function AppointmentDetailsPage({ params }: { params: { id: string }}) {
+  const router = useRouter();
   const [isShareOpen, setShareOpen] = useState(false);
+
+  const currentIndex = allAppointments.findIndex(appt => appt.id === params.id);
+  const appointmentDetails = allAppointments[currentIndex];
+  
+  const prevAppt = currentIndex > 0 ? allAppointments[currentIndex - 1] : null;
+  const nextAppt = currentIndex < allAppointments.length - 1 ? allAppointments[currentIndex + 1] : null;
+
+  if (!appointmentDetails) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full text-center">
+        <p className="text-lg text-muted-foreground">Appointment not found.</p>
+        <Button variant="link" asChild className="mt-4">
+            <Link href="/dashboard">&larr; Back to Dashboard</Link>
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -90,13 +149,17 @@ export default function AppointmentDetailsPage({ params }: { params: { id: strin
             
             <div className="space-y-2">
               <h3 className="text-lg font-semibold">Prescribed Medication</h3>
-              <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                {appointmentDetails.medications.map(med => (
-                  <li key={med.name}>
-                    <span className="font-semibold text-foreground">{med.name}</span> ({med.dosage}, {med.frequency})
-                  </li>
-                ))}
-              </ul>
+              {appointmentDetails.medications.length > 0 ? (
+                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                  {appointmentDetails.medications.map(med => (
+                    <li key={med.name}>
+                      <span className="font-semibold text-foreground">{med.name}</span> ({med.dosage}, {med.frequency})
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-muted-foreground">No medications prescribed.</p>
+              )}
             </div>
             
             <Separator />
@@ -108,18 +171,34 @@ export default function AppointmentDetailsPage({ params }: { params: { id: strin
 
           </CardContent>
         </Card>
-        <div className="mt-6 text-center">
+        <div className="mt-6 flex items-center justify-between">
+            <Button
+              variant="outline"
+              disabled={!prevAppt}
+              onClick={() => router.push(`/dashboard/appointments/${prevAppt!.id}`)}
+            >
+              <ChevronLeft className="mr-2 h-4 w-4" />
+              Previous
+            </Button>
             <Button variant="link" asChild>
               <Link href="/dashboard">
                 &larr; Back to Dashboard
               </Link>
+            </Button>
+            <Button
+              variant="outline"
+              disabled={!nextAppt}
+              onClick={() => router.push(`/dashboard/appointments/${nextAppt!.id}`)}
+            >
+              Next
+              <ChevronRight className="ml-2 h-4 w-4" />
             </Button>
         </div>
       </div>
       <ShareDialog
         isOpen={isShareOpen}
         setIsOpen={setShareOpen}
-        documentName={reportName}
+        documentName={`${reportName} - ${appointmentDetails.doctorName}`}
       />
     </>
   );
