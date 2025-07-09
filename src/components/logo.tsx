@@ -9,7 +9,8 @@ export function Logo(props: SVGProps<SVGSVGElement>) {
       {...props}
     >
       <circle cx="26" cy="26" r="26" fill="currentColor"/>
-      <path d="M17 26C17 26 21 32 26 32C31 32 37 23 37 23" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M26 19V33" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M19 26H33" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   );
 }
