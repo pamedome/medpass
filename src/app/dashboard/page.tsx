@@ -1,11 +1,22 @@
-import Link from 'next/link';
+'use client';
+
+import * as React from 'react';
 import {
-  Activity,
   ArrowUpRight,
-  FileText,
-  Upload,
-  ShieldAlert,
+  BarChart2,
+  Calendar,
+  MoreHorizontal,
+  Plus,
+  Shuffle,
+  TrendingUp,
+  FunctionSquare,
+  Gem,
+  Atom,
+  Users,
+  Video,
+  Clock,
 } from 'lucide-react';
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,130 +25,327 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartConfig,
+} from '@/components/ui/chart';
+import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
+import Image from 'next/image';
 
-const overviewCards = [
-  {
-    title: 'Total Documents',
-    value: '14',
-    icon: FileText,
-    change: '+2 from last month',
-  },
-  {
-    title: 'Emergency Ready',
-    value: 'Yes',
-    icon: ShieldAlert,
-    change: 'Profile is up to date',
-  },
-];
+const AnalyticsChart = () => {
+  const chartConfig: ChartConfig = {
+    activity: {
+      label: 'Activity',
+      color: 'hsl(var(--primary))',
+    },
+    inactive: {
+      label: 'Inactive',
+      color: 'hsl(var(--muted))',
+    },
+  };
 
-const recentDocuments = [
-  {
-    name: 'Annual Check-up Results',
-    date: '2023-10-18',
-    tags: ['lab-results', 'check-up'],
-  },
-  {
-    name: 'MRI Scan - Left Knee',
-    date: '2023-09-05',
-    tags: ['imaging', 'orthopedics'],
-  },
-  {
-    name: 'Prescription - Amoxicillin',
-    date: '2023-08-22',
-    tags: ['prescription'],
-  },
-  {
-    name: 'Dental X-Ray',
-    date: '2023-07-11',
-    tags: ['dental', 'imaging'],
-  },
-];
+  const chartData = [
+    { day: 'S', activity: 20, inactive: 80, fill: 'var(--color-inactive)' },
+    { day: 'M', activity: 50, inactive: 50, fill: 'var(--color-inactive)' },
+    { day: 'T', activity: 75, inactive: 25, fill: 'var(--color-activity)' },
+    { day: 'W', activity: 60, inactive: 40, fill: 'var(--color-activity)' },
+    { day: 'T', activity: 30, inactive: 70, fill: 'var(--color-inactive)' },
+    { day: 'F', activity: 45, inactive: 55, fill: 'var(--color-inactive)' },
+    { day: 'S', activity: 25, inactive: 75, fill: 'var(--color-inactive)' },
+  ];
+
+  return (
+    <ChartContainer config={chartConfig} className="h-full w-full">
+      <BarChart accessibilityLayer data={chartData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+        <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-muted" />
+        <XAxis
+          dataKey="day"
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+          tickFormatter={(value) => value.slice(0, 3)}
+        />
+        <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
+        <Bar dataKey="activity" radius={8} />
+      </BarChart>
+    </ChartContainer>
+  );
+};
+
+const ProgressCircle = ({ progress }: { progress: number }) => {
+    const strokeWidth = 10;
+    const radius = 80;
+    const circumference = 2 * Math.PI * radius;
+    const offset = circumference - (progress / 100) * circumference;
+
+    return (
+        <div className="relative flex items-center justify-center">
+            <svg width="200" height="200" viewBox="0 0 200 200" className="-rotate-90">
+                <circle
+                    stroke="hsl(var(--muted))"
+                    fill="transparent"
+                    strokeWidth={strokeWidth}
+                    r={radius}
+                    cx="100"
+                    cy="100"
+                />
+                <circle
+                    stroke="hsl(var(--primary))"
+                    fill="transparent"
+                    strokeWidth={strokeWidth}
+                    strokeDasharray={circumference}
+                    strokeDashoffset={offset}
+                    r={radius}
+                    cx="100"
+                    cy="100"
+                    strokeLinecap="round"
+                />
+                 <circle
+                    className="animate-[pulse_1s_ease-in-out_infinite]"
+                    stroke="hsl(var(--primary))"
+                    fill="hsl(var(--primary))"
+                    strokeWidth={strokeWidth}
+                    strokeDasharray={circumference}
+                    strokeDashoffset={offset}
+                    r={radius}
+                    cx="100"
+                    cy="100"
+                    strokeLinecap="round"
+                >
+                    <animateTransform 
+                        attributeName="transform"
+                        type="rotate"
+                        from="0 100 100"
+                        to="360 100 100"
+                        dur="10s"
+                        repeatCount="indefinite"
+                    />
+                 </circle>
+            </svg>
+            <div className="absolute flex flex-col items-center">
+                <span className="text-5xl font-bold">{progress}%</span>
+                <span className="text-muted-foreground">Profile Complete</span>
+            </div>
+        </div>
+    );
+};
+
 
 export default function DashboardPage() {
+  const statsCards = [
+    {
+      title: 'Total Documents',
+      value: '24',
+      change: 'Increased from last month',
+      icon: TrendingUp,
+      isPrimary: true,
+    },
+    {
+      title: 'Archived Records',
+      value: '10',
+      change: 'Increased from last month',
+      icon: TrendingUp,
+    },
+    {
+      title: 'Active Reminders',
+      value: '12',
+      change: 'Increased from last month',
+      icon: TrendingUp,
+    },
+    {
+      title: 'Pending Lab Results',
+      value: '2',
+      change: 'On Discuss',
+      icon: TrendingUp,
+    },
+  ];
+
+  const projectItems = [
+    { icon: Shuffle, title: 'Develop API Endpoints', due: 'Nov 28, 2024', color: 'text-blue-500' },
+    { icon: TrendingUp, title: 'Onboarding Flow', due: 'Nov 28, 2024', color: 'text-green-500' },
+    { icon: FunctionSquare, title: 'Build Dashboard', due: 'Nov 30, 2024', color: 'text-yellow-500' },
+    { icon: Gem, title: 'Optimize Page Load', due: 'Dec 5, 2024', color: 'text-orange-500' },
+    { icon: Atom, title: 'Cross-Browser Testing', due: 'Dec 6, 2024', color: 'text-purple-500' },
+  ];
+
+  const teamMembers = [
+    { name: 'Alexandra Deff', role: 'Working on Github Project Repository', avatar: 'https://placehold.co/40x40.png', hint: 'woman portrait', status: 'Completed', statusColor: 'bg-green-500' },
+    { name: 'Edwin Adenike', role: 'Working on Integrate User Authentication System', avatar: 'https://placehold.co/40x40.png', hint: 'man glasses', status: 'In Progress', statusColor: 'bg-yellow-500' },
+    { name: 'Isaac Oluwatemilorun', role: 'Working on Develop Search and Filter Functionality', avatar: 'https://placehold.co/40x40.png', hint: 'man headset', status: 'Pending', statusColor: 'bg-orange-500' },
+    { name: 'David Oshodi', role: 'Working on Responsive Layout for Homepage', avatar: 'https://placehold.co/40x40.png', hint: 'man smiling', status: 'In Progress', statusColor: 'bg-yellow-500' },
+  ]
+
   return (
-    <div className="flex flex-1 flex-col gap-4">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {overviewCards.map((card, index) => (
-          <Card key={index}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
-              <card.icon className="h-4 w-4 text-muted-foreground" />
+    <div className="flex flex-1 flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Dashboard</h1>
+          <p className="text-muted-foreground">
+            Plan, prioritize, and accomplish your tasks with ease.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="outline"><Plus className="mr-2 h-4 w-4" /> Add Project</Button>
+          <Button>Import Data</Button>
+        </div>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {statsCards.map((card, index) => (
+          <Card key={index} className={card.isPrimary ? 'bg-primary text-primary-foreground' : ''}>
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
+                <div className={`p-1.5 rounded-full ${card.isPrimary ? 'bg-white/20' : 'bg-secondary'}`}>
+                    <card.icon className={`h-5 w-5 ${card.isPrimary ? '' : 'text-primary'}`} />
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{card.value}</div>
-              <p className="text-xs text-muted-foreground">{card.change}</p>
+              <div className="text-4xl font-bold">{card.value}</div>
+              <div className="flex items-center text-xs mt-2 opacity-80">
+                <div className={`p-0.5 rounded-full mr-1.5 ${card.isPrimary ? 'bg-white/20' : 'bg-primary text-primary-foreground'}`}>
+                    <TrendingUp className="h-3 w-3"/>
+                </div>
+                <span>{card.change}</span>
+              </div>
             </CardContent>
           </Card>
         ))}
-         <Card className="md:col-span-2 lg:col-span-1">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Quick Actions</CardTitle>
-             <Activity className="h-4 w-4 text-muted-foreground" />
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <Card className="lg:col-span-2">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Health Analytics</CardTitle>
+              <CardDescription>An overview of your recent activity.</CardDescription>
+            </div>
+            <Button variant="outline" size="sm">View Details</Button>
           </CardHeader>
-          <CardContent className="flex gap-2">
-            <Button asChild className="flex-1">
-              <Link href="/dashboard/documents/upload"><Upload className="mr-2 h-4 w-4" /> Upload</Link>
-            </Button>
-            <Button asChild variant="secondary" className="flex-1">
-                <Link href="/dashboard/emergency-card"><ShieldAlert className="mr-2 h-4 w-4" /> Emergency</Link>
-            </Button>
+          <CardContent className="h-[250px]">
+            <AnalyticsChart />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Reminders</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="rounded-lg border p-4">
+                <h3 className="font-semibold">Meeting with Arc Company</h3>
+                <p className="text-sm text-muted-foreground">Time: 02.00 pm - 04.00 pm</p>
+                <div className="flex items-center gap-2 mt-2">
+                    <Button size="sm" className="w-full"><Video className="mr-2"/> Start Meeting</Button>
+                    <Button size="sm" variant="outline" className="w-full"><Calendar className="mr-2"/> Reschedule</Button>
+                </div>
+            </div>
+             <div className="rounded-lg border p-4">
+                <h3 className="font-semibold">Dentist Appointment</h3>
+                <p className="text-sm text-muted-foreground">Time: Tomorrow, 10.00 am</p>
+                <Button size="sm" variant="outline" className="w-full mt-2">View Details</Button>
+            </div>
           </CardContent>
         </Card>
       </div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Documents</CardTitle>
-          <CardDescription>
-            An overview of your most recently added documents.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Document</TableHead>
-                <TableHead className="hidden sm:table-cell">Date</TableHead>
-                <TableHead>Tags</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {recentDocuments.map((doc) => (
-                <TableRow key={doc.name}>
-                  <TableCell className="font-medium">{doc.name}</TableCell>
-                  <TableCell className="hidden sm:table-cell">{doc.date}</TableCell>
-                  <TableCell>
-                    <div className="flex flex-wrap gap-1">
-                      {doc.tags.map((tag) => (
-                        <Badge key={tag} variant="secondary">
-                          {tag}
-                        </Badge>
-                      ))}
+
+       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <Card className="lg:col-span-2">
+                <CardHeader className="flex-row items-center justify-between">
+                    <CardTitle>Team Collaboration</CardTitle>
+                    <Button variant="outline" size="sm"><Plus className="mr-2 h-4 w-4"/> Add Member</Button>
+                </CardHeader>
+                <CardContent>
+                    <div className="space-y-4">
+                        {teamMembers.map((member, index) => (
+                            <div key={index} className="flex items-center justify-between">
+                                <div className="flex items-center gap-4">
+                                    <Avatar>
+                                        <AvatarImage src={member.avatar} data-ai-hint={member.hint}/>
+                                        <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                                    </Avatar>
+                                    <div>
+                                        <p className="font-semibold">{member.name}</p>
+                                        <p className="text-sm text-muted-foreground">{member.role}</p>
+                                    </div>
+                                </div>
+                                <Badge variant="outline" className="font-normal">
+                                    <span className={`w-2 h-2 rounded-full mr-2 ${member.statusColor}`} />
+                                    {member.status}
+                                </Badge>
+                            </div>
+                        ))}
                     </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-        <CardFooter>
-            <Button asChild size="sm" variant="outline" className="ml-auto gap-1">
-                 <Link href="/dashboard/documents">
-                    View All
-                    <ArrowUpRight className="h-4 w-4" />
-                 </Link>
-            </Button>
-        </CardFooter>
-      </Card>
+                </CardContent>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Profile Progress</CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col items-center justify-center">
+                    <ProgressCircle progress={41} />
+                     <div className="flex items-center gap-4 text-sm mt-4">
+                        <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-primary" /> Completed</div>
+                        <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-yellow-400" /> In Progress</div>
+                        <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-orange-400" /> Pending</div>
+                     </div>
+                </CardContent>
+            </Card>
+       </div>
+
+       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <Card className="lg:col-span-2">
+                <CardHeader className="flex-row items-center justify-between">
+                    <CardTitle>Project</CardTitle>
+                     <Button variant="outline" size="sm"><Plus className="mr-2 h-4 w-4"/> New</Button>
+                </CardHeader>
+                <CardContent>
+                    {projectItems.map((item, index) => (
+                        <div key={index} className="flex items-center justify-between py-3 border-b last:border-none">
+                            <div className="flex items-center gap-4">
+                                <div className={`p-2 rounded-lg bg-secondary ${item.color}`}>
+                                    <item.icon className="h-5 w-5 text-background" />
+                                </div>
+                                <div>
+                                    <p className="font-semibold">{item.title}</p>
+                                    <p className="text-sm text-muted-foreground">Due date: {item.due}</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-1">
+                               <Users className="h-4 w-4 text-muted-foreground"/>
+                               <span className="text-sm text-muted-foreground">4</span>
+                               <Button variant="ghost" size="icon"><MoreHorizontal /></Button>
+                            </div>
+                        </div>
+                    ))}
+                </CardContent>
+            </Card>
+            <Card className="relative overflow-hidden">
+                <Image src="https://placehold.co/600x400.png" alt="Abstract background" data-ai-hint="abstract waves" fill className="object-cover opacity-20"/>
+                 <div className="relative z-10 h-full flex flex-col">
+                    <CardHeader>
+                        <CardTitle className="text-white">Time Tracker</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex-1 flex flex-col items-center justify-center text-white">
+                        <div className="text-6xl font-bold tracking-widest">
+                            01:24:08
+                        </div>
+                        <div className="flex gap-4 mt-4">
+                            <Button size="icon" className="rounded-full h-14 w-14 bg-white/20 backdrop-blur-sm hover:bg-white/30">
+                                <Clock className="h-8 w-8"/>
+                            </Button>
+                            <Button size="icon" className="rounded-full h-14 w-14 bg-red-500 hover:bg-red-600">
+                                <Plus className="h-8 w-8 rotate-45"/>
+                            </Button>
+                        </div>
+                    </CardContent>
+                 </div>
+            </Card>
+       </div>
     </div>
   );
 }
