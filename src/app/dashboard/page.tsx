@@ -206,7 +206,9 @@ export default function DashboardPage() {
               <CardTitle>Health Analytics</CardTitle>
               <CardDescription>An overview of your recent activity.</CardDescription>
             </div>
-            <Button variant="outline" size="sm">View Details</Button>
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/dashboard/analytics">View Details</Link>
+            </Button>
           </CardHeader>
           <CardContent className="h-[250px]">
             <AnalyticsChart />

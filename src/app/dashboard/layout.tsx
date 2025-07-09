@@ -15,6 +15,7 @@ import {
   Bell,
   MessageSquare,
   DownloadCloud,
+  AreaChart,
 } from 'lucide-react';
 
 import {
@@ -43,6 +44,7 @@ import { Card, CardContent } from '@/components/ui/card';
 
 const menuItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+  { href: '/dashboard/analytics', icon: AreaChart, label: 'Analytics' },
   { href: '/dashboard/documents', icon: FileText, label: 'Documents' },
   { href: '/dashboard/emergency-card', icon: ShieldAlert, label: 'Emergency Card' },
 ];
