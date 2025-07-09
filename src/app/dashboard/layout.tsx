@@ -48,7 +48,7 @@ const menuItems = [
 ];
 
 const generalItems = [
-    { href: '#', icon: Settings, label: 'Settings' },
+    { href: '/dashboard/settings', icon: Settings, label: 'Settings' },
     { href: '#', icon: HelpCircle, label: 'Help' },
     { href: '/', icon: LogOut, label: 'Logout' },
 ]
@@ -98,7 +98,7 @@ export default function DashboardLayout({
                     <SidebarMenuItem key={item.label}>
                         <Link href={item.href} legacyBehavior passHref>
                         <SidebarMenuButton
-                            isActive={pathname === item.href}
+                            isActive={pathname.startsWith(item.href) && item.href !== '/'}
                             tooltip={item.label}
                         >
                             <item.icon />
@@ -167,10 +167,12 @@ export default function DashboardLayout({
                         <User className="mr-2 h-4 w-4" />
                         <span>Profile</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        <Settings className="mr-2 h-4 w-4" />
-                        <span>Settings</span>
-                    </DropdownMenuItem>
+                    <Link href="/dashboard/settings" passHref>
+                        <DropdownMenuItem>
+                            <Settings className="mr-2 h-4 w-4" />
+                            <span>Settings</span>
+                        </DropdownMenuItem>
+                    </Link>
                     <DropdownMenuSeparator />
                     <Link href="/" passHref>
                         <DropdownMenuItem>
