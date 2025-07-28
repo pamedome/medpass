@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Github } from 'lucide-react';
+import { Github, Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function SettingsPage() {
   const [isGithubConnected, setIsGithubConnected] = useState(false);
@@ -26,17 +27,31 @@ export default function SettingsPage() {
         <CardHeader>
           <CardTitle>Profile</CardTitle>
           <CardDescription>
-            Update your personal information.
+            Update your personal information and photo.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-            <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input id="name" defaultValue="Totok Michael" />
-            </div>
-             <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" defaultValue="tmichael20@mail.com" />
+            <div className="flex items-start gap-6">
+                <div className="flex flex-col items-center gap-2">
+                    <Avatar className="h-24 w-24">
+                        <AvatarImage src="https://placehold.co/100x100/E0E0E0/BDBDBD.png" alt="User" data-ai-hint="user avatar" />
+                        <AvatarFallback>TM</AvatarFallback>
+                    </Avatar>
+                     <Button variant="outline" size="sm">
+                        <Upload className="mr-2 h-4 w-4" />
+                        Upload
+                    </Button>
+                </div>
+                <div className="flex-grow space-y-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="name">Full Name</Label>
+                        <Input id="name" defaultValue="Totok Michael" />
+                    </div>
+                     <div className="space-y-2">
+                        <Label htmlFor="email">Email</Label>
+                        <Input id="email" type="email" defaultValue="tmichael20@mail.com" />
+                    </div>
+                </div>
             </div>
         </CardContent>
       </Card>
