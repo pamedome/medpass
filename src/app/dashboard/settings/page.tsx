@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -6,9 +7,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Github } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 export default function SettingsPage() {
   const [isGithubConnected, setIsGithubConnected] = useState(false);
+  const { toast } = useToast();
+
+  const handleSaveChanges = () => {
+    toast({
+      title: 'Profile Updated',
+      description: 'Your changes have been saved successfully.',
+    });
+  };
 
   return (
     <div className="grid gap-6">
@@ -65,7 +75,7 @@ export default function SettingsPage() {
       </Card>
 
       <div className="flex justify-end">
-          <Button>Save Changes</Button>
+          <Button onClick={handleSaveChanges}>Save Changes</Button>
       </div>
     </div>
   );
