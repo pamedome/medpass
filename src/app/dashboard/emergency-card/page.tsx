@@ -80,6 +80,20 @@ export default function EmergencyCardPage() {
                     <Input id="blood-type" defaultValue="O+" />
                  </div>
              </div>
+            <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-2">
+                    <Label htmlFor="height">Height</Label>
+                    <Input id="height" defaultValue="5' 7&quot;" />
+                </div>
+                <div className="space-y-2">
+                    <Label htmlFor="weight">Weight</Label>
+                    <Input id="weight" defaultValue="140 lbs" />
+                </div>
+                <div className="space-y-2">
+                    <Label htmlFor="bmi">BMI</Label>
+                    <Input id="bmi" defaultValue="21.9" />
+                </div>
+            </div>
             <div className="space-y-2">
               <Label htmlFor="allergies">Known Allergies</Label>
               <Textarea

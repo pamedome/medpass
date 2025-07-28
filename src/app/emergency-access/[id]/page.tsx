@@ -1,12 +1,15 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { User, Cake, Droplets, ShieldAlert, Pill, Stethoscope, Phone } from 'lucide-react';
+import { User, Cake, Droplets, ShieldAlert, Pill, Stethoscope, Phone, Scale, TrendingUp, HeartPulse } from 'lucide-react';
 
 const emergencyInfo = {
   name: 'Jane Doe',
   dob: 'May 21, 1990',
   bloodType: 'O+',
+  height: '5\' 7"',
+  weight: '140 lbs',
+  bmi: '21.9',
   allergies: 'Penicillin, Peanuts',
   medications: 'Lisinopril 10mg (for hypertension)',
   conditions: 'Hypertension, Type 2 Diabetes',
@@ -47,6 +50,12 @@ export default function EmergencyAccessPage({ params }: { params: { id: string }
             <InfoRow icon={User} label="Name" value={emergencyInfo.name} />
             <InfoRow icon={Cake} label="Date of Birth" value={emergencyInfo.dob} />
           </div>
+          <Separator />
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+                <InfoRow icon={HeartPulse} label="Height" value={emergencyInfo.height} />
+                <InfoRow icon={Scale} label="Weight" value={emergencyInfo.weight} />
+                <InfoRow icon={TrendingUp} label="BMI" value={emergencyInfo.bmi} />
+            </div>
           <Separator />
           <InfoRow icon={Droplets} label="Blood Type" value={emergencyInfo.bloodType} />
           <Separator />
