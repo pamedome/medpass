@@ -84,7 +84,7 @@ export default function DashboardLayout({
                     <SidebarMenuItem key={item.href}>
                         <Link href={item.href}>
                         <SidebarMenuButton
-                            isActive={pathname === item.href}
+                            isActive={item.href === '/dashboard' ? pathname === item.href : pathname.startsWith(item.href)}
                             tooltip={item.label}
                         >
                             <item.icon />
@@ -102,7 +102,7 @@ export default function DashboardLayout({
                     <SidebarMenuItem key={item.label}>
                         <Link href={item.href}>
                         <SidebarMenuButton
-                            isActive={pathname.startsWith(item.href) && item.href !== '/'}
+                            isActive={item.href !== '/' && pathname.startsWith(item.href)}
                             tooltip={item.label}
                         >
                             <item.icon />
