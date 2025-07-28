@@ -65,6 +65,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const [searchQuery, setSearchQuery] = React.useState('');
 
   return (
     <SidebarProvider>
@@ -135,7 +136,13 @@ export default function DashboardLayout({
             <SidebarTrigger className="md:hidden" />
             <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input type="search" placeholder="Search task..." className="w-full rounded-full bg-secondary pl-10 h-10" />
+                <Input 
+                    type="search" 
+                    placeholder="Search task..." 
+                    className="w-full rounded-full bg-secondary pl-10 h-10"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                 />
             </div>
             <div className="flex items-center gap-2">
                 <Button variant="ghost" size="icon" className="rounded-full">
