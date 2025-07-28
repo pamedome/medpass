@@ -115,11 +115,11 @@ const InfoItem = ({ label, value }: { label: string; value: string | undefined }
     );
 }
 
-export default function DocumentDetailsPage({ params }: { params: { id: string } }) {
+export default function DocumentDetailsPage({ params: { id } }: { params: { id: string } }) {
   const router = useRouter();
   const [isShareOpen, setShareOpen] = useState(false);
 
-  const currentIndex = allDocuments.findIndex((doc) => doc.id === params.id);
+  const currentIndex = allDocuments.findIndex((doc) => doc.id === id);
   const documentDetails = allDocuments[currentIndex];
   
   const prevDoc = currentIndex > 0 ? allDocuments[currentIndex - 1] : null;

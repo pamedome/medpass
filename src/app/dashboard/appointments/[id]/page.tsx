@@ -72,11 +72,11 @@ const allAppointments = [
 ];
 const reportName = "Appointment Report";
 
-export default function AppointmentDetailsPage({ params }: { params: { id: string }}) {
+export default function AppointmentDetailsPage({ params: { id } }: { params: { id: string }}) {
   const router = useRouter();
   const [isShareOpen, setShareOpen] = useState(false);
 
-  const currentIndex = allAppointments.findIndex(appt => appt.id === params.id);
+  const currentIndex = allAppointments.findIndex(appt => appt.id === id);
   const appointmentDetails = allAppointments[currentIndex];
   
   const prevAppt = currentIndex > 0 ? allAppointments[currentIndex - 1] : null;
