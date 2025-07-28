@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -28,6 +29,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/logo';
@@ -102,7 +104,7 @@ export default function DashboardLayout({
                     <SidebarMenuItem key={item.label}>
                         <Link href={item.href}>
                         <SidebarMenuButton
-                            isActive={item.href !== '/' && pathname.startsWith(item.href)}
+                            isActive={item.href !== '/' && item.href !== '#' && pathname.startsWith(item.href)}
                             tooltip={item.label}
                         >
                             <item.icon />
@@ -130,6 +132,7 @@ export default function DashboardLayout({
       </Sidebar>
       <div className="flex flex-1 flex-col">
         <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-6">
+            <SidebarTrigger className="md:hidden" />
             <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input type="search" placeholder="Search task..." className="w-full rounded-full bg-secondary pl-10 h-10" />
