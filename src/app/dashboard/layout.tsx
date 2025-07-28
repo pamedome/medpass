@@ -137,10 +137,41 @@ export default function DashboardLayout({
                     <MessageSquare className="size-5" />
                     <span className="sr-only">Messages</span>
                 </Button>
-                <Button variant="ghost" size="icon" className="rounded-full">
-                    <Bell className="size-5" />
-                    <span className="sr-only">Notifications</span>
-                </Button>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="rounded-full">
+                            <Bell className="size-5" />
+                            <span className="sr-only">Notifications</span>
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>
+                            <div className="flex flex-col">
+                                <span className="font-medium">New lab results available</span>
+                                <span className="text-xs text-muted-foreground">2 hours ago</span>
+                            </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                             <div className="flex flex-col">
+                                <span className="font-medium">Appointment reminder</span>
+                                <span className="text-xs text-muted-foreground">Dr. Smith tomorrow at 10 AM</span>
+                            </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <div className="flex flex-col">
+                                <span className="font-medium">Prescription ready</span>
+                                <span className="text-xs text-muted-foreground">Your prescription is ready for pickup.</span>
+                            </div>
+                        </DropdownMenuItem>
+                         <DropdownMenuSeparator />
+                         <DropdownMenuItem className="justify-center text-sm text-primary">
+                            View all notifications
+                         </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                     <Button
