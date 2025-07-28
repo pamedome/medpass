@@ -66,65 +66,6 @@ const AnalyticsChart = () => {
   );
 };
 
-const ProgressCircle = ({ progress }: { progress: number }) => {
-    const strokeWidth = 10;
-    const radius = 80;
-    const circumference = 2 * Math.PI * radius;
-    const offset = circumference - (progress / 100) * circumference;
-
-    return (
-        <div className="relative flex items-center justify-center">
-            <svg width="200" height="200" viewBox="0 0 200 200" className="-rotate-90">
-                <circle
-                    stroke="hsl(var(--muted))"
-                    fill="transparent"
-                    strokeWidth={strokeWidth}
-                    r={radius}
-                    cx="100"
-                    cy="100"
-                />
-                <circle
-                    stroke="hsl(var(--primary))"
-                    fill="transparent"
-                    strokeWidth={strokeWidth}
-                    strokeDasharray={circumference}
-                    strokeDashoffset={offset}
-                    r={radius}
-                    cx="100"
-                    cy="100"
-                    strokeLinecap="round"
-                />
-                 <circle
-                    className="animate-[pulse_1s_ease-in-out_infinite]"
-                    stroke="hsl(var(--primary))"
-                    fill="hsl(var(--primary))"
-                    strokeWidth={strokeWidth}
-                    strokeDasharray={circumference}
-                    strokeDashoffset={offset}
-                    r={radius}
-                    cx="100"
-                    cy="100"
-                    strokeLinecap="round"
-                >
-                    <animateTransform 
-                        attributeName="transform"
-                        type="rotate"
-                        from="0 100 100"
-                        to="360 100 100"
-                        dur="10s"
-                        repeatCount="indefinite"
-                    />
-                 </circle>
-            </svg>
-            <div className="absolute flex flex-col items-center">
-                <span className="text-5xl font-bold">{progress}%</span>
-                <span className="text-muted-foreground">Profile Complete</span>
-            </div>
-        </div>
-    );
-};
-
-
 export default function DashboardPage() {
   const statsCards = [
     {
@@ -236,8 +177,8 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-            <Card className="lg:col-span-2">
+       <div className="grid grid-cols-1 gap-6">
+            <Card>
                 <CardHeader className="flex-row items-center justify-between">
                     <CardTitle>Doctor's Appointments</CardTitle>
                     <Button variant="outline" size="sm"><Plus className="mr-2 h-4 w-4"/> Schedule New</Button>
@@ -265,19 +206,6 @@ export default function DashboardPage() {
                             </Link>
                         ))}
                     </div>
-                </CardContent>
-            </Card>
-            <Card>
-                <CardHeader>
-                    <CardTitle>Profile Progress</CardTitle>
-                </CardHeader>
-                <CardContent className="flex flex-col items-center justify-center">
-                    <ProgressCircle progress={41} />
-                     <div className="flex items-center gap-4 text-sm mt-4">
-                        <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-primary" /> Completed</div>
-                        <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-yellow-400" /> In Progress</div>
-                        <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-orange-400" /> Pending</div>
-                     </div>
                 </CardContent>
             </Card>
        </div>
