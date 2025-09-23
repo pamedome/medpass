@@ -21,31 +21,6 @@ const features = [
   'Secure Record Sharing',
 ];
 
-const testimonials = [
-  {
-    name: 'Sarah L.',
-    title: 'Busy Mom',
-    quote: 'Health Passport is a lifesaver! I can manage my whole family\'s medical records in one place. The emergency QR code gives me peace of mind.',
-    avatar: 'https://picsum.photos/seed/101/40/40',
-    hint: 'woman smiling portrait',
-  },
-  {
-    name: 'David R.',
-    title: 'Frequent Traveler',
-    quote: 'As someone who travels a lot for work, having all my medical info accessible from my phone is incredible. Sharing records with a new doctor abroad was seamless.',
-    avatar: 'https://picsum.photos/seed/102/40/40',
-    hint: 'man travel background',
-  },
-  {
-    name: 'Maria G.',
-    title: 'Caregiver',
-    quote: 'I help manage my elderly parents\' healthcare. Health Passport makes it easy to keep track of their appointments, medications, and documents. Highly recommended!',
-    avatar: 'https://picsum.photos/seed/103/40/40',
-    hint: 'caregiver smiling',
-  },
-];
-
-
 export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -111,37 +86,6 @@ export default function LandingPage() {
                 </div>
               </div>
             ))}
-          </div>
-        </section>
-
-        {/* Testimonials Section */}
-        <section className="py-20 sm:py-24">
-          <div className="container">
-            <h2 className="text-center text-3xl font-bold">
-              Loved by Patients & Caregivers
-            </h2>
-            <p className="mt-4 text-center text-muted-foreground">
-                See what our users are saying about Health Passport.
-            </p>
-            <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {testimonials.map((testimonial) => (
-                <Card key={testimonial.name}>
-                  <CardContent className="pt-6">
-                    <p className="italic">"{testimonial.quote}"</p>
-                  </CardContent>
-                  <CardFooter className="flex items-center gap-4">
-                    <Avatar>
-                        <AvatarImage src={testimonial.avatar} data-ai-hint={testimonial.hint} />
-                        <AvatarFallback>{testimonial.name.split(' ').map(n=>n[0]).join('')}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                        <p className="font-semibold">{testimonial.name}</p>
-                        <p className="text-sm text-muted-foreground">{testimonial.title}</p>
-                    </div>
-                  </CardFooter>
-                </Card>
-              ))}
-            </div>
           </div>
         </section>
 
