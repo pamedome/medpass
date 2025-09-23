@@ -38,12 +38,12 @@ export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-14 items-center justify-center">
+        <div className="container flex h-14 items-center justify-between">
           <div className="flex items-center">
             <Logo className="mr-2 h-6 w-6 text-primary" />
             <span className="font-bold">MedPass</span>
           </div>
-          <nav className="flex items-center space-x-2 ml-auto">
+          <nav className="flex items-center space-x-2">
             <Button variant="ghost" asChild>
               <Link href="/login">Log In</Link>
             </Button>
