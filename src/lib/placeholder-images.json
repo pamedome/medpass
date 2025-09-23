@@ -1,0 +1,9 @@
+{
+  "appStoreBadge": {
+    "src": "https://picsum.photos/seed/appstore/135/40",
+    "alt": "Download on the App Store",
+    "width": 135,
+    "height": 40,
+    "hint": "app store badge"
+  }
+}
