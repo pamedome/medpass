@@ -72,10 +72,12 @@ export default function DashboardLayout({
       <Sidebar variant="sidebar" collapsible="icon">
         <SidebarHeader>
           <div className="flex h-16 items-center gap-2.5 px-3">
-            <Logo className="size-9 shrink-0 text-primary" />
-            <span className="min-w-0 text-xl font-semibold">
-              MedPass
-            </span>
+            <Link href="/dashboard" className="flex items-center gap-2.5">
+              <Logo className="size-9 shrink-0 text-primary" />
+              <span className="min-w-0 text-xl font-semibold">
+                Health Passport
+              </span>
+            </Link>
           </div>
         </SidebarHeader>
         <SidebarContent>
@@ -125,7 +127,7 @@ export default function DashboardLayout({
                       <DownloadCloud className="text-primary size-5"/>
                    </div>
                    <p className="text-sm font-semibold">Download our Mobile App</p>
-                   <p className="text-xs text-muted-foreground mt-1">Get easy in another way</p>
+                   <p className="text-xs text-muted-foreground mt-1">Get easy access on the go</p>
                    <Button size="sm" className="mt-4 w-full bg-primary text-primary-foreground">Download</Button>
                </CardContent>
            </Card>
@@ -138,7 +140,7 @@ export default function DashboardLayout({
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input 
                     type="search" 
-                    placeholder="Search task..." 
+                    placeholder="Search records..." 
                     className="w-full rounded-full bg-secondary pl-10 h-10"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -203,8 +205,8 @@ export default function DashboardLayout({
                     <DropdownMenuContent align="end">
                     <DropdownMenuLabel>
                         <div className="flex flex-col">
-                            <span>Totok Michael</span>
-                            <span className="text-xs font-normal text-muted-foreground">tmichael20@mail.com</span>
+                            <span>Jane Doe</span>
+                            <span className="text-xs font-normal text-muted-foreground">jane.doe@example.com</span>
                         </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />

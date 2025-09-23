@@ -1,12 +1,8 @@
-'use client';
-
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
+import { Logo } from '@/components/logo';
+import { CheckCircle } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -15,162 +11,167 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Logo } from '@/components/logo';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-const loginSchema = z.object({
-  email: z.string().email({ message: 'Please enter a valid email address.' }),
-  password: z.string().min(1, { message: 'Password is required.' }),
-});
+const features = [
+  'Secure Document Upload',
+  'AI-Powered Tagging',
+  'Manual Data Entry',
+  'Emergency QR Code',
+  'Secure Record Sharing',
+];
 
-type LoginFormValues = z.infer<typeof loginSchema>;
+const testimonials = [
+  {
+    name: 'Sarah L.',
+    title: 'Busy Mom',
+    quote: 'Health Passport is a lifesaver! I can manage my whole family\'s medical records in one place. The emergency QR code gives me peace of mind.',
+    avatar: 'https://picsum.photos/seed/101/40/40',
+    hint: 'woman smiling portrait',
+  },
+  {
+    name: 'David R.',
+    title: 'Frequent Traveler',
+    quote: 'As someone who travels a lot for work, having all my medical info accessible from my phone is incredible. Sharing records with a new doctor abroad was seamless.',
+    avatar: 'https://picsum.photos/seed/102/40/40',
+    hint: 'man travel background',
+  },
+  {
+    name: 'Maria G.',
+    title: 'Caregiver',
+    quote: 'I help manage my elderly parents\' healthcare. Health Passport makes it easy to keep track of their appointments, medications, and documents. Highly recommended!',
+    avatar: 'https://picsum.photos/seed/103/40/40',
+    hint: 'caregiver smiling',
+  },
+];
 
-const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
-    <path d="M12.24 10.285V14.4h6.806c-.82 2.134-2.62 3.65-5.213 3.65-3.09 0-5.6-2.51-5.6-5.6s2.51-5.6 5.6-5.6c1.39 0 2.6.52 3.56 1.36l2.76-2.76C16.89 3.19 14.74 2 12 2 6.48 2 2 6.48 2 12s4.48 10 10 10c5.52 0 10-4.48 10-10 0-.74-.07-1.45-.19-2.14h-9.57z" />
-  </svg>
-);
 
-const AppleIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
-    <path d="M17.58,15.24C16,14.08,15.32,12.18,15.32,10.2a6,6,0,0,1,1.7-4.29,5.1,5.1,0,0,1,3.47-1.86,1,1,0,1,0-.37-1.92,7.06,7.06,0,0,0-4.85,2.6,6.24,6.24,0,0,0-2.31,5.48c0,2.2,1,4.3,2.5,5.72s3.28,2.2,5.2,2.2a1,1,0,1,0,0-2C20.1,20.09,18.82,18.33,17.58,15.24ZM11.13,1.52a1,1,0,0,0-1,1.15,9,9,0,0,1,1.68,5.42,8.68,8.68,0,0,1-8.31,8.65,8.44,8.44,0,0,1-1.3-.11,1,1,0,0,0-1.1.8,1,1,0,0,0,.8,1.1,10.61,10.61,0,0,0,1.62.14,10.74,10.74,0,0,0,10.37-10.7,11,11,0,0,0-2.73-7.46Z" />
-  </svg>
-);
-
-const OutlookIcon = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
-        <path d="M21,5H7.5A2.5,2.5,0,0,0,5,7.5v11A2.5,2.5,0,0,0,7.5,21H19a2,2,0,0,0,2-2V7A2,2,0,0,0,19,5ZM7.5,7H19V8.5L13.25,12,7.5,8.5Zm11.5,12H7.5a.5.5,0,0,1-.5-.5V10.75L13.25,14,19.5,10.5V18.5A.5.5,0,0,1,19,19Z M2,8H4V6H2Z M2,12H4V10H2Z M2,16H4V14H2Z" />
-    </svg>
-);
-
-export default function LoginPage() {
-  const router = useRouter();
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-  });
-
-  function onSubmit(data: LoginFormValues) {
-    console.log(data);
-    // Simulate successful login
-    router.push('/dashboard');
-  }
-
-  const handleSocialLogin = () => {
-    // Simulate successful social login
-    router.push('/dashboard');
-  };
-
+export default function LandingPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
-       <div className="w-full max-w-sm">
-        <div className="mb-6 flex flex-col items-center text-center">
-            <Logo className="h-12 w-12 text-primary" />
-            <h1 className="mt-4 text-3xl font-bold tracking-tight">MedPass</h1>
-            <p className="mt-1 text-muted-foreground">Welcome back! Sign in to continue.</p>
-        </div>
-        <Card>
-          <CardHeader>
-            <CardTitle className="sr-only">Login</CardTitle>
-            <CardDescription className="sr-only">
-              Enter your email below to login to your account.
-            </CardDescription>
-          </CardHeader>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <CardContent className="grid gap-4">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="name@example.com"
-                          type="email"
-                          autoCapitalize="none"
-                          autoComplete="email"
-                          autoCorrect="off"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center">
-                        <FormLabel>Password</FormLabel>
-                        <Link
-                          href="#"
-                          className="ml-auto inline-block text-sm underline"
-                        >
-                          Forgot your password?
-                        </Link>
-                      </div>
-                      <FormControl>
-                        <Input placeholder="••••••••" type="password" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-              <CardFooter className="flex flex-col gap-4">
-                <Button type="submit" className="w-full">
-                  Sign In
-                </Button>
-              </CardFooter>
-            </form>
-          </Form>
-        </Card>
-        
-        <div className="relative my-6">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
+    <div className="flex min-h-screen flex-col bg-background">
+      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-14 items-center">
+          <div className="mr-4 flex items-center">
+            <Logo className="mr-2 h-6 w-6 text-primary" />
+            <span className="font-bold">Health Passport</span>
           </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">
-              Or continue with
-            </span>
+          <div className="flex flex-1 items-center justify-end space-x-2">
+            <nav className="flex items-center space-x-2">
+              <Button variant="ghost" asChild>
+                <Link href="/login">Log In</Link>
+              </Button>
+              <Button asChild>
+                <Link href="/signup">Sign Up</Link>
+              </Button>
+            </nav>
           </div>
         </div>
+      </header>
 
-        <div className="grid grid-cols-3 gap-3">
-          <Button variant="outline" size="icon" aria-label="Sign in with Google" onClick={handleSocialLogin}>
-            <GoogleIcon className="h-5 w-5" />
-          </Button>
-          <Button variant="outline" size="icon" aria-label="Sign in with Apple" onClick={handleSocialLogin}>
-            <AppleIcon className="h-5 w-5" />
-          </Button>
-          <Button variant="outline" size="icon" aria-label="Sign in with Outlook" onClick={handleSocialLogin}>
-            <OutlookIcon className="h-5 w-5" />
-          </Button>
-        </div>
-
-        <div className="mt-6 text-center text-sm text-muted-foreground">
-            Don&apos;t have an account?{' '}
-            <Link href="/signup" className="underline hover:text-primary">
-              Sign up
-            </Link>
+      <main className="flex-1">
+        {/* Hero Section */}
+        <section className="py-20 sm:py-28 md:py-32">
+          <div className="container text-center">
+            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+              Your Health Records,
+              <br />
+              <span className="text-primary">Secure & Accessible.</span>
+            </h1>
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
+              Health Passport is your secure, digital health companion. Easily manage documents, track your medical history, and access vital information in emergencies.
+            </p>
+            <div className="mt-10 flex justify-center gap-4">
+              <Button size="lg" asChild>
+                <Link href="/signup">Get Started for Free</Link>
+              </Button>
+              <Button size="lg" variant="outline">
+                Learn More
+              </Button>
+            </div>
           </div>
-      </div>
-    </main>
+        </section>
+
+        {/* Feature Section */}
+        <section id="features" className="bg-muted py-20 sm:py-24">
+          <div className="container grid gap-12 md:grid-cols-2 lg:grid-cols-3">
+             <div className="flex flex-col justify-center space-y-4">
+                <h2 className="text-3xl font-bold">All-in-One Health Management</h2>
+                <p className="text-muted-foreground">
+                    From uploading documents to generating an emergency QR code, we've built a comprehensive suite of tools to help you take control of your health information.
+                </p>
+            </div>
+            {features.map((feature) => (
+              <div key={feature} className="flex items-start space-x-4">
+                <CheckCircle className="mt-1 h-6 w-6 flex-shrink-0 text-primary" />
+                <div>
+                  <h3 className="font-semibold">{feature}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Securely manage and access your medical records with our powerful features.
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Testimonials Section */}
+        <section className="py-20 sm:py-24">
+          <div className="container">
+            <h2 className="text-center text-3xl font-bold">
+              Loved by Patients & Caregivers
+            </h2>
+            <p className="mt-4 text-center text-muted-foreground">
+                See what our users are saying about Health Passport.
+            </p>
+            <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {testimonials.map((testimonial) => (
+                <Card key={testimonial.name}>
+                  <CardContent className="pt-6">
+                    <p className="italic">"{testimonial.quote}"</p>
+                  </CardContent>
+                  <CardFooter className="flex items-center gap-4">
+                    <Avatar>
+                        <AvatarImage src={testimonial.avatar} data-ai-hint={testimonial.hint} />
+                        <AvatarFallback>{testimonial.name.split(' ').map(n=>n[0]).join('')}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                        <p className="font-semibold">{testimonial.name}</p>
+                        <p className="text-sm text-muted-foreground">{testimonial.title}</p>
+                    </div>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+         {/* CTA Section */}
+        <section className="bg-muted py-20 sm:py-24">
+            <div className="container text-center">
+                 <h2 className="text-3xl font-bold">Ready to Take Control?</h2>
+                 <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
+                     Sign up today and experience the peace of mind that comes with having your health information organized and accessible whenever you need it.
+                 </p>
+                 <div className="mt-8">
+                     <Button size="lg" asChild>
+                        <Link href="/signup">Create Your Free Account</Link>
+                     </Button>
+                 </div>
+            </div>
+        </section>
+      </main>
+
+      <footer className="border-t">
+        <div className="container flex flex-col items-center justify-between gap-4 py-6 md:flex-row">
+            <p className="text-sm text-muted-foreground">
+                © {new Date().getFullYear()} Health Passport. All rights reserved.
+            </p>
+            <nav className="flex gap-4">
+                <Link href="#" className="text-sm hover:underline">Terms of Service</Link>
+                <Link href="#" className="text-sm hover:underline">Privacy Policy</Link>
+            </nav>
+        </div>
+      </footer>
+    </div>
   );
 }

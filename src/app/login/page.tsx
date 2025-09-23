@@ -26,21 +26,12 @@ import {
 import { Input } from '@/components/ui/input';
 import { Logo } from '@/components/logo';
 
-const signupSchema = z
-  .object({
-    fullName: z.string().min(1, { message: 'Full name is required' }),
-    email: z.string().email({ message: 'Please enter a valid email address.' }),
-    password: z
-      .string()
-      .min(8, { message: 'Password must be at least 8 characters long.' }),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
-  });
+const loginSchema = z.object({
+  email: z.string().email({ message: 'Please enter a valid email address.' }),
+  password: z.string().min(1, { message: 'Password is required.' }),
+});
 
-type SignupFormValues = z.infer<typeof signupSchema>;
+type LoginFormValues = z.infer<typeof loginSchema>;
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -60,62 +51,47 @@ const OutlookIcon = (props: React.SVGProps<SVGSVGElement>) => (
     </svg>
 );
 
-export default function SignupPage() {
+export default function LoginPage() {
   const router = useRouter();
-  const form = useForm<SignupFormValues>({
-    resolver: zodResolver(signupSchema),
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
-      fullName: '',
       email: '',
       password: '',
-      confirmPassword: '',
     },
   });
 
-  function onSubmit(data: SignupFormValues) {
+  function onSubmit(data: LoginFormValues) {
     console.log(data);
-    // Simulate successful signup and redirect
+    // Simulate successful login
     router.push('/dashboard');
   }
 
-  const handleSocialSignup = () => {
-    // Simulate successful social signup and redirect
+  const handleSocialLogin = () => {
+    // Simulate successful social login
     router.push('/dashboard');
   };
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
-      <div className="w-full max-w-sm">
+       <div className="w-full max-w-sm">
         <div className="mb-6 flex flex-col items-center text-center">
             <Link href="/" className="mb-4">
                 <Logo className="h-12 w-12 text-primary" />
             </Link>
-            <h1 className="text-3xl font-bold tracking-tight">Create your Health Passport</h1>
-            <p className="mt-1 text-muted-foreground">Your secure, digital health companion.</p>
+            <h1 className="text-3xl font-bold tracking-tight">Welcome Back</h1>
+            <p className="mt-1 text-muted-foreground">Sign in to continue to Health Passport.</p>
         </div>
         <Card>
           <CardHeader>
-            <CardTitle className="sr-only">Create an account</CardTitle>
+            <CardTitle className="sr-only">Login</CardTitle>
             <CardDescription className="sr-only">
-              Enter your information to create a new account.
+              Enter your email below to login to your account.
             </CardDescription>
           </CardHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <CardContent className="grid gap-4">
-                <FormField
-                  control={form.control}
-                  name="fullName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Full Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="John Doe" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
                 <FormField
                   control={form.control}
                   name="email"
@@ -126,6 +102,9 @@ export default function SignupPage() {
                         <Input
                           placeholder="name@example.com"
                           type="email"
+                          autoCapitalize="none"
+                          autoComplete="email"
+                          autoCorrect="off"
                           {...field}
                         />
                       </FormControl>
@@ -138,20 +117,15 @@ export default function SignupPage() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input placeholder="••••••••" type="password" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="confirmPassword"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Confirm Password</FormLabel>
+                      <div className="flex items-center">
+                        <FormLabel>Password</FormLabel>
+                        <Link
+                          href="#"
+                          className="ml-auto inline-block text-sm underline"
+                        >
+                          Forgot your password?
+                        </Link>
+                      </div>
                       <FormControl>
                         <Input placeholder="••••••••" type="password" {...field} />
                       </FormControl>
@@ -160,44 +134,44 @@ export default function SignupPage() {
                   )}
                 />
               </CardContent>
-              <CardFooter>
+              <CardFooter className="flex flex-col gap-4">
                 <Button type="submit" className="w-full">
-                  Create account
+                  Sign In
                 </Button>
               </CardFooter>
             </form>
           </Form>
         </Card>
-
+        
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
             <span className="w-full border-t" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
             <span className="bg-background px-2 text-muted-foreground">
-              Or sign up with
+              Or continue with
             </span>
           </div>
         </div>
 
         <div className="grid grid-cols-3 gap-3">
-           <Button variant="outline" size="icon" aria-label="Sign up with Google" onClick={handleSocialSignup}>
+          <Button variant="outline" size="icon" aria-label="Sign in with Google" onClick={handleSocialLogin}>
             <GoogleIcon className="h-5 w-5" />
           </Button>
-          <Button variant="outline" size="icon" aria-label="Sign up with Apple" onClick={handleSocialSignup}>
+          <Button variant="outline" size="icon" aria-label="Sign in with Apple" onClick={handleSocialLogin}>
             <AppleIcon className="h-5 w-5" />
           </Button>
-          <Button variant="outline" size="icon" aria-label="Sign up with Outlook" onClick={handleSocialSignup}>
+          <Button variant="outline" size="icon" aria-label="Sign in with Outlook" onClick={handleSocialLogin}>
             <OutlookIcon className="h-5 w-5" />
           </Button>
         </div>
 
         <div className="mt-6 text-center text-sm text-muted-foreground">
-            Already have an account?{' '}
-            <Link href="/login" className="underline hover:text-primary">
-              Log In
+            Don&apos;t have an account?{' '}
+            <Link href="/signup" className="underline hover:text-primary">
+              Sign up
             </Link>
-        </div>
+          </div>
       </div>
     </main>
   );
