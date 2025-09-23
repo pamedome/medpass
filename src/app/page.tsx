@@ -21,6 +21,18 @@ const features = [
   'Secure Record Sharing',
 ];
 
+const AppleIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M17.58,15.24C16,14.08,15.32,12.18,15.32,10.2a6,6,0,0,1,1.7-4.29,5.1,5.1,0,0,1,3.47-1.86,1,1,0,1,0-.37-1.92,7.06,7.06,0,0,0-4.85,2.6,6.24,6.24,0,0,0-2.31,5.48c0,2.2,1,4.3,2.5,5.72s3.28,2.2,5.2,2.2a1,1,0,1,0,0-2C20.1,20.09,18.82,18.33,17.58,15.24ZM11.13,1.52a1,1,0,0,0-1,1.15,9,9,0,0,1,1.68,5.42,8.68,8.68,0,0,1-8.31,8.65,8.44,8.44,0,0,1-1.3-.11,1,1,0,0,0-1.1.8,1,1,0,0,0,.8,1.1,10.61,10.61,0,0,0,1.62.14,10.74,10.74,0,0,0,10.37-10.7,11,11,0,0,0-2.73-7.46Z" />
+    </svg>
+);
+
+const GooglePlayIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+        <path d="M21.3,10.35,3.77,0.29A2,2,0,0,0,1,2.06V21.94a2,2,0,0,0,2.77,1.77L21.3,13.65a2,2,0,0,0,0-3.3ZM4,4.3,16.83,12,4,19.7Z" />
+    </svg>
+);
+
 export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -87,6 +99,26 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
+        </section>
+
+        {/* Download Beta Section */}
+        <section className="py-20 sm:py-24">
+            <div className="container text-center">
+                <h2 className="text-3xl font-bold">Get the Beta App</h2>
+                <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+                    Be one of the first to test our mobile app. Download the beta version and help us shape the future of health management on the go.
+                </p>
+                <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                    <Button size="lg" variant="outline" className="w-full sm:w-auto">
+                        <AppleIcon className="mr-2 h-5 w-5" />
+                        Download on the App Store
+                    </Button>
+                    <Button size="lg" variant="outline" className="w-full sm:w-auto">
+                        <GooglePlayIcon className="mr-2 h-5 w-5" />
+                        Get it on Google Play
+                    </Button>
+                </div>
+            </div>
         </section>
 
          {/* CTA Section */}
