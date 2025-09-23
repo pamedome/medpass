@@ -40,7 +40,7 @@ export default function LandingPage() {
         <div className="container flex h-14 items-center">
           <div className="mr-4 flex items-center">
             <Logo className="mr-2 h-6 w-6 text-primary" />
-            <span className="font-bold">Health Passport</span>
+            <span className="font-bold">MedPass</span>
           </div>
           <div className="flex flex-1 items-center justify-end space-x-2">
             <nav className="flex items-center space-x-2">
