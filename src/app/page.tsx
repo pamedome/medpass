@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -80,24 +81,26 @@ export default function LandingPage() {
 
         {/* Feature Section */}
         <section id="features" className="bg-muted py-20 sm:py-24">
-          <div className="container grid gap-12 md:grid-cols-2 lg:grid-cols-3">
-             <div className="flex flex-col justify-center space-y-4">
-                <h2 className="text-3xl font-bold">All-in-One Health Management</h2>
-                <p className="text-muted-foreground">
-                    From uploading documents to generating an emergency QR code, we've built a comprehensive suite of tools to help you take control of your health information.
-                </p>
+          <div className="container">
+            <div className="mx-auto max-w-2xl text-center">
+              <h2 className="text-3xl font-bold">All-in-One Health Management</h2>
+              <p className="mt-4 text-muted-foreground">
+                From uploading documents to generating an emergency QR code, we've built a comprehensive suite of tools to help you take control of your health information.
+              </p>
             </div>
-            {features.map((feature) => (
-              <div key={feature} className="flex items-start space-x-4">
-                <CheckCircle className="mt-1 h-6 w-6 flex-shrink-0 text-primary" />
-                <div>
-                  <h3 className="font-semibold">{feature}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Securely manage and access your medical records with our powerful features.
-                  </p>
+            <div className="mx-auto mt-12 grid max-w-4xl gap-8 text-left sm:grid-cols-2 lg:grid-cols-3">
+              {features.map((feature) => (
+                <div key={feature} className="flex items-start space-x-4">
+                  <CheckCircle className="mt-1 h-6 w-6 flex-shrink-0 text-primary" />
+                  <div>
+                    <h3 className="font-semibold">{feature}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Securely manage and access your medical records with our powerful features.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
 
