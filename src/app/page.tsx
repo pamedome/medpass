@@ -38,12 +38,12 @@ export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-14 items-center justify-between">
+        <div className="container flex h-14 items-center justify-center">
           <div className="flex items-center">
             <Logo className="mr-2 h-6 w-6 text-primary" />
             <span className="font-bold">MedPass</span>
           </div>
-          <nav className="flex items-center space-x-2">
+          <nav className="flex items-center space-x-2 ml-auto">
             <Button variant="ghost" asChild>
               <Link href="/login">Log In</Link>
             </Button>
@@ -86,7 +86,7 @@ export default function LandingPage() {
                 From uploading documents to generating an emergency QR code, we've built a comprehensive suite of tools to help you take control of your health information.
               </p>
             </div>
-            <div className="mx-auto mt-12 grid max-w-4xl gap-8 text-left sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mx-auto mt-12 grid max-w-4xl gap-8 text-center sm:grid-cols-2 lg:grid-cols-3">
               {features.map((feature) => (
                 <div key={feature} className="flex items-start space-x-4">
                   <CheckCircle className="mt-1 h-6 w-6 flex-shrink-0 text-primary" />
