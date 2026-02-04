@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -19,13 +19,17 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { initialUsers, UserProfile } from '@/lib/family-members';
 import Link from 'next/link';
 
-export default function EditProfilePage({ params }: { params: { id: string } }) {
+export default function EditProfilePage() {
   const router = useRouter();
+  const params = useParams();
   const { toast } = useToast();
   const [user, setUser] = useState<UserProfile | null>(null);
 
   useEffect(() => {
-    const userId = parseInt(params.id, 10);
+    if (!params.id) {
+      return;
+    }
+    const userId = parseInt(params.id as string, 10);
     const userToEdit = initialUsers.find((u) => u.id === userId);
     if (userToEdit) {
       setUser(userToEdit);
