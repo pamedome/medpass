@@ -70,12 +70,9 @@ export default function DashboardLayout({
     <SidebarProvider>
       <Sidebar variant="sidebar" collapsible="icon">
         <SidebarHeader>
-          <div className="flex h-16 items-center gap-2.5 px-3">
+          <div className="flex h-16 items-center justify-center gap-2.5 px-3">
             <Link href="/dashboard" className="flex items-center gap-2.5">
               <Logo className="size-9 shrink-0 text-primary" />
-              <span className="min-w-0 text-xl font-semibold">
-                Medpass
-              </span>
             </Link>
           </div>
         </SidebarHeader>
