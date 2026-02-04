@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -17,7 +18,41 @@ import { Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { initialUsers, UserProfile } from '@/lib/family-members';
-import Link from 'next/link';
+import { Separator } from '@/components/ui/separator';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
+
+const ethnicityOptions = [
+  "White British", "White Irish", "White Other", "Mixed White/Black Caribbean",
+  "Mixed White/Asian", "Asian Indian", "Asian Pakistani", "Asian Bangladeshi",
+  "Asian Chinese", "Asian Other", "Black African", "Black Caribbean",
+  "Black Other", "Arab", "Any Other", "Prefer not to say"
+];
+
+const religionOptions = [
+  "None", "Christian", "Buddhist", "Hindu", "Jewish", "Muslim",
+  "Sikh", "Other", "Prefer not to say"
+];
+
+const sexualOrientationOptions = [
+  "Heterosexual", "Gay/Lesbian", "Bisexual", "Other", "Prefer not to say"
+];
+
+const disabilityOptions = [
+    { id: 'learning', label: 'Learning disability' },
+    { id: 'mental', label: 'Mental health' },
+    { id: 'physical', label: 'Physical impairment' },
+    { id: 'illness', label: 'Long-standing illness' },
+    { id: 'no-known', label: 'No known disability' },
+]
 
 export default function EditProfilePage() {
   const router = useRouter();
@@ -43,104 +78,176 @@ export default function EditProfilePage() {
     }
   }, [params.id, router, toast]);
 
-  const handleUserChange = (field: keyof UserProfile, value: string) => {
+  const handleUserChange = (
+    field: keyof UserProfile,
+    value: string | string[]
+  ) => {
     setUser((prev) => (prev ? { ...prev, [field]: value } : null));
+  };
+  
+  const handleDisabilityChange = (checked: boolean, value: string) => {
+    setUser((prev) => {
+      if (!prev) return null;
+      const currentDisabilities = prev.disabilities || [];
+      if (checked) {
+        return {
+          ...prev,
+          disabilities: [...currentDisabilities.filter(d => d !== 'No known disability'), value],
+        };
+      } else {
+        return {
+          ...prev,
+          disabilities: currentDisabilities.filter((d) => d !== value),
+        };
+      }
+    });
+  };
+
+  const calculateAge = (dob: string | undefined): string => {
+    if (!dob) return '';
+    try {
+      const birthDate = new Date(dob);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      return age >= 0 ? age.toString() : '';
+    } catch {
+      return '';
+    }
   };
 
   const handleSaveChanges = () => {
-    // In a real app, you would save this to a backend.
-    // For now, we'll just show a toast and navigate back.
     if (user) {
-        console.log('Saving user:', user);
-        toast({
-            title: 'Profile Updated',
-            description: `Changes for ${user.name} have been saved.`,
-        });
-        router.push('/dashboard/settings');
+      console.log('Saving user:', user);
+      toast({
+        title: 'Profile Updated',
+        description: `Changes for ${user.name} have been saved.`,
+      });
+      router.push('/dashboard/settings');
     }
   };
-  
+
   if (!user) {
-      return <div>Loading...</div> // Or a skeleton loader
+    return <div>Loading...</div>; // Or a skeleton loader
   }
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-4xl">
       <Card>
         <CardHeader>
-            <CardTitle>Edit Profile</CardTitle>
-            <CardDescription>
-                Update personal information for {user.name}.
-            </CardDescription>
+          <CardTitle>Edit Profile</CardTitle>
+          <CardDescription>
+            Update personal information for {user.name}.
+          </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-            <div className="flex items-center gap-6">
-                <div className="flex flex-col items-center gap-2">
-                <Avatar className="h-24 w-24">
-                    <AvatarImage
-                    src={user.avatar}
-                    alt={user.name}
-                    data-ai-hint={user.hint}
-                    />
-                    <AvatarFallback>
-                    {user.name
-                        .split(' ')
-                        .map((n) => n[0])
-                        .join('')}
-                    </AvatarFallback>
-                </Avatar>
-                <Button variant="outline" size="sm">
-                    <Upload className="mr-2 h-4 w-4" />
-                    Upload
-                </Button>
+        <CardContent className="space-y-8">
+          {/* Section 1: Personal Details */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">1. Personal Details</h3>
+            <div className="grid grid-cols-1 gap-x-6 gap-y-4 rounded-lg border p-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="space-y-2 lg:col-span-1 sm:col-span-2">
+                    <Label htmlFor="title">Title</Label>
+                    <Select
+                    value={user.title}
+                    onValueChange={(value) => handleUserChange('title', value)}
+                    >
+                    <SelectTrigger><SelectValue placeholder="Select..." /></SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="Mr">Mr</SelectItem>
+                        <SelectItem value="Mrs">Mrs</SelectItem>
+                        <SelectItem value="Miss">Miss</SelectItem>
+                        <SelectItem value="Ms">Ms</SelectItem>
+                        <SelectItem value="Dr">Dr</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                    </SelectContent>
+                    </Select>
                 </div>
-                <div className="flex-grow space-y-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="name">Full Name</Label>
-                        <Input
-                        id="name"
-                        value={user.name}
-                        onChange={(e) => handleUserChange('name', e.target.value)}
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                        id="email"
-                        type="email"
-                        value={user.email || ''}
-                        onChange={(e) => handleUserChange('email', e.target.value)}
-                        disabled={user.relationship !== 'Primary'}
-                        />
-                    </div>
+                {user.title === 'Other' && (
+                <div className="space-y-2 lg:col-span-3 sm:col-span-2">
+                    <Label htmlFor="otherTitle">Other Title</Label>
+                    <Input id="otherTitle" value={user.otherTitle || ''} onChange={(e) => handleUserChange('otherTitle', e.target.value)} />
                 </div>
+                )}
+                 <div className="space-y-2 lg:col-span-2 sm:col-span-1"><Label htmlFor="firstName">First Name(s)</Label><Input id="firstName" value={user.firstName || ''} onChange={(e) => handleUserChange('firstName', e.target.value)}/></div>
+                 <div className="space-y-2"><Label htmlFor="middleNames">Middle Name(s)</Label><Input id="middleNames" value={user.middleNames || ''} onChange={(e) => handleUserChange('middleNames', e.target.value)} /></div>
+                 <div className="space-y-2"><Label htmlFor="surname">Surname</Label><Input id="surname" value={user.surname || ''} onChange={(e) => handleUserChange('surname', e.target.value)} /></div>
+                 <div className="space-y-2"><Label htmlFor="previousSurname">Previous Surname</Label><Input id="previousSurname" value={user.previousSurname || ''} onChange={(e) => handleUserChange('previousSurname', e.target.value)} /></div>
+                 <div className="space-y-2"><Label htmlFor="preferredName">Preferred Name</Label><Input id="preferredName" value={user.preferredName || ''} onChange={(e) => handleUserChange('preferredName', e.target.value)} /></div>
+                 <div className="space-y-2"><Label htmlFor="nhsNumber">NHS Number</Label><Input id="nhsNumber" value={user.nhsNumber || ''} onChange={(e) => handleUserChange('nhsNumber', e.target.value)} /></div>
+                 <div className="space-y-2"><Label htmlFor="dob">Date of Birth</Label><Input id="dob" type="date" value={user.dob || ''} onChange={(e) => handleUserChange('dob', e.target.value)} /></div>
+                 <div className="space-y-2"><Label htmlFor="age">Age</Label><Input id="age" value={calculateAge(user.dob)} disabled /></div>
+                 <div className="space-y-2"><Label>Gender</Label><RadioGroup value={user.gender} onValueChange={(value) => handleUserChange('gender', value)} className="flex gap-4"><div className="flex items-center space-x-2"><RadioGroupItem value="Male" id="male" /><Label htmlFor="male">Male</Label></div><div className="flex items-center space-x-2"><RadioGroupItem value="Female" id="female" /><Label htmlFor="female">Female</Label></div></RadioGroup></div>
+                 <div className="space-y-2"><Label>Gender Identity</Label><RadioGroup value={user.genderIdentity} onValueChange={(value) => handleUserChange('genderIdentity', value)} className="flex flex-wrap gap-4"><div className="flex items-center space-x-2"><RadioGroupItem value="Same as above" id="gi-same" /><Label htmlFor="gi-same">Same as above</Label></div><div className="flex items-center space-x-2"><RadioGroupItem value="Different" id="gi-different" /><Label htmlFor="gi-different">Different</Label></div><div className="flex items-center space-x-2"><RadioGroupItem value="Prefer not to say" id="gi-pnts" /><Label htmlFor="gi-pnts">Prefer not to say</Label></div></RadioGroup></div>
+                 {user.genderIdentity === 'Different' && (<div className="space-y-2"><Label htmlFor="genderIdentityOther">Please specify</Label><Input id="genderIdentityOther" value={user.genderIdentityOther || ''} onChange={(e) => handleUserChange('genderIdentityOther', e.target.value)} /></div>)}
+                 <div className="space-y-2"><Label htmlFor="preferredPronouns">Preferred Pronouns</Label><Input id="preferredPronouns" value={user.preferredPronouns || ''} onChange={(e) => handleUserChange('preferredPronouns', e.target.value)} /></div>
             </div>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                    <Label htmlFor="relationship">Relationship</Label>
-                    <Input
-                        id="relationship"
-                        value={user.relationship}
-                        onChange={(e) => handleUserChange('relationship', e.target.value)}
-                        disabled={user.relationship === 'Primary'}
-                    />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="dob">Date of Birth</Label>
-                    <Input
-                        id="dob"
-                        type="date"
-                        value={user.dob || ''}
-                        onChange={(e) => handleUserChange('dob', e.target.value)}
-                    />
-                </div>
+          </div>
+          
+          {/* Section 2: Contact Details */}
+          <div className="space-y-4">
+              <h3 className="text-lg font-semibold">2. Contact Details</h3>
+              <div className="space-y-4 rounded-lg border p-4">
+                  <div className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
+                    <div className="space-y-2 sm:col-span-2"><Label htmlFor="addressLine1">Address Line 1</Label><Input id="addressLine1" value={user.addressLine1 || ''} onChange={(e) => handleUserChange('addressLine1', e.target.value)} /></div>
+                    <div className="space-y-2 sm:col-span-2"><Label htmlFor="addressLine2">Address Line 2</Label><Input id="addressLine2" value={user.addressLine2 || ''} onChange={(e) => handleUserChange('addressLine2', e.target.value)} /></div>
+                    <div className="space-y-2"><Label htmlFor="townCity">Town/City</Label><Input id="townCity" value={user.townCity || ''} onChange={(e) => handleUserChange('townCity', e.target.value)} /></div>
+                    <div className="space-y-2"><Label htmlFor="county">County</Label><Input id="county" value={user.county || ''} onChange={(e) => handleUserChange('county', e.target.value)} /></div>
+                    <div className="space-y-2"><Label htmlFor="postcode">Postcode</Label><Input id="postcode" value={user.postcode || ''} onChange={(e) => handleUserChange('postcode', e.target.value)} /></div>
+                    <div className="space-y-2"><Label htmlFor="homeTel">Home Tel</Label><Input id="homeTel" value={user.homeTel || ''} onChange={(e) => handleUserChange('homeTel', e.target.value)} /></div>
+                    <div className="space-y-2"><Label htmlFor="mobileTel">Mobile Tel</Label><Input id="mobileTel" value={user.mobileTel || ''} onChange={(e) => handleUserChange('mobileTel', e.target.value)} /></div>
+                    <div className="space-y-2"><Label htmlFor="workTel">Work Tel</Label><Input id="workTel" value={user.workTel || ''} onChange={(e) => handleUserChange('workTel', e.target.value)} /></div>
+                    <div className="space-y-2 sm:col-span-2"><Label htmlFor="email">Email</Label><Input id="email" type="email" value={user.email || ''} onChange={(e) => handleUserChange('email', e.target.value)} disabled={user.relationship !== 'Primary'}/></div>
+                  </div>
+                  <div className="space-y-2"><Label>Preferred contact method</Label><RadioGroup value={user.preferredContactMethod} onValueChange={(value) => handleUserChange('preferredContactMethod', value)} className="flex flex-wrap gap-4"><div className="flex items-center space-x-2"><RadioGroupItem value="Phone" id="contact-phone" /><Label htmlFor="contact-phone">Phone</Label></div><div className="flex items-center space-x-2"><RadioGroupItem value="SMS" id="contact-sms" /><Label htmlFor="contact-sms">SMS</Label></div><div className="flex items-center space-x-2"><RadioGroupItem value="Email" id="contact-email" /><Label htmlFor="contact-email">Email</Label></div><div className="flex items-center space-x-2"><RadioGroupItem value="Letter" id="contact-letter" /><Label htmlFor="contact-letter">Letter</Label></div></RadioGroup></div>
+              </div>
+          </div>
+
+          {/* Section 3: NHS Equality Monitoring */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">3. NHS Equality Monitoring (Optional)</h3>
+            <div className="grid grid-cols-1 gap-x-6 gap-y-4 rounded-lg border p-4 sm:grid-cols-2">
+                 <div className="space-y-2"><Label htmlFor="countryOfBirth">Country of Birth</Label><Input id="countryOfBirth" value={user.countryOfBirth || ''} onChange={(e) => handleUserChange('countryOfBirth', e.target.value)} /></div>
+                 <div className="space-y-2"><Label htmlFor="nationality">Nationality</Label><Input id="nationality" value={user.nationality || ''} onChange={(e) => handleUserChange('nationality', e.target.value)} /></div>
+                 <div className="space-y-2"><Label>First Language</Label><RadioGroup value={user.firstLanguage} onValueChange={(value) => handleUserChange('firstLanguage', value)} className="flex gap-4"><div className="flex items-center space-x-2"><RadioGroupItem value="English" id="lang-en" /><Label htmlFor="lang-en">English</Label></div><div className="flex items-center space-x-2"><RadioGroupItem value="Other" id="lang-other" /><Label htmlFor="lang-other">Other</Label></div></RadioGroup></div>
+                 {user.firstLanguage === 'Other' && <div className="space-y-2"><Label htmlFor="firstLanguageOther">Please specify</Label><Input id="firstLanguageOther" value={user.firstLanguageOther || ''} onChange={(e) => handleUserChange('firstLanguageOther', e.target.value)} /></div>}
+                 <div className="space-y-2"><Label>Interpreter needed?</Label><RadioGroup value={user.interpreterNeeded} onValueChange={(value) => handleUserChange('interpreterNeeded', value)} className="flex gap-4"><div className="flex items-center space-x-2"><RadioGroupItem value="Yes" id="int-yes" /><Label htmlFor="int-yes">Yes</Label></div><div className="flex items-center space-x-2"><RadioGroupItem value="No" id="int-no" /><Label htmlFor="int-no">No</Label></div></RadioGroup></div>
+                 <div className="space-y-2 sm:col-span-2"><Label htmlFor="ethnicity">Ethnicity</Label><Select value={user.ethnicity} onValueChange={(value) => handleUserChange('ethnicity', value)}><SelectTrigger><SelectValue placeholder="Select..." /></SelectTrigger><SelectContent>{ethnicityOptions.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent></Select></div>
+                 <div className="space-y-2"><Label htmlFor="religion">Religion/Belief</Label><Select value={user.religion} onValueChange={(value) => handleUserChange('religion', value)}><SelectTrigger><SelectValue placeholder="Select..." /></SelectTrigger><SelectContent>{religionOptions.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent></Select></div>
+                 {user.religion === 'Other' && <div className="space-y-2"><Label htmlFor="religionOther">Please specify</Label><Input id="religionOther" value={user.religionOther || ''} onChange={(e) => handleUserChange('religionOther', e.target.value)} /></div>}
+                 <div className="space-y-2 sm:col-span-2"><Label htmlFor="sexualOrientation">Sexual Orientation</Label><Select value={user.sexualOrientation} onValueChange={(value) => handleUserChange('sexualOrientation', value)}><SelectTrigger><SelectValue placeholder="Select..." /></SelectTrigger><SelectContent>{sexualOrientationOptions.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent></Select></div>
+                 <div className="space-y-2 sm:col-span-2"><Label>Disability/Long-term health condition</Label><div className="space-y-2 rounded-md border p-4">{disabilityOptions.map(opt => (<div key={opt.id} className="flex items-center space-x-2"><Checkbox id={`dis-${opt.id}`} checked={user.disabilities?.includes(opt.label)} onCheckedChange={(checked) => handleDisabilityChange(Boolean(checked), opt.label)} /><Label htmlFor={`dis-${opt.id}`}>{opt.label}</Label></div>))}{user.disabilities?.includes('Other') && (<div className="space-y-2 pt-2"><Label htmlFor="disabilityOther">Please specify</Label><Input id="disabilityOther" value={user.disabilityOther || ''} onChange={(e) => handleUserChange('disabilityOther', e.target.value)} /></div>)}</div></div>
             </div>
+          </div>
+          
+          {/* Section 4: Emergency Contact */}
+          <div className="space-y-4">
+              <h3 className="text-lg font-semibold">4. Emergency Contact</h3>
+              <div className="grid grid-cols-1 gap-x-6 gap-y-4 rounded-lg border p-4 sm:grid-cols-2">
+                 <div className="space-y-2"><Label htmlFor="nextOfKinName">Next of Kin Name</Label><Input id="nextOfKinName" value={user.nextOfKinName || ''} onChange={(e) => handleUserChange('nextOfKinName', e.target.value)} /></div>
+                 <div className="space-y-2"><Label htmlFor="nextOfKinRelationship">Relationship</Label><Input id="nextOfKinRelationship" value={user.nextOfKinRelationship || ''} onChange={(e) => handleUserChange('nextOfKinRelationship', e.target.value)} /></div>
+                 <div className="space-y-2"><Label htmlFor="nextOfKinPhone">Phone</Label><Input id="nextOfKinPhone" value={user.nextOfKinPhone || ''} onChange={(e) => handleUserChange('nextOfKinPhone', e.target.value)} /></div>
+                 <div className="space-y-2"><Label htmlFor="nextOfKinAddress">Address (if different)</Label><Input id="nextOfKinAddress" value={user.nextOfKinAddress || ''} onChange={(e) => handleUserChange('nextOfKinAddress', e.target.value)} /></div>
+              </div>
+          </div>
+
+          {/* Section 5: GP Medical History */}
+          <div className="space-y-4">
+              <h3 className="text-lg font-semibold">5. GP Medical History</h3>
+              <div className="grid grid-cols-1 gap-x-6 gap-y-4 rounded-lg border p-4 sm:grid-cols-2">
+                 <div className="space-y-2"><Label htmlFor="currentGPPractice">Current GP Practice</Label><Input id="currentGPPractice" value={user.currentGPPractice || ''} onChange={(e) => handleUserChange('currentGPPractice', e.target.value)} /></div>
+                 <div className="space-y-2"><Label htmlFor="previousGPAddress">Previous GP Address</Label><Input id="previousGPAddress" value={user.previousGPAddress || ''} onChange={(e) => handleUserChange('previousGPAddress', e.target.value)} /></div>
+              </div>
+          </div>
+
         </CardContent>
         <CardFooter className="flex justify-end gap-2">
-            <Button variant="ghost" asChild>
-                <Link href="/dashboard/settings">Cancel</Link>
-            </Button>
-            <Button onClick={handleSaveChanges}>Save Changes</Button>
+          <Button variant="ghost" asChild>
+            <Link href="/dashboard/settings">Cancel</Link>
+          </Button>
+          <Button onClick={handleSaveChanges}>Save Changes</Button>
         </CardFooter>
       </Card>
     </div>
