@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from 'next/link';
@@ -75,7 +74,7 @@ export default function DashboardLayout({
             <Link href="/dashboard" className="flex items-center gap-2.5">
               <Logo className="size-9 shrink-0 text-primary" />
               <span className="min-w-0 text-xl font-semibold">
-                Health Passport
+                Medpass
               </span>
             </Link>
           </div>

@@ -80,7 +80,7 @@ export default function LoginPage() {
                 <Logo className="h-12 w-12 text-primary" />
             </Link>
             <h1 className="text-3xl font-bold tracking-tight">Welcome Back</h1>
-            <p className="mt-1 text-muted-foreground">Sign in to continue to Health Passport.</p>
+            <p className="mt-1 text-muted-foreground">Sign in to continue to Medpass.</p>
         </div>
         <Card>
           <CardHeader>

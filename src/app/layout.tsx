@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'MedPass',
+  title: 'Medpass',
   description: 'Your secure, digital health companion.',
 };
 

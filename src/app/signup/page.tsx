@@ -90,7 +90,7 @@ export default function SignupPage() {
             <Link href="/" className="mb-4">
                 <Logo className="h-12 w-12 text-primary" />
             </Link>
-            <h1 className="text-3xl font-bold tracking-tight">Create your Health Passport</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Create your Medpass</h1>
             <p className="mt-1 text-muted-foreground">Your secure, digital health companion.</p>
         </div>
         <Card>

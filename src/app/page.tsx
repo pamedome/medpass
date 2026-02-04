@@ -93,7 +93,7 @@ export default function LandingPage() {
         <div className="container flex h-14 items-center justify-between">
           <div className="flex items-center">
             <Logo className="mr-2 h-6 w-6 text-primary" />
-            <span className="font-bold">MedPass</span>
+            <span className="font-bold">Medpass</span>
           </div>
           <nav className="flex items-center space-x-2">
             <Button variant="ghost" asChild>
@@ -116,7 +116,7 @@ export default function LandingPage() {
               <span className="text-primary">Secure & Accessible.</span>
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-              Health Passport is your secure, digital health companion. Easily manage documents, track your medical history, and access vital information in emergencies.
+              Medpass is your secure, digital health companion. Easily manage documents, track your medical history, and access vital information in emergencies.
             </p>
             <div className="mt-10 flex flex-wrap justify-center gap-4">
               <Button size="lg" asChild>
@@ -191,7 +191,7 @@ export default function LandingPage() {
       <footer className="border-t">
         <div className="container flex flex-col items-center justify-between gap-4 py-6 md:flex-row">
             <p className="text-sm text-muted-foreground">
-                © {new Date().getFullYear()} Health Passport. All rights reserved.
+                © {new Date().getFullYear()} Medpass. All rights reserved.
             </p>
             <nav className="flex gap-4">
                 <Link href="#" className="text-sm hover:underline">Terms of Service</Link>
