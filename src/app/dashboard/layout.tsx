@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
+import Image from 'next/image';
 import {
   LayoutDashboard,
   FileText,
@@ -31,7 +32,6 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { Logo } from '@/components/logo';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -72,7 +72,12 @@ export default function DashboardLayout({
         <SidebarHeader>
           <div className="flex h-16 items-center justify-center gap-2.5 px-3">
             <Link href="/dashboard" className="flex items-center gap-2.5">
-              <Logo className="h-8 w-auto shrink-0 text-primary" />
+              <Image
+                src="https://placehold.co/170x40/16A385/FFFFFF/png?text=Medpass&font=inter"
+                width={136}
+                height={32}
+                alt="Medpass Logo"
+              />
             </Link>
           </div>
         </SidebarHeader>

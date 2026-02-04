@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Logo } from '@/components/logo';
 import { CheckCircle } from 'lucide-react';
 import {
   Card,
@@ -92,8 +91,12 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 items-center justify-between">
           <div className="flex items-center">
-            <Logo className="mr-2 h-6 w-6 text-primary" />
-            <span className="font-bold">Medpass</span>
+            <Image
+              src="https://placehold.co/170x40/16A385/FFFFFF/png?text=Medpass&font=inter"
+              width={102}
+              height={24}
+              alt="Medpass Logo"
+            />
           </div>
           <nav className="flex items-center space-x-2">
             <Button variant="ghost" asChild>

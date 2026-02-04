@@ -1,4 +1,4 @@
-import { Logo } from "@/components/logo"
+import Image from "next/image"
 
 export default function EmergencyAccessLayout({
   children,
@@ -9,8 +9,13 @@ export default function EmergencyAccessLayout({
     <div className="flex min-h-screen flex-col items-center bg-background text-foreground">
       <header className="w-full border-b py-4">
         <div className="container mx-auto flex items-center justify-center gap-2">
-            <Logo className="h-6 w-6 text-primary" />
-            <h1 className="text-xl font-bold">Medpass - Emergency Access</h1>
+            <Image
+                src="https://placehold.co/170x40/16A385/FFFFFF/png?text=Medpass&font=inter"
+                width={102}
+                height={24}
+                alt="Medpass Logo"
+              />
+            <h1 className="text-xl font-bold"> - Emergency Access</h1>
         </div>
       </header>
       <main className="flex-1 w-full container mx-auto p-4 md:p-8">

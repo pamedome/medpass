@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -24,7 +25,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Logo } from '@/components/logo';
 
 const signupSchema = z
   .object({
@@ -88,7 +88,12 @@ export default function SignupPage() {
       <div className="w-full max-w-sm">
         <div className="mb-6 flex flex-col items-center text-center">
             <Link href="/" className="mb-4">
-                <Logo className="h-12 w-12 text-primary" />
+                 <Image
+                    src="https://placehold.co/170x40/16A385/FFFFFF/png?text=Medpass&font=inter"
+                    width={204}
+                    height={48}
+                    alt="Medpass Logo"
+                />
             </Link>
             <h1 className="text-3xl font-bold tracking-tight">Create your Medpass</h1>
             <p className="mt-1 text-muted-foreground">Your secure, digital health companion.</p>
