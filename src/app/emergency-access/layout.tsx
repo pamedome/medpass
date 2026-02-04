@@ -11,8 +11,8 @@ export default function EmergencyAccessLayout({
         <div className="container mx-auto flex items-center justify-center gap-2">
             <Image
                 src="/logo.svg"
-                width={102}
-                height={24}
+                width={122}
+                height={29}
                 alt="Medpass Logo"
               />
             <h1 className="text-xl font-bold"> - Emergency Access</h1>

@@ -74,8 +74,8 @@ export default function DashboardLayout({
             <Link href="/dashboard" className="flex items-center gap-2.5">
               <Image
                 src="/logo.svg"
-                width={136}
-                height={32}
+                width={163}
+                height={38}
                 alt="Medpass Logo"
               />
             </Link>

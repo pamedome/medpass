@@ -90,8 +90,8 @@ export default function SignupPage() {
             <Link href="/" className="mb-4">
                  <Image
                     src="/logo.svg"
-                    width={204}
-                    height={48}
+                    width={235}
+                    height={55}
                     alt="Medpass Logo"
                 />
             </Link>
