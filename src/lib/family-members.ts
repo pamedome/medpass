@@ -17,8 +17,6 @@ export interface UserProfile {
   preferredName?: string;
   nhsNumber?: string;
   gender?: 'Male' | 'Female';
-  genderIdentity?: 'Same as above' | 'Different' | 'Prefer not to say';
-  genderIdentityOther?: string;
   preferredPronouns?: string;
 
   // 2. CONTACT DETAILS
@@ -30,7 +28,6 @@ export interface UserProfile {
   homeTel?: string;
   mobileTel?: string;
   workTel?: string;
-  preferredContactMethod?: 'Phone' | 'SMS' | 'Email' | 'Letter';
 
   // 3. NHS EQUALITY MONITORING
   countryOfBirth?: string;
@@ -39,9 +36,6 @@ export interface UserProfile {
   firstLanguageOther?: string;
   interpreterNeeded?: 'Yes' | 'No';
   ethnicity?: string;
-  religion?: string;
-  religionOther?: string;
-  sexualOrientation?: string;
   disabilities?: string[];
   disabilityOther?: string;
 
@@ -76,7 +70,6 @@ export const initialUsers: UserProfile[] = [
     county: 'Healthshire',
     postcode: 'MD1 1AA',
     mobileTel: '07123456789',
-    preferredContactMethod: 'Email',
     nextOfKinName: 'John Doe',
     nextOfKinRelationship: 'Spouse',
     nextOfKinPhone: '07123456780',

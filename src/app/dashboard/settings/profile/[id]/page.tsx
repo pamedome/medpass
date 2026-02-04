@@ -14,11 +14,8 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { initialUsers, UserProfile } from '@/lib/family-members';
-import { Separator } from '@/components/ui/separator';
 import {
   Select,
   SelectContent,
@@ -27,7 +24,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 
 const ethnicityOptions = [
@@ -35,15 +31,6 @@ const ethnicityOptions = [
   "Mixed White/Asian", "Asian Indian", "Asian Pakistani", "Asian Bangladeshi",
   "Asian Chinese", "Asian Other", "Black African", "Black Caribbean",
   "Black Other", "Arab", "Any Other", "Prefer not to say"
-];
-
-const religionOptions = [
-  "None", "Christian", "Buddhist", "Hindu", "Jewish", "Muslim",
-  "Sikh", "Other", "Prefer not to say"
-];
-
-const sexualOrientationOptions = [
-  "Heterosexual", "Gay/Lesbian", "Bisexual", "Other", "Prefer not to say"
 ];
 
 const disabilityOptions = [
@@ -180,8 +167,6 @@ export default function EditProfilePage() {
                  <div className="space-y-2"><Label htmlFor="dob">Date of Birth</Label><Input id="dob" type="date" value={user.dob || ''} onChange={(e) => handleUserChange('dob', e.target.value)} /></div>
                  <div className="space-y-2"><Label htmlFor="age">Age</Label><Input id="age" value={calculateAge(user.dob)} disabled /></div>
                  <div className="space-y-2"><Label>Gender</Label><RadioGroup value={user.gender} onValueChange={(value) => handleUserChange('gender', value)} className="flex gap-4"><div className="flex items-center space-x-2"><RadioGroupItem value="Male" id="male" /><Label htmlFor="male">Male</Label></div><div className="flex items-center space-x-2"><RadioGroupItem value="Female" id="female" /><Label htmlFor="female">Female</Label></div></RadioGroup></div>
-                 <div className="space-y-2"><Label>Gender Identity</Label><RadioGroup value={user.genderIdentity} onValueChange={(value) => handleUserChange('genderIdentity', value)} className="flex flex-wrap gap-4"><div className="flex items-center space-x-2"><RadioGroupItem value="Same as above" id="gi-same" /><Label htmlFor="gi-same">Same as above</Label></div><div className="flex items-center space-x-2"><RadioGroupItem value="Different" id="gi-different" /><Label htmlFor="gi-different">Different</Label></div><div className="flex items-center space-x-2"><RadioGroupItem value="Prefer not to say" id="gi-pnts" /><Label htmlFor="gi-pnts">Prefer not to say</Label></div></RadioGroup></div>
-                 {user.genderIdentity === 'Different' && (<div className="space-y-2"><Label htmlFor="genderIdentityOther">Please specify</Label><Input id="genderIdentityOther" value={user.genderIdentityOther || ''} onChange={(e) => handleUserChange('genderIdentityOther', e.target.value)} /></div>)}
                  <div className="space-y-2"><Label htmlFor="preferredPronouns">Preferred Pronouns</Label><Input id="preferredPronouns" value={user.preferredPronouns || ''} onChange={(e) => handleUserChange('preferredPronouns', e.target.value)} /></div>
             </div>
           </div>
@@ -201,7 +186,6 @@ export default function EditProfilePage() {
                     <div className="space-y-2"><Label htmlFor="workTel">Work Tel</Label><Input id="workTel" value={user.workTel || ''} onChange={(e) => handleUserChange('workTel', e.target.value)} /></div>
                     <div className="space-y-2 sm:col-span-2"><Label htmlFor="email">Email</Label><Input id="email" type="email" value={user.email || ''} onChange={(e) => handleUserChange('email', e.target.value)} disabled={user.relationship !== 'Primary'}/></div>
                   </div>
-                  <div className="space-y-2"><Label>Preferred contact method</Label><RadioGroup value={user.preferredContactMethod} onValueChange={(value) => handleUserChange('preferredContactMethod', value)} className="flex flex-wrap gap-4"><div className="flex items-center space-x-2"><RadioGroupItem value="Phone" id="contact-phone" /><Label htmlFor="contact-phone">Phone</Label></div><div className="flex items-center space-x-2"><RadioGroupItem value="SMS" id="contact-sms" /><Label htmlFor="contact-sms">SMS</Label></div><div className="flex items-center space-x-2"><RadioGroupItem value="Email" id="contact-email" /><Label htmlFor="contact-email">Email</Label></div><div className="flex items-center space-x-2"><RadioGroupItem value="Letter" id="contact-letter" /><Label htmlFor="contact-letter">Letter</Label></div></RadioGroup></div>
               </div>
           </div>
 
@@ -215,9 +199,6 @@ export default function EditProfilePage() {
                  {user.firstLanguage === 'Other' && <div className="space-y-2"><Label htmlFor="firstLanguageOther">Please specify</Label><Input id="firstLanguageOther" value={user.firstLanguageOther || ''} onChange={(e) => handleUserChange('firstLanguageOther', e.target.value)} /></div>}
                  <div className="space-y-2"><Label>Interpreter needed?</Label><RadioGroup value={user.interpreterNeeded} onValueChange={(value) => handleUserChange('interpreterNeeded', value)} className="flex gap-4"><div className="flex items-center space-x-2"><RadioGroupItem value="Yes" id="int-yes" /><Label htmlFor="int-yes">Yes</Label></div><div className="flex items-center space-x-2"><RadioGroupItem value="No" id="int-no" /><Label htmlFor="int-no">No</Label></div></RadioGroup></div>
                  <div className="space-y-2 sm:col-span-2"><Label htmlFor="ethnicity">Ethnicity</Label><Select value={user.ethnicity} onValueChange={(value) => handleUserChange('ethnicity', value)}><SelectTrigger><SelectValue placeholder="Select..." /></SelectTrigger><SelectContent>{ethnicityOptions.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent></Select></div>
-                 <div className="space-y-2"><Label htmlFor="religion">Religion/Belief</Label><Select value={user.religion} onValueChange={(value) => handleUserChange('religion', value)}><SelectTrigger><SelectValue placeholder="Select..." /></SelectTrigger><SelectContent>{religionOptions.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent></Select></div>
-                 {user.religion === 'Other' && <div className="space-y-2"><Label htmlFor="religionOther">Please specify</Label><Input id="religionOther" value={user.religionOther || ''} onChange={(e) => handleUserChange('religionOther', e.target.value)} /></div>}
-                 <div className="space-y-2 sm:col-span-2"><Label htmlFor="sexualOrientation">Sexual Orientation</Label><Select value={user.sexualOrientation} onValueChange={(value) => handleUserChange('sexualOrientation', value)}><SelectTrigger><SelectValue placeholder="Select..." /></SelectTrigger><SelectContent>{sexualOrientationOptions.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent></Select></div>
                  <div className="space-y-2 sm:col-span-2"><Label>Disability/Long-term health condition</Label><div className="space-y-2 rounded-md border p-4">{disabilityOptions.map(opt => (<div key={opt.id} className="flex items-center space-x-2"><Checkbox id={`dis-${opt.id}`} checked={user.disabilities?.includes(opt.label)} onCheckedChange={(checked) => handleDisabilityChange(Boolean(checked), opt.label)} /><Label htmlFor={`dis-${opt.id}`}>{opt.label}</Label></div>))}{user.disabilities?.includes('Other') && (<div className="space-y-2 pt-2"><Label htmlFor="disabilityOther">Please specify</Label><Input id="disabilityOther" value={user.disabilityOther || ''} onChange={(e) => handleUserChange('disabilityOther', e.target.value)} /></div>)}</div></div>
             </div>
           </div>
