@@ -162,28 +162,36 @@ export default function DashboardLayout({
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Notifications</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>
-                            <div className="flex flex-col">
-                                <span className="font-medium">New lab results available</span>
-                                <span className="text-xs text-muted-foreground">2 hours ago</span>
-                            </div>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                             <div className="flex flex-col">
-                                <span className="font-medium">Appointment reminder</span>
-                                <span className="text-xs text-muted-foreground">Dr. Smith tomorrow at 10 AM</span>
-                            </div>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                            <div className="flex flex-col">
-                                <span className="font-medium">Prescription ready</span>
-                                <span className="text-xs text-muted-foreground">Your prescription is ready for pickup.</span>
-                            </div>
-                        </DropdownMenuItem>
+                        <Link href="/dashboard/documents/doc1">
+                            <DropdownMenuItem>
+                                <div className="flex flex-col">
+                                    <span className="font-medium">New lab results available</span>
+                                    <span className="text-xs text-muted-foreground">2 hours ago</span>
+                                </div>
+                            </DropdownMenuItem>
+                        </Link>
+                        <Link href="/dashboard/appointments/appt-1">
+                            <DropdownMenuItem>
+                                <div className="flex flex-col">
+                                    <span className="font-medium">Appointment reminder</span>
+                                    <span className="text-xs text-muted-foreground">Dr. Sarah Johnson - Dec 1, 2024</span>
+                                </div>
+                            </DropdownMenuItem>
+                        </Link>
+                        <Link href="/dashboard/documents/doc3">
+                            <DropdownMenuItem>
+                                <div className="flex flex-col">
+                                    <span className="font-medium">Prescription ready</span>
+                                    <span className="text-xs text-muted-foreground">Your prescription is ready for pickup.</span>
+                                </div>
+                            </DropdownMenuItem>
+                        </Link>
                          <DropdownMenuSeparator />
-                         <DropdownMenuItem className="justify-center text-sm text-primary">
-                            View all notifications
-                         </DropdownMenuItem>
+                         <Link href="/dashboard/notifications">
+                            <DropdownMenuItem className="justify-center text-sm text-primary">
+                                View all notifications
+                            </DropdownMenuItem>
+                         </Link>
                     </DropdownMenuContent>
                 </DropdownMenu>
 
