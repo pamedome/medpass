@@ -1,21 +1,17 @@
-<svg width="170" height="40" viewBox="0 0 170 40" xmlns="http://www.w3.org/2000/svg">
-  <g transform="translate(5, 2)">
-    <g fill="#16a385" transform="skewX(-10)">
-        <circle cx="11" cy="8" r="4.5" />
-        <circle cx="25" cy="8" r="4.5" />
-        <rect x="6" y="15" width="10" height="18" rx="3" />
-        <rect x="20" y="15" width="10" height="18" rx="3" />
-    </g>
-    <text
-        x="45"
-        y="30"
-        font-family="Inter, sans-serif"
-        font-size="24"
-        font-weight="700"
-        letter-spacing="1"
-    >
-        <tspan fill="#16a385">MED</tspan>
-        <tspan fill="#80bf40">PASS</tspan>
-    </text>
+<svg viewBox="0 0 200 40" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .text { font: bold 26px 'Inter', sans-serif; }
+  </style>
+  <g transform="translate(0, 4)">
+    <!-- Icon part -->
+    <rect x="5" y="14" width="10" height="18" rx="2" fill="#14B8A6"/>
+    <rect x="17" y="14" width="10" height="18" rx="2" fill="#0D9488"/>
+    <circle cx="10" cy="8" r="4" fill="#14B8A6"/>
+    <circle cx="22" cy="8" r="4" fill="#0D9488"/>
   </g>
+  <!-- Text part -->
+  <text x="40" y="28" class="text">
+    <tspan fill="#0D9488">MED</tspan>
+    <tspan fill="#84CC16">PASS</tspan>
+  </text>
 </svg>
