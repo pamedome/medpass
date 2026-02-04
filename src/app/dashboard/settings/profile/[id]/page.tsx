@@ -33,8 +33,17 @@ const disabilityOptions = [
     { id: 'mental', label: 'Mental health' },
     { id: 'physical', label: 'Physical impairment' },
     { id: 'illness', label: 'Long-standing illness' },
+    { id: 'other', label: 'Other' },
     { id: 'no-known', label: 'No known disability' },
 ]
+
+const ethnicityOptions = [
+    'White',
+    'Mixed / Multiple ethnic groups',
+    'Asian / Asian British',
+    'Black / African / Caribbean / Black British',
+    'Other ethnic group'
+];
 
 const newMemberTemplate: UserProfile = {
     id: 0, // Temp id
