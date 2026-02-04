@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
+import { countries } from '@/lib/countries';
 
 const ethnicityOptions = [
   "White British", "White Irish", "White Other", "Mixed White/Black Caribbean",
@@ -193,8 +194,28 @@ export default function EditProfilePage() {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">3. NHS Equality Monitoring (Optional)</h3>
             <div className="grid grid-cols-1 gap-x-6 gap-y-4 rounded-lg border p-4 sm:grid-cols-2">
-                 <div className="space-y-2"><Label htmlFor="countryOfBirth">Country of Birth</Label><Input id="countryOfBirth" value={user.countryOfBirth || ''} onChange={(e) => handleUserChange('countryOfBirth', e.target.value)} /></div>
-                 <div className="space-y-2"><Label htmlFor="nationality">Nationality</Label><Input id="nationality" value={user.nationality || ''} onChange={(e) => handleUserChange('nationality', e.target.value)} /></div>
+                 <div className="space-y-2">
+                    <Label htmlFor="countryOfBirth">Country of Birth</Label>
+                    <Select value={user.countryOfBirth} onValueChange={(value) => handleUserChange('countryOfBirth', value)}>
+                        <SelectTrigger id="countryOfBirth"><SelectValue placeholder="Select a country..." /></SelectTrigger>
+                        <SelectContent>
+                            {countries.map(country => (
+                                <SelectItem key={country} value={country}>{country}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                 </div>
+                 <div className="space-y-2">
+                    <Label htmlFor="nationality">Nationality</Label>
+                    <Select value={user.nationality} onValueChange={(value) => handleUserChange('nationality', value)}>
+                        <SelectTrigger id="nationality"><SelectValue placeholder="Select a nationality..." /></SelectTrigger>
+                        <SelectContent>
+                            {countries.map(country => (
+                                <SelectItem key={country} value={country}>{country}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                 </div>
                  <div className="space-y-2"><Label>First Language</Label><RadioGroup value={user.firstLanguage} onValueChange={(value) => handleUserChange('firstLanguage', value)} className="flex gap-4"><div className="flex items-center space-x-2"><RadioGroupItem value="English" id="lang-en" /><Label htmlFor="lang-en">English</Label></div><div className="flex items-center space-x-2"><RadioGroupItem value="Other" id="lang-other" /><Label htmlFor="lang-other">Other</Label></div></RadioGroup></div>
                  {user.firstLanguage === 'Other' && <div className="space-y-2"><Label htmlFor="firstLanguageOther">Please specify</Label><Input id="firstLanguageOther" value={user.firstLanguageOther || ''} onChange={(e) => handleUserChange('firstLanguageOther', e.target.value)} /></div>}
                  <div className="space-y-2"><Label>Interpreter needed?</Label><RadioGroup value={user.interpreterNeeded} onValueChange={(value) => handleUserChange('interpreterNeeded', value)} className="flex gap-4"><div className="flex items-center space-x-2"><RadioGroupItem value="Yes" id="int-yes" /><Label htmlFor="int-yes">Yes</Label></div><div className="flex items-center space-x-2"><RadioGroupItem value="No" id="int-no" /><Label htmlFor="int-no">No</Label></div></RadioGroup></div>
