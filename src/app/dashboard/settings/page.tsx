@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 import {
   Card,
   CardContent,
@@ -10,11 +11,8 @@ import {
   CardTitle,
   CardFooter,
 } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Github,
-  Upload,
   MoreVertical,
   UserCheck,
   Edit,
@@ -39,77 +37,23 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { cn } from '@/lib/utils';
+import { initialUsers, UserProfile } from '@/lib/family-members';
 
-interface UserProfile {
-  id: number;
-  name: string;
-  email?: string;
-  relationship: string;
-  avatar: string;
-  hint: string;
-}
-
-const initialUsers: UserProfile[] = [
-  {
-    id: 1,
-    name: 'Jane Doe',
-    email: 'jane.doe@example.com',
-    relationship: 'Primary',
-    avatar: 'https://placehold.co/100x100/E0E0E0/BDBDBD.png',
-    hint: 'user avatar',
-  },
-  {
-    id: 2,
-    name: 'John Doe',
-    relationship: 'Spouse',
-    avatar: 'https://placehold.co/100x100/A9D5E5/333333.png',
-    hint: 'man smiling',
-  },
-  {
-    id: 3,
-    name: 'Jimmy Doe',
-    relationship: 'Child',
-    avatar: 'https://placehold.co/100x100/D4EDDA/333333.png',
-    hint: 'boy smiling',
-  },
-];
 
 export default function SettingsPage() {
+  const router = useRouter();
   const [isGithubConnected, setIsGithubConnected] = useState(false);
   const { toast } = useToast();
 
   const [users, setUsers] = useState<UserProfile[]>(initialUsers);
-  const [activeUser, setActiveUser] = useState<UserProfile>(initialUsers[0]);
-  const [isEditing, setIsEditing] = useState(true);
+  const [activeUser, setActiveUser] = useState<UserProfile>(initialUsers.find(u => u.relationship === 'Primary') || initialUsers[0]);
   const [userToDelete, setUserToDelete] = useState<UserProfile | null>(null);
 
-  const handleUserChange = (field: keyof UserProfile, value: string) => {
-    setActiveUser((prev) => ({ ...prev!, [field]: value }));
-  };
-
-  const handleSaveChanges = () => {
-    setUsers(users.map((u) => (u.id === activeUser.id ? activeUser : u)));
-    setIsEditing(false);
-    toast({
-      title: 'Profile Updated',
-      description: `Changes for ${activeUser.name} have been saved.`,
-    });
-  };
-
   const handleSwitchUser = (user: UserProfile) => {
-    if (isEditing) {
-      toast({
-        variant: 'destructive',
-        title: 'Unsaved Changes',
-        description:
-          'Please save or cancel your current changes before switching accounts.',
-      });
-      return;
-    }
     setActiveUser(user);
     toast({
       title: 'Account Switched',
-      description: `You are now viewing ${user.name}'s profile.`,
+      description: `You are now viewing the dashboard for ${user.name}.`,
     });
   };
 
@@ -121,11 +65,13 @@ export default function SettingsPage() {
       relationship: 'Family',
       avatar: 'https://placehold.co/100x100/CCCCCC/333333.png',
       hint: 'person outline',
+      dob: new Date().toISOString().split('T')[0],
     };
     setUsers([...users, newMember]);
+    router.push(`/dashboard/settings/profile/${newId}`);
     toast({
       title: 'Member Added',
-      description: 'A new family member profile has been created.',
+      description: 'You can now edit the new family member\'s profile.',
     });
   };
 
@@ -161,95 +107,10 @@ export default function SettingsPage() {
     <div className="grid gap-6">
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>Profile</CardTitle>
-              <CardDescription>
-                Update personal information for {activeUser.name}.
-              </CardDescription>
-            </div>
-            {isEditing ? (
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setIsEditing(false);
-                    // Reset changes by finding the original user state
-                    const originalUser = users.find(
-                      (u) => u.id === activeUser.id
-                    );
-                    if (originalUser) setActiveUser(originalUser);
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button onClick={handleSaveChanges}>Save Changes</Button>
-              </div>
-            ) : (
-              <Button
-                variant="outline"
-                onClick={() => setIsEditing(true)}
-              >
-                <Edit className="mr-2 h-4 w-4" /> Edit Profile
-              </Button>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-start gap-6">
-            <div className="flex flex-col items-center gap-2">
-              <Avatar className="h-24 w-24">
-                <AvatarImage
-                  src={activeUser.avatar}
-                  alt={activeUser.name}
-                  data-ai-hint={activeUser.hint}
-                />
-                <AvatarFallback>
-                  {activeUser.name
-                    .split(' ')
-                    .map((n) => n[0])
-                    .join('')}
-                </AvatarFallback>
-              </Avatar>
-              <Button variant="outline" size="sm" disabled={!isEditing}>
-                <Upload className="mr-2 h-4 w-4" />
-                Upload
-              </Button>
-            </div>
-            <div className="flex-grow space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input
-                  id="name"
-                  value={activeUser.name}
-                  onChange={(e) => handleUserChange('name', e.target.value)}
-                  disabled={!isEditing}
-                />
-              </div>
-              {activeUser.email && (
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={activeUser.email}
-                    onChange={(e) => handleUserChange('email', e.target.value)}
-                    disabled={
-                      !isEditing || activeUser.relationship !== 'Primary'
-                    }
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
           <CardTitle>Family Accounts</CardTitle>
           <CardDescription>
-            Switch between or manage profiles for your family members.
+            Manage profiles for your family members. You are currently viewing the dashboard for{' '}
+            <span className="font-semibold text-foreground">{activeUser.name}</span>.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -301,8 +162,7 @@ export default function SettingsPage() {
                   <DropdownMenuContent>
                     <DropdownMenuItem
                       onSelect={() => {
-                        handleSwitchUser(member);
-                        setIsEditing(true);
+                        router.push(`/dashboard/settings/profile/${member.id}`)
                       }}
                     >
                       <Edit className="mr-2 h-4 w-4" />
