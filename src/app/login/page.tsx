@@ -25,13 +25,29 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   password: z.string().min(1, { message: 'Password is required.' }),
 });
 
+const signupSchema = z
+  .object({
+    fullName: z.string().min(1, { message: 'Full name is required' }),
+    email: z.string().email({ message: 'Please enter a valid email address.' }),
+    password: z
+      .string()
+      .min(8, { message: 'Password must be at least 8 characters long.' }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  });
+
 type LoginFormValues = z.infer<typeof loginSchema>;
+type SignupFormValues = z.infer<typeof signupSchema>;
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -51,30 +67,35 @@ const OutlookIcon = (props: React.SVGProps<SVGSVGElement>) => (
     </svg>
 );
 
-export default function LoginPage() {
+export default function AuthPage() {
   const router = useRouter();
-  const form = useForm<LoginFormValues>({
+  const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
+    defaultValues: { email: '', password: '' },
   });
 
-  function onSubmit(data: LoginFormValues) {
+  const signupForm = useForm<SignupFormValues>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: { fullName: '', email: '', password: '', confirmPassword: '' },
+  });
+
+  function onLoginSubmit(data: LoginFormValues) {
     console.log(data);
-    // Simulate successful login
+    router.push('/dashboard');
+  }
+
+  function onSignupSubmit(data: SignupFormValues) {
+    console.log(data);
     router.push('/dashboard');
   }
 
   const handleSocialLogin = () => {
-    // Simulate successful social login
     router.push('/dashboard');
   };
-
+  
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
-       <div className="w-full max-w-sm">
+      <div className="w-full max-w-sm">
         <div className="mb-6 flex flex-col items-center text-center">
             <Link href="/" className="mb-4">
                 <Image
@@ -84,69 +105,153 @@ export default function LoginPage() {
                     alt="Medpass Logo"
                 />
             </Link>
-            <h1 className="text-3xl font-bold tracking-tight">Welcome Back</h1>
-            <p className="mt-1 text-muted-foreground">Sign in to continue to Medpass.</p>
         </div>
-        <Card>
-          <CardHeader>
-            <CardTitle className="sr-only">Login</CardTitle>
-            <CardDescription className="sr-only">
-              Enter your email below to login to your account.
-            </CardDescription>
-          </CardHeader>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <CardContent className="grid gap-4">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="name@example.com"
-                          type="email"
-                          autoCapitalize="none"
-                          autoComplete="email"
-                          autoCorrect="off"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center">
-                        <FormLabel>Password</FormLabel>
-                        <Link
-                          href="#"
-                          className="ml-auto inline-block text-sm underline"
-                        >
-                          Forgot your password?
-                        </Link>
-                      </div>
-                      <FormControl>
-                        <Input placeholder="••••••••" type="password" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-              <CardFooter className="flex flex-col gap-4">
-                <Button type="submit" className="w-full">
-                  Sign In
-                </Button>
-              </CardFooter>
-            </form>
-          </Form>
-        </Card>
+        
+        <Tabs defaultValue="login" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="login">Login</TabsTrigger>
+                <TabsTrigger value="signup">Sign Up</TabsTrigger>
+            </TabsList>
+            <TabsContent value="login">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-2xl">Welcome Back</CardTitle>
+                        <CardDescription>
+                            Sign in to continue to Medpass.
+                        </CardDescription>
+                    </CardHeader>
+                    <Form {...loginForm}>
+                        <form onSubmit={loginForm.handleSubmit(onLoginSubmit)}>
+                            <CardContent className="grid gap-4">
+                                <FormField
+                                control={loginForm.control}
+                                name="email"
+                                render={({ field }) => (
+                                    <FormItem>
+                                    <FormLabel>Email</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                        placeholder="name@example.com"
+                                        type="email"
+                                        autoCapitalize="none"
+                                        autoComplete="email"
+                                        autoCorrect="off"
+                                        {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                                />
+                                <FormField
+                                control={loginForm.control}
+                                name="password"
+                                render={({ field }) => (
+                                    <FormItem>
+                                    <div className="flex items-center">
+                                        <FormLabel>Password</FormLabel>
+                                        <Link
+                                        href="#"
+                                        className="ml-auto inline-block text-sm underline"
+                                        >
+                                        Forgot your password?
+                                        </Link>
+                                    </div>
+                                    <FormControl>
+                                        <Input placeholder="••••••••" type="password" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                                />
+                            </CardContent>
+                            <CardFooter>
+                                <Button type="submit" className="w-full">
+                                Sign In
+                                </Button>
+                            </CardFooter>
+                        </form>
+                    </Form>
+                </Card>
+            </TabsContent>
+            <TabsContent value="signup">
+                <Card>
+                     <CardHeader>
+                        <CardTitle className="text-2xl">Create your Medpass</CardTitle>
+                        <CardDescription>
+                             Your secure, digital health companion.
+                        </CardDescription>
+                    </CardHeader>
+                    <Form {...signupForm}>
+                        <form onSubmit={signupForm.handleSubmit(onSignupSubmit)}>
+                        <CardContent className="grid gap-4">
+                            <FormField
+                            control={signupForm.control}
+                            name="fullName"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel>Full Name</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="John Doe" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                            />
+                            <FormField
+                            control={signupForm.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel>Email</FormLabel>
+                                <FormControl>
+                                    <Input
+                                    placeholder="name@example.com"
+                                    type="email"
+                                    {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                            />
+                            <FormField
+                            control={signupForm.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel>Password</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="••••••••" type="password" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                            />
+                             <FormField
+                                control={signupForm.control}
+                                name="confirmPassword"
+                                render={({ field }) => (
+                                    <FormItem>
+                                    <FormLabel>Confirm Password</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="••••••••" type="password" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                                />
+                        </CardContent>
+                        <CardFooter>
+                            <Button type="submit" className="w-full">
+                            Create account
+                            </Button>
+                        </CardFooter>
+                        </form>
+                    </Form>
+                </Card>
+            </TabsContent>
+        </Tabs>
         
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
@@ -170,13 +275,6 @@ export default function LoginPage() {
             <OutlookIcon className="h-5 w-5" />
           </Button>
         </div>
-
-        <div className="mt-6 text-center text-sm text-muted-foreground">
-            Don&apos;t have an account?{' '}
-            <Link href="/signup" className="underline hover:text-primary">
-              Sign up
-            </Link>
-          </div>
       </div>
     </main>
   );
