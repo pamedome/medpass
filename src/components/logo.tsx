@@ -2,15 +2,34 @@ import type { SVGProps } from "react"
 
 export function Logo(props: SVGProps<SVGSVGElement>) {
   return (
-    <svg 
-      viewBox="0 0 52 52" 
-      fill="none" 
+    <svg
+      viewBox="0 0 170 40"
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <circle cx="26" cy="26" r="26" fill="currentColor"/>
-      <path d="M26 19V33" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
-      <path d="M19 26H33" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+      <g transform="translate(5, 2)">
+        {/* Icon */}
+        <g fill="hsl(var(--primary))" transform="skewX(-10)">
+            {/* Heads */}
+            <circle cx="11" cy="8" r="4.5" />
+            <circle cx="25" cy="8" r="4.5" />
+            {/* Bodies */}
+            <rect x="6" y="15" width="10" height="18" rx="3" />
+            <rect x="20" y="15" width="10" height="18" rx="3" />
+        </g>
+        {/* Text */}
+        <text
+            x="45"
+            y="30"
+            fontFamily="Inter, sans-serif"
+            fontSize="24"
+            fontWeight="700"
+            letterSpacing="1"
+        >
+            <tspan fill="hsl(var(--primary))">MED</tspan>
+            <tspan fill="hsl(var(--accent))">PASS</tspan>
+        </text>
+      </g>
     </svg>
   );
 }
