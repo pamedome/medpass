@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import {
   Card,
   CardContent,
@@ -72,8 +72,10 @@ const allAppointments = [
 ];
 const reportName = "Appointment Report";
 
-export default function AppointmentDetailsPage({ params: { id } }: { params: { id: string }}) {
+export default function AppointmentDetailsPage() {
   const router = useRouter();
+  const params = useParams();
+  const id = params.id as string;
   const [isShareOpen, setShareOpen] = useState(false);
 
   const currentIndex = allAppointments.findIndex(appt => appt.id === id);

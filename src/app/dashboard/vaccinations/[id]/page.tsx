@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import {
   Card,
   CardContent,
@@ -86,8 +86,10 @@ const InfoItem = ({ label, value }: { label: string; value: string | undefined }
     );
 }
 
-export default function VaccinationDetailsPage({ params: { id } }: { params: { id: string }}) {
+export default function VaccinationDetailsPage() {
   const router = useRouter();
+  const params = useParams();
+  const id = params.id as string;
   const [isShareOpen, setShareOpen] = useState(false);
 
   const currentIndex = allVaccinations.findIndex(vax => vax.id === id);
