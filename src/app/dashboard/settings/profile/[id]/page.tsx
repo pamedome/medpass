@@ -42,35 +42,92 @@ const disabilityOptions = [
     { id: 'no-known', label: 'No known disability' },
 ]
 
+const newMemberTemplate: UserProfile = {
+    id: 0, // Temp id
+    name: 'New Family Member',
+    relationship: 'Family',
+    avatar: 'https://placehold.co/100x100/CCCCCC/333333.png',
+    hint: 'person outline',
+    email: '',
+    dob: '',
+    title: '',
+    otherTitle: '',
+    firstName: '',
+    middleNames: '',
+    surname: '',
+    previousSurname: '',
+    preferredName: '',
+    nhsNumber: '',
+    gender: undefined,
+    preferredPronouns: '',
+    addressLine1: '',
+    addressLine2: '',
+    townCity: '',
+    county: '',
+    postcode: '',
+    homeTel: '',
+    mobileTel: '',
+    workTel: '',
+    countryOfBirth: undefined,
+    nationality: undefined,
+    firstLanguage: undefined,
+    firstLanguageOther: '',
+    interpreterNeeded: undefined,
+    ethnicity: undefined,
+    disabilities: [],
+    disabilityOther: '',
+    nextOfKinName: '',
+    nextOfKinRelationship: '',
+    nextOfKinPhone: '',
+    nextOfKinAddress: '',
+    currentGPPractice: '',
+    previousGPAddress: '',
+};
+
+
 export default function EditProfilePage() {
   const router = useRouter();
   const params = useParams();
   const { toast } = useToast();
   const [user, setUser] = useState<UserProfile | null>(null);
 
+  const isNew = params.id === 'new';
+
   useEffect(() => {
     if (!params.id) {
       return;
     }
-    const userId = parseInt(params.id as string, 10);
-    const userToEdit = initialUsers.find((u) => u.id === userId);
-    if (userToEdit) {
-      setUser(userToEdit);
+    
+    if (isNew) {
+        setUser(newMemberTemplate);
     } else {
-      toast({
-        variant: 'destructive',
-        title: 'User not found',
-        description: 'The profile you are trying to edit does not exist.',
-      });
-      router.push('/dashboard/settings');
+        const userId = parseInt(params.id as string, 10);
+        const userToEdit = initialUsers.find((u) => u.id === userId);
+        if (userToEdit) {
+          setUser(userToEdit);
+        } else {
+          toast({
+            variant: 'destructive',
+            title: 'User not found',
+            description: 'The profile you are trying to edit does not exist.',
+          });
+          router.push('/dashboard/settings');
+        }
     }
-  }, [params.id, router, toast]);
+  }, [params.id, router, toast, isNew]);
 
   const handleUserChange = (
     field: keyof UserProfile,
     value: string | string[]
   ) => {
-    setUser((prev) => (prev ? { ...prev, [field]: value } : null));
+    setUser((prev) => {
+        if (!prev) return null;
+        const updatedUser = { ...prev, [field]: value };
+        if (field === 'firstName' || field === 'surname') {
+            updatedUser.name = `${updatedUser.firstName || ''} ${updatedUser.surname || ''}`.trim();
+        }
+        return updatedUser;
+      });
   };
   
   const handleDisabilityChange = (checked: boolean, value: string) => {
@@ -109,13 +166,30 @@ export default function EditProfilePage() {
 
   const handleSaveChanges = () => {
     if (user) {
-      console.log('Saving user:', user);
-      toast({
-        title: 'Profile Updated',
-        description: `Changes for ${user.name} have been saved.`,
-      });
-      router.push('/dashboard/settings');
-    }
+        const finalUser = {
+            ...user,
+            name: `${user.firstName || ''} ${user.surname || ''}`.trim() || (isNew ? 'New Family Member' : user.name)
+        };
+
+        if (isNew) {
+          const newId = Math.max(0, ...initialUsers.map((u) => u.id)) + 1;
+          initialUsers.push({ ...finalUser, id: newId });
+          toast({
+            title: 'Member Added',
+            description: `${finalUser.name} has been added to your family.`,
+          });
+        } else {
+          const userIndex = initialUsers.findIndex(u => u.id === finalUser.id);
+          if (userIndex !== -1) {
+            initialUsers[userIndex] = finalUser;
+            toast({
+              title: 'Profile Updated',
+              description: `Changes for ${finalUser.name} have been saved.`,
+            });
+          }
+        }
+        router.push('/dashboard/settings');
+      }
   };
 
   if (!user) {
@@ -126,9 +200,9 @@ export default function EditProfilePage() {
     <div className="mx-auto max-w-4xl">
       <Card>
         <CardHeader>
-          <CardTitle>Edit Profile</CardTitle>
+          <CardTitle>{isNew ? 'Add Family Member' : 'Edit Profile'}</CardTitle>
           <CardDescription>
-            Update personal information for {user.name}.
+            {isNew ? 'Enter the details for the new family member.' : `Update personal information for ${user.name}.`}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-8">
@@ -185,7 +259,7 @@ export default function EditProfilePage() {
                     <div className="space-y-2"><Label htmlFor="homeTel">Home Tel</Label><Input id="homeTel" value={user.homeTel || ''} onChange={(e) => handleUserChange('homeTel', e.target.value)} /></div>
                     <div className="space-y-2"><Label htmlFor="mobileTel">Mobile Tel</Label><Input id="mobileTel" value={user.mobileTel || ''} onChange={(e) => handleUserChange('mobileTel', e.target.value)} /></div>
                     <div className="space-y-2"><Label htmlFor="workTel">Work Tel</Label><Input id="workTel" value={user.workTel || ''} onChange={(e) => handleUserChange('workTel', e.target.value)} /></div>
-                    <div className="space-y-2 sm:col-span-2"><Label htmlFor="email">Email</Label><Input id="email" type="email" value={user.email || ''} onChange={(e) => handleUserChange('email', e.target.value)} disabled={user.relationship !== 'Primary'}/></div>
+                    <div className="space-y-2 sm:col-span-2"><Label htmlFor="email">Email</Label><Input id="email" type="email" value={user.email || ''} onChange={(e) => handleUserChange('email', e.target.value)} disabled={user.relationship !== 'Primary' && !isNew}/></div>
                   </div>
               </div>
           </div>

@@ -50,7 +50,7 @@ export interface UserProfile {
   previousGPAddress?: string;
 }
 
-export const initialUsers: UserProfile[] = [
+export let initialUsers: UserProfile[] = [
   {
     id: 1,
     name: 'Jane Doe',

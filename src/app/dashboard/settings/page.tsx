@@ -58,21 +58,7 @@ export default function SettingsPage() {
   };
 
   const handleAddMember = () => {
-    const newId = Math.max(...users.map((u) => u.id)) + 1;
-    const newMember: UserProfile = {
-      id: newId,
-      name: 'New Family Member',
-      relationship: 'Family',
-      avatar: 'https://placehold.co/100x100/CCCCCC/333333.png',
-      hint: 'person outline',
-      dob: new Date().toISOString().split('T')[0],
-    };
-    setUsers([...users, newMember]);
-    router.push(`/dashboard/settings/profile/${newId}`);
-    toast({
-      title: 'Member Added',
-      description: 'You can now edit the new family member\'s profile.',
-    });
+    router.push('/dashboard/settings/profile/new');
   };
 
   const handleDeleteUser = (user: UserProfile) => {
@@ -89,15 +75,22 @@ export default function SettingsPage() {
 
   const confirmDeleteUser = () => {
     if (userToDelete) {
-      setUsers(users.filter((u) => u.id !== userToDelete.id));
+      const index = initialUsers.findIndex(u => u.id === userToDelete.id);
+      if (index > -1) {
+        initialUsers.splice(index, 1);
+      }
+      setUsers([...initialUsers]);
+
       toast({
         title: 'Member Removed',
         description: `${userToDelete.name} has been removed from the family.`,
       });
+
       if (activeUser.id === userToDelete.id) {
-        setActiveUser(
-          users.find((u) => u.relationship === 'Primary') || users[0]
-        );
+        const newActiveUser = initialUsers.find((u) => u.relationship === 'Primary') || initialUsers[0];
+        if (newActiveUser) {
+          setActiveUser(newActiveUser);
+        }
       }
       setUserToDelete(null);
     }
