@@ -92,7 +92,7 @@ export default function LandingPage() {
         <div className="container flex h-14 items-center justify-between">
           <div className="flex items-center">
             <Image
-              src="https://placehold.co/170x40/16A385/FFFFFF/png?text=Medpass&font=inter"
+              src="/logo.svg"
               width={102}
               height={24}
               alt="Medpass Logo"

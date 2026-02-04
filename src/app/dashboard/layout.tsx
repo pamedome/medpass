@@ -73,7 +73,7 @@ export default function DashboardLayout({
           <div className="flex h-16 items-center justify-center gap-2.5 px-3">
             <Link href="/dashboard" className="flex items-center gap-2.5">
               <Image
-                src="https://placehold.co/170x40/16A385/FFFFFF/png?text=Medpass&font=inter"
+                src="/logo.svg"
                 width={136}
                 height={32}
                 alt="Medpass Logo"

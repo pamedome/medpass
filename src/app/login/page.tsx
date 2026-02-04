@@ -78,7 +78,7 @@ export default function LoginPage() {
         <div className="mb-6 flex flex-col items-center text-center">
             <Link href="/" className="mb-4">
                 <Image
-                    src="https://placehold.co/170x40/16A385/FFFFFF/png?text=Medpass&font=inter"
+                    src="/logo.svg"
                     width={204}
                     height={48}
                     alt="Medpass Logo"

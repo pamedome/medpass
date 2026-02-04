@@ -10,7 +10,7 @@ export default function EmergencyAccessLayout({
       <header className="w-full border-b py-4">
         <div className="container mx-auto flex items-center justify-center gap-2">
             <Image
-                src="https://placehold.co/170x40/16A385/FFFFFF/png?text=Medpass&font=inter"
+                src="/logo.svg"
                 width={102}
                 height={24}
                 alt="Medpass Logo"
