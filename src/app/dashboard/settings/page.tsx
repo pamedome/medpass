@@ -80,7 +80,7 @@ export default function SettingsPage() {
 
   const [users, setUsers] = useState<UserProfile[]>(initialUsers);
   const [activeUser, setActiveUser] = useState<UserProfile>(initialUsers[0]);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(true);
   const [userToDelete, setUserToDelete] = useState<UserProfile | null>(null);
 
   const handleUserChange = (field: keyof UserProfile, value: string) => {
