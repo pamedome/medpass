@@ -26,13 +26,7 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { countries } from '@/lib/countries';
-
-const ethnicityOptions = [
-  "White British", "White Irish", "White Other", "Mixed White/Black Caribbean",
-  "Mixed White/Asian", "Asian Indian", "Asian Pakistani", "Asian Bangladeshi",
-  "Asian Chinese", "Asian Other", "Black African", "Black Caribbean",
-  "Black Other", "Arab", "Any Other", "Prefer not to say"
-];
+import { Textarea } from '@/components/ui/textarea';
 
 const disabilityOptions = [
     { id: 'learning', label: 'Learning disability' },
@@ -68,6 +62,12 @@ const newMemberTemplate: UserProfile = {
     homeTel: '',
     mobileTel: '',
     workTel: '',
+    bloodGroup: '',
+    genotype: '',
+    height: '',
+    weight: '',
+    bmi: '',
+    allergies: '',
     countryOfBirth: undefined,
     nationality: undefined,
     firstLanguage: undefined,
@@ -263,10 +263,26 @@ export default function EditProfilePage() {
                   </div>
               </div>
           </div>
-
-          {/* Section 3: NHS Equality Monitoring */}
+          
+          {/* Section 3: Health & Medical */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">3. NHS Equality Monitoring (Optional)</h3>
+            <h3 className="text-lg font-semibold">3. Health & Medical</h3>
+            <div className="grid grid-cols-1 gap-x-6 gap-y-4 rounded-lg border p-4 sm:grid-cols-2 lg:grid-cols-3">
+                 <div className="space-y-2"><Label htmlFor="bloodGroup">Blood Group</Label><Input id="bloodGroup" value={user.bloodGroup || ''} onChange={(e) => handleUserChange('bloodGroup', e.target.value)} /></div>
+                 <div className="space-y-2"><Label htmlFor="genotype">Genotype</Label><Input id="genotype" value={user.genotype || ''} onChange={(e) => handleUserChange('genotype', e.target.value)} /></div>
+                 <div className="space-y-2"><Label htmlFor="height">Height</Label><Input id="height" value={user.height || ''} onChange={(e) => handleUserChange('height', e.target.value)} /></div>
+                 <div className="space-y-2"><Label htmlFor="weight">Weight</Label><Input id="weight" value={user.weight || ''} onChange={(e) => handleUserChange('weight', e.target.value)} /></div>
+                 <div className="space-y-2"><Label htmlFor="bmi">BMI</Label><Input id="bmi" value={user.bmi || ''} onChange={(e) => handleUserChange('bmi', e.target.value)} /></div>
+                 <div className="space-y-2 sm:col-span-2 lg:col-span-3">
+                    <Label htmlFor="allergies">Allergies</Label>
+                    <Textarea id="allergies" value={user.allergies || ''} onChange={(e) => handleUserChange('allergies', e.target.value)} placeholder="e.g., Penicillin, Peanuts" />
+                </div>
+            </div>
+          </div>
+
+          {/* Section 4: NHS Equality Monitoring */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">4. NHS Equality Monitoring (Optional)</h3>
             <div className="grid grid-cols-1 gap-x-6 gap-y-4 rounded-lg border p-4 sm:grid-cols-2">
                  <div className="space-y-2">
                     <Label htmlFor="countryOfBirth">Country of Birth</Label>
@@ -298,9 +314,9 @@ export default function EditProfilePage() {
             </div>
           </div>
           
-          {/* Section 4: Emergency Contact */}
+          {/* Section 5: Emergency Contact */}
           <div className="space-y-4">
-              <h3 className="text-lg font-semibold">4. Emergency Contact</h3>
+              <h3 className="text-lg font-semibold">5. Emergency Contact</h3>
               <div className="grid grid-cols-1 gap-x-6 gap-y-4 rounded-lg border p-4 sm:grid-cols-2">
                  <div className="space-y-2"><Label htmlFor="nextOfKinName">Next of Kin Name</Label><Input id="nextOfKinName" value={user.nextOfKinName || ''} onChange={(e) => handleUserChange('nextOfKinName', e.target.value)} /></div>
                  <div className="space-y-2"><Label htmlFor="nextOfKinRelationship">Relationship</Label><Input id="nextOfKinRelationship" value={user.nextOfKinRelationship || ''} onChange={(e) => handleUserChange('nextOfKinRelationship', e.target.value)} /></div>
@@ -309,9 +325,9 @@ export default function EditProfilePage() {
               </div>
           </div>
 
-          {/* Section 5: GP Medical History */}
+          {/* Section 6: GP Medical History */}
           <div className="space-y-4">
-              <h3 className="text-lg font-semibold">5. GP Medical History</h3>
+              <h3 className="text-lg font-semibold">6. GP Medical History</h3>
               <div className="grid grid-cols-1 gap-x-6 gap-y-4 rounded-lg border p-4 sm:grid-cols-2">
                  <div className="space-y-2"><Label htmlFor="currentGPPractice">Current GP Practice</Label><Input id="currentGPPractice" value={user.currentGPPractice || ''} onChange={(e) => handleUserChange('currentGPPractice', e.target.value)} /></div>
                  <div className="space-y-2"><Label htmlFor="previousGPAddress">Previous GP Address</Label><Input id="previousGPAddress" value={user.previousGPAddress || ''} onChange={(e) => handleUserChange('previousGPAddress', e.target.value)} /></div>

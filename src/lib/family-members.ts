@@ -29,7 +29,15 @@ export interface UserProfile {
   mobileTel?: string;
   workTel?: string;
 
-  // 3. NHS EQUALITY MONITORING
+  // 3. Health & Medical
+  bloodGroup?: string;
+  genotype?: string;
+  height?: string;
+  weight?: string;
+  bmi?: string;
+  allergies?: string;
+
+  // 4. NHS EQUALITY MONITORING
   countryOfBirth?: string;
   nationality?: string;
   firstLanguage?: 'English' | 'Other';
@@ -39,13 +47,13 @@ export interface UserProfile {
   disabilities?: string[];
   disabilityOther?: string;
 
-  // 4. EMERGENCY CONTACT
+  // 5. EMERGENCY CONTACT
   nextOfKinName?: string;
   nextOfKinRelationship?: string;
   nextOfKinPhone?: string;
   nextOfKinAddress?: string;
 
-  // 5. GP MEDICAL HISTORY
+  // 6. GP MEDICAL HISTORY
   currentGPPractice?: string;
   previousGPAddress?: string;
 }
@@ -70,6 +78,11 @@ export let initialUsers: UserProfile[] = [
     county: 'Healthshire',
     postcode: 'MD1 1AA',
     mobileTel: '07123456789',
+    bloodGroup: 'O+',
+    height: "5' 7\"",
+    weight: '140 lbs',
+    bmi: '21.9',
+    allergies: 'Penicillin, Peanuts',
     nextOfKinName: 'John Doe',
     nextOfKinRelationship: 'Spouse',
     nextOfKinPhone: '07123456780',
