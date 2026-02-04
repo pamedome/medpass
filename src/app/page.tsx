@@ -1,5 +1,4 @@
 
-
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -91,12 +90,9 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 items-center justify-between">
           <div className="flex items-center">
-            <Image
-              src="/logo.svg"
-              width={122}
-              height={29}
-              alt="Medpass Logo"
-            />
+            <Link href="/" className="flex items-center gap-2">
+              <Image src="/logo.svg" width={163} height={38} alt="Medpass Logo" className="h-10 w-auto" />
+            </Link>
           </div>
           <nav className="flex items-center space-x-2">
             <Button variant="ghost" asChild>
@@ -141,10 +137,10 @@ export default function LandingPage() {
                 From uploading documents to generating an emergency QR code, we've built a comprehensive suite of tools to help you take control of your health information.
               </p>
             </div>
-            <div className="mx-auto mt-12 grid max-w-4xl gap-8 text-left sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mx-auto mt-12 grid max-w-5xl gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {features.map((feature) => (
-                <div key={feature} className="flex items-start space-x-4">
-                  <CheckCircle className="mt-1 h-6 w-6 flex-shrink-0 text-primary" />
+                <div key={feature} className="flex flex-col items-center gap-4 text-center">
+                  <CheckCircle className="h-8 w-8 text-primary" />
                   <div>
                     <h3 className="font-semibold">{feature}</h3>
                     <p className="text-sm text-muted-foreground">
