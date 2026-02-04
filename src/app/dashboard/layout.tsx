@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import * as React from 'react';
 import Image from 'next/image';
 import {
@@ -43,6 +43,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
+import { notificationsData, Notification } from '@/lib/notifications';
+import { Badge } from '@/components/ui/badge';
 
 const menuItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -64,7 +66,20 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = React.useState('');
+  const [notifications, setNotifications] = React.useState<Notification[]>(notificationsData);
+
+  const unreadNotifications = notifications.filter(n => !n.read);
+
+  const handleNotificationClick = (notification: Notification) => {
+    setNotifications(currentNotifications =>
+      currentNotifications.map(n =>
+        n.id === notification.id ? { ...n, read: true } : n
+      )
+    );
+    router.push(notification.href);
+  };
 
   return (
     <SidebarProvider>
@@ -74,8 +89,8 @@ export default function DashboardLayout({
             <Link href="/dashboard" className="flex items-center gap-2.5">
               <Image
                 src="/logo.svg"
-                width={163}
-                height={38}
+                width={200}
+                height={46}
                 alt="Medpass Logo"
               />
             </Link>
@@ -154,44 +169,42 @@ export default function DashboardLayout({
                 </Button>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="rounded-full">
+                        <Button variant="ghost" size="icon" className="relative rounded-full">
+                             {unreadNotifications.length > 0 && (
+                                <Badge
+                                variant="destructive"
+                                className="absolute -top-1 -right-1 h-4 w-4 justify-center p-0 text-xs"
+                                >
+                                {unreadNotifications.length}
+                                </Badge>
+                            )}
                             <Bell className="size-5" />
                             <span className="sr-only">Notifications</span>
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
+                    <DropdownMenuContent align="end" className="w-80">
                         <DropdownMenuLabel>Notifications</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <Link href="/dashboard/documents/doc1">
-                            <DropdownMenuItem>
+                        {unreadNotifications.length > 0 ? (
+                           unreadNotifications.map((notification) => (
+                             <DropdownMenuItem key={notification.id} onSelect={() => handleNotificationClick(notification)} className="cursor-pointer">
                                 <div className="flex flex-col">
-                                    <span className="font-medium">New lab results available</span>
-                                    <span className="text-xs text-muted-foreground">2 hours ago</span>
+                                    <span className="font-medium">{notification.title}</span>
+                                    <span className="text-xs text-muted-foreground">{notification.date}</span>
                                 </div>
                             </DropdownMenuItem>
-                        </Link>
-                        <Link href="/dashboard/appointments/appt-1">
-                            <DropdownMenuItem>
-                                <div className="flex flex-col">
-                                    <span className="font-medium">Appointment reminder</span>
-                                    <span className="text-xs text-muted-foreground">Dr. Sarah Johnson - Dec 1, 2024</span>
-                                </div>
-                            </DropdownMenuItem>
-                        </Link>
-                        <Link href="/dashboard/documents/doc3">
-                            <DropdownMenuItem>
-                                <div className="flex flex-col">
-                                    <span className="font-medium">Prescription ready</span>
-                                    <span className="text-xs text-muted-foreground">Your prescription is ready for pickup.</span>
-                                </div>
-                            </DropdownMenuItem>
-                        </Link>
+                           ))
+                        ) : (
+                            <div className="p-4 text-center text-sm text-muted-foreground">
+                                No new notifications
+                            </div>
+                        )}
                          <DropdownMenuSeparator />
-                         <Link href="/dashboard/notifications">
-                            <DropdownMenuItem className="justify-center text-sm text-primary">
+                         <DropdownMenuItem asChild className="justify-center text-sm text-primary cursor-pointer">
+                            <Link href="/dashboard/notifications">
                                 View all notifications
-                            </DropdownMenuItem>
-                         </Link>
+                            </Link>
+                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
 
