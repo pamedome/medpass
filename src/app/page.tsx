@@ -91,7 +91,7 @@ export default function LandingPage() {
         <div className="container flex h-14 items-center justify-between">
           <div className="flex items-center">
             <Link href="/" className="flex items-center gap-2">
-              <Image src="/logo.svg" width={163} height={38} alt="Medpass Logo" className="h-10 w-auto" />
+              <Image src="/logo.svg" width={200} height={46} alt="Medpass Logo" className="h-12 w-auto" />
             </Link>
           </div>
           <nav className="flex items-center space-x-2">
@@ -99,7 +99,7 @@ export default function LandingPage() {
               <Link href="/login">Log In</Link>
             </Button>
             <Button asChild>
-              <Link href="/login">Sign Up</Link>
+              <Link href="/auth/signup/account">Sign Up</Link>
             </Button>
           </nav>
         </div>
@@ -119,7 +119,7 @@ export default function LandingPage() {
             </p>
             <div className="mt-10 flex flex-wrap justify-center gap-4">
               <Button size="lg" asChild>
-                <Link href="/login">Get Started for Free</Link>
+                <Link href="/auth/signup/account">Get Started for Free</Link>
               </Button>
               <Button size="lg" variant="outline">
                 Learn More
@@ -130,7 +130,7 @@ export default function LandingPage() {
 
         {/* Feature Section */}
         <section id="features" className="bg-muted py-20 sm:py-24">
-          <div className="container">
+          <div className="container text-center">
             <div className="mx-auto max-w-2xl text-center">
               <h2 className="text-3xl font-bold">All-in-One Health Management</h2>
               <p className="mt-4 text-muted-foreground">
@@ -180,7 +180,7 @@ export default function LandingPage() {
                  </p>
                  <div className="mt-8">
                      <Button size="lg" asChild>
-                        <Link href="/login">Create Your Free Account</Link>
+                        <Link href="/auth/signup/account">Create Your Free Account</Link>
                      </Button>
                  </div>
             </div>
