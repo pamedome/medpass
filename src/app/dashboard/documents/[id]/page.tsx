@@ -30,135 +30,7 @@ import {
 } from '@/components/ui/table';
 import Link from 'next/link';
 import { ShareDialog } from '@/components/share-dialog';
-import placeholderImages from '@/lib/placeholder-images.json';
-
-// Mock data for all documents
-const allDocuments = [
-  {
-    id: 'doc1',
-    name: 'Annual Check-up Results',
-    type: 'Lab Report',
-    date: '2023-10-18',
-    tags: ['lab-results', 'check-up', 'annual', 'physical-exam'],
-    patientInfo: { name: 'Jane Doe', dob: '1990-05-21', patientId: 'JD-12345' },
-    reportInfo: { reportId: 'RPT-98765', issuedBy: 'Dr. Emily Carter', facility: 'Central City Clinic', time: '09:45 AM' },
-    vitalSigns: { bloodPressure: '120/80 mmHg', heartRate: '72 bpm', temperature: '98.6°F (37°C)', respiratoryRate: '16 breaths/min' },
-    labResults: [
-      { test: 'Total Cholesterol', value: '210 mg/dL', range: 'Below 200 mg/dL', status: 'High' },
-      { test: 'LDL Cholesterol', value: '140 mg/dL', range: 'Below 130 mg/dL', status: 'High' },
-      { test: 'HDL Cholesterol', value: '60 mg/dL', range: 'Above 40 mg/dL', status: 'Normal' },
-      { test: 'Triglycerides', value: '110 mg/dL', range: 'Below 150 mg/dL', status: 'Normal' },
-      { test: 'Blood Glucose', value: '90 mg/dL', range: '70-100 mg/dL', status: 'Normal' },
-    ],
-    assessment: 'Patient appears to be in good health overall, though cholesterol levels are slightly elevated. Vitals are stable. No other acute issues identified.',
-    recommendations: 'Recommend dietary consultation to manage cholesterol. Continue with regular exercise. Re-test cholesterol in 3 months. Schedule next annual physical exam in one year.',
-  },
-  {
-    id: 'doc2',
-    name: 'MRI Scan - Left Knee',
-    type: 'Imaging Report',
-    date: '2023-09-05',
-    tags: ['imaging', 'orthopedics', 'mri'],
-    patientInfo: { name: 'Jane Doe', dob: '1990-05-21', patientId: 'JD-12345' },
-    reportInfo: { reportId: 'RPT-98766', issuedBy: 'Dr. Alan Grant', facility: 'Island Imaging Center', time: '03:15 PM' },
-    vitalSigns: {},
-    labResults: [],
-    assessment: 'MRI of the left knee shows a moderate tear of the medial meniscus. No other significant abnormalities noted. The anterior cruciate ligament is intact.',
-    recommendations: 'Referral to an orthopedic specialist for consultation regarding surgical vs. non-surgical management options. Recommend RICE (Rest, Ice, Compression, Elevation) protocol in the interim.',
-    images: [
-      {
-        src: placeholderImages.mriScan.src,
-        width: placeholderImages.mriScan.width,
-        height: placeholderImages.mriScan.height,
-        alt: placeholderImages.mriScan.alt,
-        hint: placeholderImages.mriScan.hint,
-      },
-      {
-        src: placeholderImages.mriScan2.src,
-        width: placeholderImages.mriScan2.width,
-        height: placeholderImages.mriScan2.height,
-        alt: placeholderImages.mriScan2.alt,
-        hint: placeholderImages.mriScan2.hint,
-      },
-    ],
-  },
-  {
-    id: 'doc3',
-    name: 'Prescription - Amoxicillin',
-    type: 'Prescription',
-    date: '2023-08-22',
-    tags: ['prescription', 'pharmacy'],
-    patientInfo: { name: 'Jane Doe', dob: '1990-05-21', patientId: 'JD-12345' },
-    reportInfo: { reportId: 'RPT-98767', issuedBy: 'Dr. Emily Carter', facility: 'Central City Clinic', time: '11:00 AM' },
-    vitalSigns: {},
-    labResults: [],
-    assessment: 'Diagnosis: Acute Sinusitis. Prescribing Amoxicillin to treat bacterial infection.',
-    recommendations: 'Take one 500mg tablet twice daily for 10 days. Complete the full course of antibiotics even if feeling better. Avoid alcohol. May cause mild stomach upset.'
-  },
-  {
-    id: 'doc4',
-    name: 'Dental X-Ray',
-    type: 'Imaging Report',
-    date: '2023-07-11',
-    tags: ['dental', 'imaging', 'x-ray'],
-    patientInfo: { name: 'Jane Doe', dob: '1990-05-21', patientId: 'JD-12345' },
-    reportInfo: { reportId: 'RPT-98768', issuedBy: 'Dr. Ian Malcolm', facility: 'Downtown Dental', time: '02:00 PM' },
-    vitalSigns: {},
-    labResults: [],
-    assessment: 'Bitewing and panoramic X-rays reviewed. Early signs of a cavity (caries) on tooth #30 (lower right first molar). No other signs of decay or periodontal disease.',
-    recommendations: 'Schedule a filling for tooth #30. Continue regular brushing and flossing. Six-month follow-up recommended.',
-    images: [
-        {
-          src: placeholderImages.dentalXray.src,
-          width: placeholderImages.dentalXray.width,
-          height: placeholderImages.dentalXray.height,
-          alt: placeholderImages.dentalXray.alt,
-          hint: placeholderImages.dentalXray.hint,
-        },
-      ],
-  },
-  {
-    id: 'doc5',
-    name: 'Allergy Test Results',
-    type: 'Lab Report',
-    date: '2023-06-15',
-    tags: ['lab-results', 'allergy'],
-    patientInfo: { name: 'Jane Doe', dob: '1990-05-21', patientId: 'JD-12345' },
-    reportInfo: { reportId: 'RPT-98769', issuedBy: 'Dr. Ellie Sattler', facility: 'Allergy & Asthma Associates', time: '10:30 AM' },
-    vitalSigns: {},
-    labResults: [
-        { test: 'Dust Mites (D. farinae)', value: 'Class 3', range: 'Negative', status: 'High' },
-        { test: 'Cat Dander', value: 'Class 4', range: 'Negative', status: 'High' },
-        { test: 'Ragweed Pollen', value: 'Class 2', range: 'Negative', status: 'Moderate' },
-        { test: 'Peanut', value: 'Class 0', range: 'Negative', status: 'Normal' },
-    ],
-    assessment: 'Patient has a significant allergy to dust mites and cat dander, and a moderate allergy to ragweed pollen. No allergy to peanuts detected.',
-    recommendations: 'Discussed environmental control measures for dust mites and cats. Prescribed an antihistamine for seasonal allergy symptoms. Recommended allergen-proof bedding. Follow up as needed.'
-  },
-  {
-    id: 'doc6',
-    name: 'Abdominal Ultrasound',
-    type: 'Imaging Report',
-    date: '2023-05-20',
-    tags: ['imaging', 'ultrasound', 'gastroenterology'],
-    patientInfo: { name: 'Jane Doe', dob: '1990-05-21', patientId: 'JD-12345' },
-    reportInfo: { reportId: 'RPT-98770', issuedBy: 'Dr. John Hammond', facility: 'Central City Clinic', time: '01:30 PM' },
-    vitalSigns: {},
-    labResults: [],
-    assessment: 'Ultrasound of the abdomen reveals a normal-appearing liver, gallbladder, spleen, pancreas, and kidneys. No evidence of gallstones or other abnormalities.',
-    recommendations: 'No follow-up needed based on these findings. Patient can continue with routine care.',
-    images: [
-      {
-        src: placeholderImages.ultrasoundScan.src,
-        width: placeholderImages.ultrasoundScan.width,
-        height: placeholderImages.ultrasoundScan.height,
-        alt: placeholderImages.ultrasoundScan.alt,
-        hint: placeholderImages.ultrasoundScan.hint,
-      },
-    ],
-  },
-];
-
+import { allMemberDocuments } from '@/lib/documents';
 
 const InfoItem = ({ label, value }: { label: string; value: string | undefined }) => {
     if (!value) return null;
@@ -179,6 +51,9 @@ export default function DocumentDetailsPage() {
   const [isShareOpen, setShareOpen] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<ImageType | null>(null);
+
+  // Combine all documents from all users into a single array for lookup
+  const allDocuments = Object.values(allMemberDocuments).flat();
 
   const currentIndex = allDocuments.findIndex((doc) => doc.id === id);
   const documentDetails = allDocuments[currentIndex] as (typeof allDocuments)[0] & { images?: any[] };

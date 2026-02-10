@@ -96,5 +96,12 @@
     "height": 400,
     "alt": "Ultrasound scan",
     "hint": "ultrasound scan"
+  },
+  "chestXray": {
+    "src": "https://images.unsplash.com/photo-1606232596443-44a169b53744?w=600&h=800&fit=crop",
+    "width": 600,
+    "height": 800,
+    "alt": "Chest X-ray of a child",
+    "hint": "chest xray"
   }
 }
