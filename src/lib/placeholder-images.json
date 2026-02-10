@@ -70,16 +70,16 @@
     "hint": "man smiling"
   },
   "mriScan": {
-    "src": "https://www.researchgate.net/profile/Ali-Gabr/publication/338491417/figure/fig1/AS:845938837188609@1578716738923/Knee-MRI-showing-joint-effusion-and-bone-marrow-edema-A-sagittal-view-and-B.png",
-    "width": 1038,
-    "height": 560,
-    "alt": "MRI scan of a knee",
+    "src": "https://upload.wikimedia.org/wikipedia/commons/8/8d/MR_Knie_cor_PD_fs.jpg",
+    "width": 436,
+    "height": 486,
+    "alt": "MRI scan of a knee, coronal view",
     "hint": "mri knee"
   },
   "mriScan2": {
-    "src": "https://picsum.photos/seed/mri2/600/400",
-    "width": 600,
-    "height": 400,
+    "src": "https://upload.wikimedia.org/wikipedia/commons/9/9c/Knee_MRI%2C_sagittal_view.jpg",
+    "width": 381,
+    "height": 374,
     "alt": "MRI scan of a knee, sagittal view",
     "hint": "mri knee"
   },
