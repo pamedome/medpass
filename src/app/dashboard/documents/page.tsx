@@ -115,7 +115,7 @@ export default function DocumentsPage() {
             </TableHeader>
             <TableBody>
               {documents.map((doc) => (
-                <TableRow key={doc.id}>
+                <TableRow key={doc.id} className="cursor-pointer" onClick={() => router.push(`/dashboard/documents/${doc.id}`)}>
                   <TableCell className="font-medium">{doc.name}</TableCell>
                   <TableCell className="hidden md:table-cell">{doc.type}</TableCell>
                   <TableCell className="hidden md:table-cell">{doc.date}</TableCell>
@@ -128,7 +128,7 @@ export default function DocumentsPage() {
                       ))}
                     </div>
                   </TableCell>
-                  <TableCell>
+                  <TableCell onClick={(e) => e.stopPropagation()}>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
