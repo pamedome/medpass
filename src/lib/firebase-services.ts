@@ -13,13 +13,12 @@ import {
 import { initializeFirebase } from '@/firebase';
 import { UserProfile, UserRole } from './types';
 
-const { db, auth } = initializeFirebase();
-
 export const signUpWithEmail = async (
   email: string,
   password: string,
   role: UserRole
 ) => {
+  const { auth, db } = initializeFirebase();
   const userCredential = await createUserWithEmailAndPassword(
     auth,
     email,
@@ -46,11 +45,13 @@ export const updateUserOnboarding = async (
   uid: string,
   data: Partial<UserProfile>
 ) => {
+  const { db } = initializeFirebase();
   const userRef = doc(db, 'users', uid);
   await setDoc(userRef, data, { merge: true });
 };
 
 export const sendVerificationEmail = async () => {
+  const { auth } = initializeFirebase();
   const user = auth.currentUser;
   if (user) {
     await sendEmailVerification(user);
