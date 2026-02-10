@@ -68,58 +68,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => unsubscribe();
   }, [user, db]);
 
-  // Effect 3: Handle all routing logic based on the current state
+  // Effect 3: Handle all routing logic
   useEffect(() => {
     if (loading) {
       return; // Wait until auth and profile state are resolved
     }
 
-    const isPublicRoute = ['/', '/login', '/auth/forgot-password'].includes(pathname) || 
-                          pathname.startsWith('/auth/signup') || 
-                          pathname.startsWith('/emergency-access');
+    const protectedRoutes = pathname.startsWith('/dashboard');
+    const isPublicRoute = ['/', '/login', '/auth/forgot-password'].includes(pathname) || pathname.startsWith('/emergency-access');
 
-    // Case A: No user is logged in. Redirect from protected routes.
-    if (!user) {
-      if (!isPublicRoute) {
-        router.push('/login');
-      }
-      return;
+    // If user is not logged in and is trying to access a protected route, redirect to login
+    if (!user && protectedRoutes) {
+      router.push('/login');
     }
 
-    // --- From here on, we know the user is authenticated. ---
-
-    // Case B: User is authenticated, but has no profile document in Firestore.
-    // This means they are a new user who hasn't completed the first signup step.
-    if (!userProfile) {
-      if (!pathname.startsWith('/auth/signup/account')) {
-        router.push('/auth/signup/account');
-      }
-      return;
-    }
-    
-    // Case C: User is authenticated and has a profile document.
-    const { onboardingStatus, region } = userProfile;
-    
-    if (onboardingStatus === 'complete') {
-      // If onboarding is complete, they should be on the dashboard or other app pages.
-      // If they land on a public/auth page, redirect them to the dashboard.
-      const isOnAuthPage = pathname.startsWith('/auth/signup') || pathname === '/login';
-      if (isOnAuthPage) {
-        router.push('/dashboard');
-      }
-    } else {
-      // Onboarding is not complete. Force them to the correct step.
-      const step = onboardingStatus.split('_')[0]; // 'country', 'kyc', 'verify'
-      let requiredPath = `/auth/signup/${step}`;
-      
-      if (step === 'kyc' && region) {
-        requiredPath = `/auth/signup/kyc/${region.toLowerCase()}`;
-      }
-      
-      // Only redirect if they are not already on the correct page.
-      if (pathname !== requiredPath) {
-        router.push(requiredPath);
-      }
+    // If user is logged in and is on a public page like login or landing, redirect to dashboard
+    if (user && (pathname === '/login' || pathname === '/')) {
+      router.push('/dashboard');
     }
     
   }, [loading, user, userProfile, pathname, router]);

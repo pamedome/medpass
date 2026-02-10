@@ -11,51 +11,7 @@ import {
   sendEmailVerification,
 } from 'firebase/auth';
 import { initializeFirebase } from '@/firebase';
-import { UserProfile, UserRole } from './types';
 
-export const signUpWithEmail = async (
-  email: string,
-  password: string,
-  role: UserRole
-) => {
-  const { auth, db } = initializeFirebase();
-  const userCredential = await createUserWithEmailAndPassword(
-    auth,
-    email,
-    password
-  );
-  const user = userCredential.user;
-
-  const userProfile: Partial<UserProfile> = {
-    uid: user.uid,
-    email: user.email,
-    role: role,
-    createdAt: serverTimestamp(),
-    onboardingStatus: 'country_pending',
-    kyc: {
-      kycStatus: 'pending',
-    },
-  };
-
-  await setDoc(doc(db, 'users', user.uid), userProfile);
-  return user;
-};
-
-export const updateUserOnboarding = async (
-  uid: string,
-  data: Partial<UserProfile>
-) => {
-  const { db } = initializeFirebase();
-  const userRef = doc(db, 'users', uid);
-  await setDoc(userRef, data, { merge: true });
-};
-
-export const sendVerificationEmail = async () => {
-  const { auth } = initializeFirebase();
-  const user = auth.currentUser;
-  if (user) {
-    await sendEmailVerification(user);
-  } else {
-    throw new Error('No user is currently signed in.');
-  }
-};
+// This file is intentionally left with no exports as the signup flow has been removed.
+// The functions that were here (signUpWithEmail, updateUserOnboarding, sendVerificationEmail)
+// are no longer needed.

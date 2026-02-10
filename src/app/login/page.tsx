@@ -166,12 +166,6 @@ export default function AuthPage() {
                   )}
                   Sign In
                 </Button>
-                <p className="text-sm text-muted-foreground">
-                  Don't have an account?{' '}
-                  <Link href="/auth/signup/account" className="font-semibold text-primary underline-offset-4 hover:underline">
-                    Sign Up
-                  </Link>
-                </p>
               </CardFooter>
             </form>
           </Form>

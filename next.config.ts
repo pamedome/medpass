@@ -24,15 +24,6 @@ const nextConfig: NextConfig = {
       }
     ],
   },
-  async redirects() {
-    return [
-      {
-        source: '/signup',
-        destination: '/auth/signup/account',
-        permanent: true,
-      },
-    ]
-  },
 };
 
 export default nextConfig;
