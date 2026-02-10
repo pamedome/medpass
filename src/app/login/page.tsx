@@ -1,11 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Image from 'next/image';
+import { Loader2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -27,7 +29,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { useFirebaseAuth } from '@/firebase'; // Updated import
+import { useFirebaseAuth } from '@/firebase';
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
@@ -39,7 +41,8 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export default function AuthPage() {
   const router = useRouter();
   const { toast } = useToast();
-  const auth = useFirebaseAuth(); // Updated to use new hook
+  const auth = useFirebaseAuth();
+  const [isLoading, setIsLoading] = useState(false);
 
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -55,17 +58,22 @@ export default function AuthPage() {
       });
       return;
     }
+    setIsLoading(true);
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password);
       toast({
         title: 'Login Successful',
-        description: 'Redirecting to your dashboard...',
+        description: 'Redirecting...',
       });
-      router.push('/dashboard');
+      // The useAuth hook will now handle redirection based on onboarding status.
     } catch (error: any) {
       console.error('Login error:', error);
       let description = 'An unknown error occurred.';
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+      if (
+        error.code === 'auth/user-not-found' ||
+        error.code === 'auth/wrong-password' ||
+        error.code === 'auth/invalid-credential'
+      ) {
         description = 'Invalid email or password.';
       } else if (error.code === 'auth/too-many-requests') {
         description = 'Too many attempts. Please try again later.';
@@ -75,6 +83,7 @@ export default function AuthPage() {
         title: 'Login Failed',
         description,
       });
+      setIsLoading(false);
     }
   };
 
@@ -150,9 +159,12 @@ export default function AuthPage() {
                 <Button
                   type="submit"
                   className="w-full"
-                  disabled={loginForm.formState.isSubmitting}
+                  disabled={isLoading}
                 >
-                  {loginForm.formState.isSubmitting ? 'Signing In...' : 'Sign In'}
+                  {isLoading && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  Sign In
                 </Button>
                 <p className="text-sm text-muted-foreground">
                   Don't have an account?{' '}
