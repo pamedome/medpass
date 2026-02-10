@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import {
@@ -38,6 +38,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { cn } from '@/lib/utils';
 import { initialUsers, UserProfile } from '@/lib/family-members';
+import { Skeleton } from '@/components/ui/skeleton';
 
 
 export default function SettingsPage() {
@@ -46,11 +47,21 @@ export default function SettingsPage() {
   const { toast } = useToast();
 
   const [users, setUsers] = useState<UserProfile[]>(initialUsers);
-  const [activeUser, setActiveUser] = useState<UserProfile>(initialUsers.find(u => u.relationship === 'Primary') || initialUsers[0]);
+  const [activeUser, setActiveUser] = useState<UserProfile | null>(null);
   const [userToDelete, setUserToDelete] = useState<UserProfile | null>(null);
+
+  useEffect(() => {
+    const storedUserId = localStorage.getItem('activeFamilyMemberId');
+    const activeId = storedUserId ? parseInt(storedUserId, 10) : 1;
+    const currentUser = users.find(u => u.id === activeId) || users.find(u => u.relationship === 'Primary') || users[0];
+    setActiveUser(currentUser);
+  }, [users]);
+
 
   const handleSwitchUser = (user: UserProfile) => {
     setActiveUser(user);
+    localStorage.setItem('activeFamilyMemberId', user.id.toString());
+    window.dispatchEvent(new Event('familyMemberChanged'));
     toast({
       title: 'Account Switched',
       description: `You are now viewing the dashboard for ${user.name}.`,
@@ -74,8 +85,9 @@ export default function SettingsPage() {
   };
 
   const confirmDeleteUser = () => {
-    if (userToDelete) {
-      setUsers((currentUsers) => currentUsers.filter(u => u.id !== userToDelete.id));
+    if (userToDelete && activeUser) {
+      const remainingUsers = users.filter((u) => u.id !== userToDelete.id)
+      setUsers(remainingUsers);
 
       toast({
         title: 'Member Removed',
@@ -83,14 +95,44 @@ export default function SettingsPage() {
       });
 
       if (activeUser.id === userToDelete.id) {
-        const newActiveUser = users.find((u) => u.relationship === 'Primary' && u.id !== userToDelete.id) || users.find(u => u.id !== userToDelete.id);
+        const newActiveUser = remainingUsers.find((u) => u.relationship === 'Primary') || remainingUsers[0];
         if (newActiveUser) {
-          setActiveUser(newActiveUser);
+            handleSwitchUser(newActiveUser);
         }
       }
       setUserToDelete(null);
     }
   };
+
+  if (!activeUser) {
+    return (
+      <div className="grid gap-6">
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-4 w-96" />
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="flex items-center justify-between rounded-lg border p-4">
+                <div className="flex items-center gap-4">
+                  <Skeleton className="h-12 w-12 rounded-full" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-4 w-16" />
+                  </div>
+                </div>
+                <Skeleton className="h-9 w-24 rounded-md" />
+              </div>
+            ))}
+          </CardContent>
+          <CardFooter>
+            <Skeleton className="h-10 w-40 rounded-md" />
+          </CardFooter>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="grid gap-6">

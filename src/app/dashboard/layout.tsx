@@ -50,6 +50,7 @@ import placeholderImages from '@/lib/placeholder-images.json';
 import { useFirebaseAuth } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { useToast } from '@/hooks/use-toast';
+import { initialUsers, UserProfile } from '@/lib/family-members';
 
 const menuItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -76,6 +77,19 @@ export default function DashboardLayout({
   const [searchQuery, setSearchQuery] = React.useState('');
   const [notifications, setNotifications] = React.useState<Notification[]>(notificationsData);
   const { user } = useAuth();
+  const [activeUser, setActiveUser] = React.useState<UserProfile | null>(null);
+
+  React.useEffect(() => {
+    const updateActiveUser = () => {
+      const storedUserId = localStorage.getItem('activeFamilyMemberId');
+      const userId = storedUserId ? parseInt(storedUserId, 10) : 1;
+      const currentUser = initialUsers.find(u => u.id === userId);
+      setActiveUser(currentUser || initialUsers[0]);
+    };
+    updateActiveUser();
+    window.addEventListener('familyMemberChanged', updateActiveUser);
+    return () => window.removeEventListener('familyMemberChanged', updateActiveUser);
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -247,18 +261,18 @@ export default function DashboardLayout({
                     >
                         <Avatar className="h-9 w-9">
                         <AvatarImage
-                            src={placeholderImages.userAvatar.src}
-                            alt={placeholderImages.userAvatar.alt}
-                            data-ai-hint={placeholderImages.userAvatar.hint}
+                            src={activeUser?.avatar ?? placeholderImages.userAvatar.src}
+                            alt={activeUser?.name ?? placeholderImages.userAvatar.alt}
+                            data-ai-hint={activeUser?.hint ?? placeholderImages.userAvatar.hint}
                         />
-                        <AvatarFallback>U</AvatarFallback>
+                        <AvatarFallback>{activeUser ? activeUser.name.split(' ').map(n=>n[0]).join('') : 'U'}</AvatarFallback>
                         </Avatar>
                     </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                     <DropdownMenuLabel>
                         <div className="flex flex-col">
-                            <span>Jane Doe</span>
+                            <span>{activeUser?.name ?? 'Jane Doe'}</span>
                             <span className="text-xs font-normal text-muted-foreground">{user?.email ?? 'jane.doe@example.com'}</span>
                         </div>
                     </DropdownMenuLabel>

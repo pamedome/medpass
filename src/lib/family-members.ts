@@ -109,4 +109,14 @@ export let initialUsers: UserProfile[] = [
     avatar: placeholderImages.childAvatar.src,
     hint: 'boy smiling',
   },
+  {
+    id: 4,
+    name: 'Jonna Doe',
+    firstName: 'Jonna',
+    surname: 'Doe',
+    dob: '2018-07-22',
+    relationship: 'Child',
+    avatar: placeholderImages.childAvatar2.src,
+    hint: 'girl smiling',
+  },
 ];

@@ -26,6 +26,7 @@ import {
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 import Link from 'next/link';
 import placeholderImages from '@/lib/placeholder-images.json';
+import { initialUsers, UserProfile } from '@/lib/family-members';
 
 const AnalyticsChart = () => {
   const chartConfig: ChartConfig = {
@@ -67,50 +68,89 @@ const AnalyticsChart = () => {
   );
 };
 
-export default function DashboardPage() {
-  const statsCards = [
-    {
-      title: 'Total Documents',
-      value: '24',
-      change: 'Increased from last month',
-      icon: TrendingUp,
-      isPrimary: true,
+const dashboardData: { [key: number]: any } = {
+    1: { // Jane Doe
+        statsCards: [
+            { title: 'Total Documents', value: '24', change: 'Increased from last month', icon: TrendingUp, isPrimary: true },
+            { title: 'Archived Records', value: '10', change: 'Increased from last month', icon: TrendingUp },
+            { title: 'Active Reminders', value: '12', change: 'Increased from last month', icon: TrendingUp },
+            { title: 'Pending Lab Results', value: '2', change: 'On Discuss', icon: TrendingUp },
+        ],
+        appointments: [
+            { id: 'appt-1', name: 'Dr. Sarah Johnson', specialty: 'Cardiologist', avatar: placeholderImages.doctorAvatar1, hint: 'woman doctor smiling', date: 'Dec 1, 2024', time: '10:00 AM' },
+            { id: 'appt-2', name: 'Dr. Michael Lee', specialty: 'Dermatologist', avatar: placeholderImages.doctorAvatar2, hint: 'man doctor portrait', date: 'Dec 5, 2024', time: '02:30 PM' },
+        ],
+        title: 'Dashboard',
+        description: 'Plan, prioritize, and accomplish your tasks with ease.',
     },
-    {
-      title: 'Archived Records',
-      value: '10',
-      change: 'Increased from last month',
-      icon: TrendingUp,
+    2: { // John Doe
+        statsCards: [
+            { title: 'Total Documents', value: '15', change: 'Stable', icon: TrendingUp, isPrimary: true },
+            { title: 'Archived Records', value: '3', change: 'Stable', icon: TrendingUp },
+            { title: 'Active Reminders', value: '2', change: '1 new', icon: TrendingUp },
+            { title: 'Pending Lab Results', value: '0', change: 'All clear', icon: TrendingUp },
+        ],
+        appointments: [
+            { id: 'appt-4', name: 'Dr. David Oshodi', specialty: 'General Practitioner', avatar: placeholderImages.doctorAvatar4, hint: 'man smiling', date: 'Dec 12, 2024', time: '09:00 AM' },
+        ],
+        title: 'John\'s Dashboard',
+        description: 'An overview of John\'s health records.',
     },
-    {
-      title: 'Active Reminders',
-      value: '12',
-      change: 'Increased from last month',
-      icon: TrendingUp,
+    3: { // Jimmy Doe
+        statsCards: [
+            { title: 'Total Documents', value: '5', change: '1 new', icon: TrendingUp, isPrimary: true },
+            { title: 'Archived Records', value: '1', change: 'Stable', icon: TrendingUp },
+            { title: 'Upcoming Vaccinations', value: '1', change: 'Next month', icon: TrendingUp },
+            { title: 'School Forms', value: '2', change: '1 pending', icon: TrendingUp },
+        ],
+        appointments: [
+            { id: 'appt-3', name: 'Dr. Emily Chen', specialty: 'Pediatrician', avatar: placeholderImages.doctorAvatar3, hint: 'woman doctor glasses', date: 'Dec 10, 2024', time: '11:15 AM' },
+        ],
+        title: 'Jimmy\'s Dashboard',
+        description: 'An overview of Jimmy\'s health records.',
     },
-    {
-      title: 'Pending Lab Results',
-      value: '2',
-      change: 'On Discuss',
-      icon: TrendingUp,
-    },
-  ];
+    4: { // Jonna Doe
+        statsCards: [
+            { title: 'Total Documents', value: '3', change: 'Just started!', icon: TrendingUp, isPrimary: true },
+            { title: 'Archived Records', value: '0', change: '', icon: TrendingUp },
+            { title: 'Upcoming Vaccinations', value: '2', change: 'Next week', icon: TrendingUp },
+            { title: 'School Forms', value: '1', change: '1 pending', icon: TrendingUp },
+        ],
+        appointments: [
+            { id: 'appt-3', name: 'Dr. Emily Chen', specialty: 'Pediatrician', avatar: placeholderImages.doctorAvatar3, hint: 'woman doctor glasses', date: 'Dec 18, 2024', time: '03:00 PM' },
+        ],
+        title: 'Jonna\'s Dashboard',
+        description: 'An overview of Jonna\'s health records.',
+    }
+};
 
-  const appointments = [
-    { id: 'appt-1', name: 'Dr. Sarah Johnson', specialty: 'Cardiologist', avatar: placeholderImages.doctorAvatar1, hint: 'woman doctor smiling', date: 'Dec 1, 2024', time: '10:00 AM' },
-    { id: 'appt-2', name: 'Dr. Michael Lee', specialty: 'Dermatologist', avatar: placeholderImages.doctorAvatar2, hint: 'man doctor portrait', date: 'Dec 5, 2024', time: '02:30 PM' },
-    { id: 'appt-3', name: 'Dr. Emily Chen', specialty: 'Pediatrician', avatar: placeholderImages.doctorAvatar3, hint: 'woman doctor glasses', date: 'Dec 10, 2024', time: '11:15 AM' },
-    { id: 'appt-4', name: 'Dr. David Oshodi', specialty: 'General Practitioner', avatar: placeholderImages.doctorAvatar4, hint: 'man smiling', date: 'Dec 12, 2024', time: '09:00 AM' },
-  ];
+export default function DashboardPage() {
+    const [data, setData] = React.useState(dashboardData[1]);
+
+    React.useEffect(() => {
+        const updateDashboardData = () => {
+            const storedUserId = localStorage.getItem('activeFamilyMemberId');
+            const userId = storedUserId ? parseInt(storedUserId, 10) : 1;
+            setData(dashboardData[userId] || dashboardData[1]);
+        };
+
+        updateDashboardData();
+
+        window.addEventListener('familyMemberChanged', updateDashboardData);
+
+        return () => {
+            window.removeEventListener('familyMemberChanged', updateDashboardData);
+        };
+    }, []);
+
+  const { statsCards, appointments, title, description } = data;
 
   return (
     <div className="flex flex-1 flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="text-muted-foreground">
-            Plan, prioritize, and accomplish your tasks with ease.
-          </p>
+          <h1 className="text-3xl font-bold">{title}</h1>
+          <p className="text-muted-foreground">{description}</p>
         </div>
         <div className="flex items-center gap-2">
           <Button>Import Data</Button>
@@ -118,7 +158,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {statsCards.map((card, index) => (
+        {statsCards.map((card: any, index: number) => (
           <Card key={index} className={card.isPrimary ? 'bg-primary text-primary-foreground' : ''}>
             <CardHeader>
               <div className="flex justify-between items-center">
@@ -186,13 +226,13 @@ export default function DashboardPage() {
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-1">
-                        {appointments.map((appointment) => (
+                        {appointments.map((appointment: any) => (
                             <Link href={`/dashboard/appointments/${appointment.id}`} key={appointment.id} className="block -mx-2">
                                 <div className="flex items-center justify-between rounded-md p-2 hover:bg-muted">
                                     <div className="flex items-center gap-4">
                                         <Avatar>
                                             <AvatarImage src={appointment.avatar.src} alt={appointment.avatar.alt} data-ai-hint={appointment.hint}/>
-                                            <AvatarFallback>{appointment.name.replace("Dr. ", "").split(' ').map(n=>n[0]).join('')}</AvatarFallback>
+                                            <AvatarFallback>{appointment.name.replace("Dr. ", "").split(' ').map((n: string)=>n[0]).join('')}</AvatarFallback>
                                         </Avatar>
                                         <div>
                                             <p className="font-semibold">{appointment.name}</p>
@@ -206,6 +246,11 @@ export default function DashboardPage() {
                                 </div>
                             </Link>
                         ))}
+                         {appointments.length === 0 && (
+                            <div className="text-center text-muted-foreground p-8">
+                                No upcoming appointments.
+                            </div>
+                        )}
                     </div>
                 </CardContent>
             </Card>
