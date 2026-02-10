@@ -64,10 +64,16 @@ export default function AuthPage() {
       router.push('/dashboard');
     } catch (error: any) {
       console.error('Login error:', error);
+      let description = 'An unknown error occurred.';
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+        description = 'Invalid email or password.';
+      } else if (error.code === 'auth/too-many-requests') {
+        description = 'Too many attempts. Please try again later.';
+      }
       toast({
         variant: 'destructive',
         title: 'Login Failed',
-        description: error.message || 'An unknown error occurred.',
+        description,
       });
     }
   };
@@ -122,8 +128,8 @@ export default function AuthPage() {
                       <div className="flex items-center">
                         <FormLabel>Password</FormLabel>
                         <Link
-                          href="#"
-                          className="ml-auto inline-block text-sm underline"
+                          href="/auth/forgot-password"
+                          className="ml-auto inline-block text-sm text-primary hover:underline"
                         >
                           Forgot your password?
                         </Link>
