@@ -1,9 +1,65 @@
 {
-  "appStoreBadge": {
-    "src": "https://placehold.co/120x40/000000/FFFFFF?text=App+Store",
-    "alt": "Download on the App Store",
-    "width": 120,
+  "userAvatar": {
+    "src": "https://picsum.photos/seed/userAvatar/100/100",
+    "width": 100,
+    "height": 100,
+    "alt": "User avatar",
+    "hint": "user avatar"
+  },
+  "spouseAvatar": {
+    "src": "https://picsum.photos/seed/spouseAvatar/100/100",
+    "width": 100,
+    "height": 100,
+    "alt": "Spouse avatar",
+    "hint": "man smiling"
+  },
+  "childAvatar": {
+    "src": "https://picsum.photos/seed/childAvatar/100/100",
+    "width": 100,
+    "height": 100,
+    "alt": "Child avatar",
+    "hint": "boy smiling"
+  },
+  "newMemberAvatar": {
+    "src": "https://picsum.photos/seed/newMember/100/100",
+    "width": 100,
+    "height": 100,
+    "alt": "New member avatar",
+    "hint": "person outline"
+  },
+  "qrCode": {
+    "src": "https://picsum.photos/seed/qrCode/250/250",
+    "width": 250,
+    "height": 250,
+    "alt": "Emergency QR Code",
+    "hint": "qr code"
+  },
+  "doctorAvatar1": {
+    "src": "https://picsum.photos/seed/doc1/40/40",
+    "width": 40,
     "height": 40,
-    "hint": "app store badge"
+    "alt": "Dr. Sarah Johnson",
+    "hint": "woman doctor smiling"
+  },
+  "doctorAvatar2": {
+    "src": "https://picsum.photos/seed/doc2/40/40",
+    "width": 40,
+    "height": 40,
+    "alt": "Dr. Michael Lee",
+    "hint": "man doctor portrait"
+  },
+  "doctorAvatar3": {
+    "src": "https://picsum.photos/seed/doc3/40/40",
+    "width": 40,
+    "height": 40,
+    "alt": "Dr. Emily Chen",
+    "hint": "woman doctor glasses"
+  },
+  "doctorAvatar4": {
+    "src": "https://picsum.photos/seed/doc4/40/40",
+    "width": 40,
+    "height": 40,
+    "alt": "Dr. David Oshodi",
+    "hint": "man smiling"
   }
 }

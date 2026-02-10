@@ -45,6 +45,8 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { notificationsData, Notification } from '@/lib/notifications';
 import { Badge } from '@/components/ui/badge';
+import { useAuth } from '@/hooks/use-auth';
+import placeholderImages from '@/lib/placeholder-images.json';
 
 const menuItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -69,6 +71,7 @@ export default function DashboardLayout({
   const router = useRouter();
   const [searchQuery, setSearchQuery] = React.useState('');
   const [notifications, setNotifications] = React.useState<Notification[]>(notificationsData);
+  const { user } = useAuth();
 
   const unreadNotifications = notifications.filter(n => !n.read);
 
@@ -216,9 +219,9 @@ export default function DashboardLayout({
                     >
                         <Avatar className="h-9 w-9">
                         <AvatarImage
-                            src="https://placehold.co/100x100/E0E0E0/BDBDBD.png"
-                            alt="User"
-                            data-ai-hint="user avatar"
+                            src={placeholderImages.userAvatar.src}
+                            alt={placeholderImages.userAvatar.alt}
+                            data-ai-hint={placeholderImages.userAvatar.hint}
                         />
                         <AvatarFallback>U</AvatarFallback>
                         </Avatar>
@@ -228,7 +231,7 @@ export default function DashboardLayout({
                     <DropdownMenuLabel>
                         <div className="flex flex-col">
                             <span>Jane Doe</span>
-                            <span className="text-xs font-normal text-muted-foreground">jane.doe@example.com</span>
+                            <span className="text-xs font-normal text-muted-foreground">{user?.email ?? 'jane.doe@example.com'}</span>
                         </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />

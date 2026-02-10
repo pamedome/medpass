@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/chart';
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 import Link from 'next/link';
+import placeholderImages from '@/lib/placeholder-images.json';
 
 const AnalyticsChart = () => {
   const chartConfig: ChartConfig = {
@@ -96,10 +97,10 @@ export default function DashboardPage() {
   ];
 
   const appointments = [
-    { id: 'appt-1', name: 'Dr. Sarah Johnson', specialty: 'Cardiologist', avatar: 'https://placehold.co/40x40/A9D5E5/333333.png', hint: 'woman doctor smiling', date: 'Dec 1, 2024', time: '10:00 AM' },
-    { id: 'appt-2', name: 'Dr. Michael Lee', specialty: 'Dermatologist', avatar: 'https://placehold.co/40x40/F3D6E4/333333.png', hint: 'man doctor portrait', date: 'Dec 5, 2024', time: '02:30 PM' },
-    { id: 'appt-3', name: 'Dr. Emily Chen', specialty: 'Pediatrician', avatar: 'https://placehold.co/40x40/D4EDDA/333333.png', hint: 'woman doctor glasses', date: 'Dec 10, 2024', time: '11:15 AM' },
-    { id: 'appt-4', name: 'Dr. David Oshodi', specialty: 'General Practitioner', avatar: 'https://placehold.co/40x40/FFF3CD/333333.png', hint: 'man smiling', date: 'Dec 12, 2024', time: '09:00 AM' },
+    { id: 'appt-1', name: 'Dr. Sarah Johnson', specialty: 'Cardiologist', avatar: placeholderImages.doctorAvatar1, hint: 'woman doctor smiling', date: 'Dec 1, 2024', time: '10:00 AM' },
+    { id: 'appt-2', name: 'Dr. Michael Lee', specialty: 'Dermatologist', avatar: placeholderImages.doctorAvatar2, hint: 'man doctor portrait', date: 'Dec 5, 2024', time: '02:30 PM' },
+    { id: 'appt-3', name: 'Dr. Emily Chen', specialty: 'Pediatrician', avatar: placeholderImages.doctorAvatar3, hint: 'woman doctor glasses', date: 'Dec 10, 2024', time: '11:15 AM' },
+    { id: 'appt-4', name: 'Dr. David Oshodi', specialty: 'General Practitioner', avatar: placeholderImages.doctorAvatar4, hint: 'man smiling', date: 'Dec 12, 2024', time: '09:00 AM' },
   ];
 
   return (
@@ -190,7 +191,7 @@ export default function DashboardPage() {
                                 <div className="flex items-center justify-between rounded-md p-2 hover:bg-muted">
                                     <div className="flex items-center gap-4">
                                         <Avatar>
-                                            <AvatarImage src={appointment.avatar} data-ai-hint={appointment.hint}/>
+                                            <AvatarImage src={appointment.avatar.src} alt={appointment.avatar.alt} data-ai-hint={appointment.hint}/>
                                             <AvatarFallback>{appointment.name.replace("Dr. ", "").split(' ').map(n=>n[0]).join('')}</AvatarFallback>
                                         </Avatar>
                                         <div>

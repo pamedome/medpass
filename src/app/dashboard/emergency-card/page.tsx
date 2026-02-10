@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -27,6 +26,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
+import placeholderImages from '@/lib/placeholder-images.json';
 
 export default function EmergencyCardPage() {
   const userId = "user123"; // Placeholder user ID
@@ -75,11 +75,11 @@ export default function EmergencyCardPage() {
             <CardContent className="flex flex-col items-center gap-4">
               <div className="rounded-lg border p-4">
                 <Image
-                  src="https://placehold.co/300x300.png"
-                  width={250}
-                  height={250}
-                  alt="Emergency QR Code"
-                  data-ai-hint="qr code"
+                  src={placeholderImages.qrCode.src}
+                  width={placeholderImages.qrCode.width}
+                  height={placeholderImages.qrCode.height}
+                  alt={placeholderImages.qrCode.alt}
+                  data-ai-hint={placeholderImages.qrCode.hint}
                 />
               </div>
               <p className="text-center text-sm text-muted-foreground">

@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { User, Cake, Droplets, ShieldAlert, Pill, Stethoscope, Phone, Scale, TrendingUp, HeartPulse } from 'lucide-react';
+import placeholderImages from '@/lib/placeholder-images.json';
 
 const emergencyInfo = {
   name: 'Jane Doe',
@@ -39,7 +40,7 @@ export default function EmergencyAccessPage({ params }: { params: { id: string }
         <CardHeader className="text-center">
             <div className="flex flex-col items-center gap-4">
                 <Avatar className="h-24 w-24 border-4 border-primary">
-                    <AvatarImage src="https://placehold.co/100x100/E0E0E0/BDBDBD.png" alt="User" data-ai-hint="person portrait"/>
+                    <AvatarImage src={placeholderImages.userAvatar.src} alt={placeholderImages.userAvatar.alt} data-ai-hint="person portrait"/>
                     <AvatarFallback className="text-4xl">JD</AvatarFallback>
                 </Avatar>
                 <CardTitle className="text-3xl font-bold">{emergencyInfo.name}</CardTitle>

@@ -1,3 +1,5 @@
+import placeholderImages from './placeholder-images.json';
+
 export interface UserProfile {
   id: number;
   name: string;
@@ -67,7 +69,7 @@ export let initialUsers: UserProfile[] = [
     email: 'jane.doe@example.com',
     dob: '1990-05-21',
     relationship: 'Primary',
-    avatar: 'https://placehold.co/100x100/E0E0E0/BDBDBD.png',
+    avatar: placeholderImages.userAvatar.src,
     hint: 'user avatar',
     title: 'Mrs',
     preferredName: 'Jane',
@@ -94,7 +96,7 @@ export let initialUsers: UserProfile[] = [
     surname: 'Doe',
     dob: '1988-11-15',
     relationship: 'Spouse',
-    avatar: 'https://placehold.co/100x100/A9D5E5/333333.png',
+    avatar: placeholderImages.spouseAvatar.src,
     hint: 'man smiling',
   },
   {
@@ -104,7 +106,7 @@ export let initialUsers: UserProfile[] = [
     surname: 'Doe',
     dob: '2015-03-10',
     relationship: 'Child',
-    avatar: 'https://placehold.co/100x100/D4EDDA/333333.png',
+    avatar: placeholderImages.childAvatar.src,
     hint: 'boy smiling',
   },
 ];

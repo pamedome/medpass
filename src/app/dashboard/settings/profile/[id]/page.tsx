@@ -27,6 +27,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { countries } from '@/lib/countries';
 import { Textarea } from '@/components/ui/textarea';
+import placeholderImages from '@/lib/placeholder-images.json';
 
 const disabilityOptions = [
     { id: 'learning', label: 'Learning disability' },
@@ -49,7 +50,7 @@ const newMemberTemplate: UserProfile = {
     id: 0, // Temp id
     name: 'New Family Member',
     relationship: 'Family',
-    avatar: 'https://placehold.co/100x100/CCCCCC/333333.png',
+    avatar: placeholderImages.newMemberAvatar.src,
     hint: 'person outline',
     email: '',
     dob: '',
