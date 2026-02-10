@@ -70,11 +70,11 @@
     "hint": "man smiling"
   },
   "mriScan": {
-    "src": "https://images.unsplash.com/photo-1628334882583-6c7391520478?w=600&h=400&fit=crop",
-    "width": 600,
-    "height": 400,
-    "alt": "MRI scan of a brain",
-    "hint": "mri scan"
+    "src": "https://www.researchgate.net/profile/Ali-Gabr/publication/338491417/figure/fig1/AS:845938837188609@1578716738923/Knee-MRI-showing-joint-effusion-and-bone-marrow-edema-A-sagittal-view-and-B.png",
+    "width": 1038,
+    "height": 560,
+    "alt": "MRI scan of a knee",
+    "hint": "mri knee"
   },
   "dentalXray": {
     "src": "https://images.unsplash.com/photo-1599429959958-88203322f98f?w=600&h=400&fit=crop",
