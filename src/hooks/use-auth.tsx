@@ -54,6 +54,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           setUserProfile(profileData);
 
           const isAuthRoute = pathname.startsWith('/auth/signup');
+          const isLoginRoute = pathname === '/login';
           const onboardingStatus = profileData.onboardingStatus;
           
           if (onboardingStatus !== 'complete' && !isAuthRoute) {
@@ -66,7 +67,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             if (pathname !== redirectPath) {
               router.push(redirectPath);
             }
-          } else if (onboardingStatus === 'complete' && isAuthRoute) {
+          } else if (onboardingStatus === 'complete' && (isAuthRoute || isLoginRoute)) {
             router.push('/dashboard');
           }
 
