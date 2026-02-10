@@ -66,6 +66,13 @@ const documents = [
     date: '2023-06-15',
     tags: ['lab-results', 'allergy'],
   },
+  {
+    id: 'doc6',
+    name: 'Abdominal Ultrasound',
+    type: 'IMG',
+    date: '2023-05-20',
+    tags: ['imaging', 'ultrasound'],
+  },
 ];
 
 type Document = typeof documents[0];

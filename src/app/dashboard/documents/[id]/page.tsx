@@ -67,6 +67,13 @@ const allDocuments = [
         alt: placeholderImages.mriScan.alt,
         hint: placeholderImages.mriScan.hint,
       },
+      {
+        src: placeholderImages.mriScan2.src,
+        width: placeholderImages.mriScan2.width,
+        height: placeholderImages.mriScan2.height,
+        alt: placeholderImages.mriScan2.alt,
+        hint: placeholderImages.mriScan2.hint,
+      },
     ],
   },
   {
@@ -121,6 +128,28 @@ const allDocuments = [
     ],
     assessment: 'Patient has a significant allergy to dust mites and cat dander, and a moderate allergy to ragweed pollen. No allergy to peanuts detected.',
     recommendations: 'Discussed environmental control measures for dust mites and cats. Prescribed an antihistamine for seasonal allergy symptoms. Recommended allergen-proof bedding. Follow up as needed.'
+  },
+  {
+    id: 'doc6',
+    name: 'Abdominal Ultrasound',
+    type: 'Imaging Report',
+    date: '2023-05-20',
+    tags: ['imaging', 'ultrasound', 'gastroenterology'],
+    patientInfo: { name: 'Jane Doe', dob: '1990-05-21', patientId: 'JD-12345' },
+    reportInfo: { reportId: 'RPT-98770', issuedBy: 'Dr. John Hammond', facility: 'Central City Clinic', time: '01:30 PM' },
+    vitalSigns: {},
+    labResults: [],
+    assessment: 'Ultrasound of the abdomen reveals a normal-appearing liver, gallbladder, spleen, pancreas, and kidneys. No evidence of gallstones or other abnormalities.',
+    recommendations: 'No follow-up needed based on these findings. Patient can continue with routine care.',
+    images: [
+      {
+        src: placeholderImages.ultrasoundScan.src,
+        width: placeholderImages.ultrasoundScan.width,
+        height: placeholderImages.ultrasoundScan.height,
+        alt: placeholderImages.ultrasoundScan.alt,
+        hint: placeholderImages.ultrasoundScan.hint,
+      },
+    ],
   },
 ];
 
