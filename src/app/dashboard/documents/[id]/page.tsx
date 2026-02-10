@@ -10,6 +10,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -164,17 +170,26 @@ const InfoItem = ({ label, value }: { label: string; value: string | undefined }
     );
 }
 
+type ImageType = { src: string; alt: string; width: number; height: number };
+
 export default function DocumentDetailsPage() {
   const router = useRouter();
   const params = useParams();
   const id = params.id as string;
   const [isShareOpen, setShareOpen] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<ImageType | null>(null);
 
   const currentIndex = allDocuments.findIndex((doc) => doc.id === id);
   const documentDetails = allDocuments[currentIndex] as (typeof allDocuments)[0] & { images?: any[] };
   
   const prevDoc = currentIndex > 0 ? allDocuments[currentIndex - 1] : null;
   const nextDoc = currentIndex < allDocuments.length - 1 ? allDocuments[currentIndex + 1] : null;
+
+  const handleImageClick = (image: ImageType) => {
+    setSelectedImage(image);
+    setIsPreviewOpen(true);
+  };
 
   if (!documentDetails) {
     return (
@@ -305,16 +320,20 @@ export default function DocumentDetailsPage() {
                     <h3 className="text-lg font-semibold">Attached Images</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {documentDetails.images.map((image: any, index: number) => (
-                        <div key={index} className="rounded-lg border overflow-hidden">
-                        <Image
-                            src={image.src}
-                            alt={image.alt}
-                            width={image.width}
-                            height={image.height}
-                            data-ai-hint={image.hint}
-                            className="w-full h-auto object-cover"
-                        />
-                        </div>
+                        <button
+                            key={index}
+                            className="block h-full w-full overflow-hidden rounded-lg border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                            onClick={() => handleImageClick(image)}
+                        >
+                            <Image
+                                src={image.src}
+                                alt={image.alt}
+                                width={image.width}
+                                height={image.height}
+                                data-ai-hint={image.hint}
+                                className="h-auto w-full object-cover"
+                            />
+                        </button>
                     ))}
                     </div>
                 </div>
@@ -349,6 +368,24 @@ export default function DocumentDetailsPage() {
         setIsOpen={setShareOpen}
         documentName={documentDetails.name}
       />
+      <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+        <DialogContent className="w-auto max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>{selectedImage?.alt}</DialogTitle>
+          </DialogHeader>
+          {selectedImage && (
+            <div className="flex items-center justify-center">
+              <Image
+                src={selectedImage.src}
+                alt={selectedImage.alt}
+                width={1920}
+                height={1080}
+                className="h-auto w-auto max-h-[80vh] max-w-full rounded-md object-contain"
+              />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
