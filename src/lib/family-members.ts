@@ -70,7 +70,7 @@ export let initialUsers: UserProfile[] = [
     dob: '1990-05-21',
     relationship: 'Primary',
     avatar: placeholderImages.userAvatar.src,
-    hint: 'user avatar',
+    hint: 'woman portrait',
     title: 'Mrs',
     preferredName: 'Jane',
     nhsNumber: '123 456 7890',
@@ -97,7 +97,7 @@ export let initialUsers: UserProfile[] = [
     dob: '1988-11-15',
     relationship: 'Spouse',
     avatar: placeholderImages.spouseAvatar.src,
-    hint: 'man smiling',
+    hint: 'man portrait',
   },
   {
     id: 3,
@@ -107,7 +107,7 @@ export let initialUsers: UserProfile[] = [
     dob: '2015-03-10',
     relationship: 'Child',
     avatar: placeholderImages.childAvatar.src,
-    hint: 'boy smiling',
+    hint: 'young boy smiling',
   },
   {
     id: 4,
@@ -117,6 +117,6 @@ export let initialUsers: UserProfile[] = [
     dob: '2018-07-22',
     relationship: 'Child',
     avatar: placeholderImages.childAvatar2.src,
-    hint: 'girl smiling',
+    hint: 'young girl smiling',
   },
 ];

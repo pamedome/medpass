@@ -1,31 +1,31 @@
 {
   "userAvatar": {
-    "src": "https://picsum.photos/seed/userAvatar/100/100",
+    "src": "https://picsum.photos/seed/janeDoeAvatar/100/100",
     "width": 100,
     "height": 100,
     "alt": "User avatar",
-    "hint": "user avatar"
+    "hint": "woman portrait"
   },
   "spouseAvatar": {
-    "src": "https://picsum.photos/seed/spouseAvatar/100/100",
+    "src": "https://picsum.photos/seed/johnDoeAvatar/100/100",
     "width": 100,
     "height": 100,
     "alt": "Spouse avatar",
-    "hint": "man smiling"
+    "hint": "man portrait"
   },
   "childAvatar": {
-    "src": "https://picsum.photos/seed/childAvatar/100/100",
+    "src": "https://picsum.photos/seed/jimmyDoeAvatar/100/100",
     "width": 100,
     "height": 100,
     "alt": "Child avatar",
-    "hint": "boy smiling"
+    "hint": "young boy smiling"
   },
   "childAvatar2": {
-    "src": "https://picsum.photos/seed/childAvatar2/100/100",
+    "src": "https://picsum.photos/seed/jonnaDoeAvatar/100/100",
     "width": 100,
     "height": 100,
     "alt": "Child avatar",
-    "hint": "girl smiling"
+    "hint": "young girl smiling"
   },
   "newMemberAvatar": {
     "src": "https://picsum.photos/seed/newMember/100/100",

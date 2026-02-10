@@ -18,6 +18,8 @@ import {
   DownloadCloud,
   AreaChart,
   Syringe,
+  Check,
+  UserPlus,
 } from 'lucide-react';
 
 import {
@@ -39,6 +41,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuGroup,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
@@ -107,6 +110,20 @@ export default function DashboardLayout({
         description: 'An error occurred while logging out. Please try again.',
       });
     }
+  };
+
+  const handleSwitchUser = (user: UserProfile) => {
+    setActiveUser(user);
+    localStorage.setItem('activeFamilyMemberId', user.id.toString());
+    window.dispatchEvent(new Event('familyMemberChanged'));
+    toast({
+      title: 'Account Switched',
+      description: `You are now viewing the dashboard for ${user.name}.`,
+    });
+  };
+
+  const handleAddMember = () => {
+    router.push('/dashboard/settings/profile/new');
   };
 
   const unreadNotifications = notifications.filter(n => !n.read);
@@ -269,29 +286,55 @@ export default function DashboardLayout({
                         </Avatar>
                     </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>
-                        <div className="flex flex-col">
-                            <span>{activeUser?.name ?? 'Jane Doe'}</span>
-                            <span className="text-xs font-normal text-muted-foreground">{user?.email ?? 'jane.doe@example.com'}</span>
-                        </div>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                        <User className="mr-2 h-4 w-4" />
-                        <span>Profile</span>
-                    </DropdownMenuItem>
-                    <Link href="/dashboard/settings">
-                        <DropdownMenuItem>
-                            <Settings className="mr-2 h-4 w-4" />
-                            <span>Settings</span>
+                    <DropdownMenuContent align="end" className="w-64">
+                        <DropdownMenuLabel>
+                            <div className="flex flex-col">
+                                <span>{activeUser?.name ?? 'Jane Doe'}</span>
+                                <span className="text-xs font-normal text-muted-foreground">{user?.email ?? 'jane.doe@example.com'}</span>
+                            </div>
+                        </DropdownMenuLabel>
+                        
+                        <DropdownMenuSeparator />
+
+                        <DropdownMenuGroup>
+                            <DropdownMenuLabel>Switch Profile</DropdownMenuLabel>
+                            {initialUsers.map((member) => (
+                                <DropdownMenuItem key={member.id} onSelect={() => handleSwitchUser(member)} className="cursor-pointer">
+                                    <Avatar className="mr-2 h-6 w-6">
+                                        <AvatarImage src={member.avatar} alt={member.name} data-ai-hint={member.hint} />
+                                        <AvatarFallback>{member.name.split(' ').map(n=>n[0]).join('')}</AvatarFallback>
+                                    </Avatar>
+                                    <span className="flex-1">{member.name}</span>
+                                    {activeUser?.id === member.id && <Check className="h-4 w-4" />}
+                                </DropdownMenuItem>
+                            ))}
+                        </DropdownMenuGroup>
+                        
+                        <DropdownMenuSeparator />
+
+                        <Link href={`/dashboard/settings/profile/${activeUser?.id ?? '1'}`}>
+                            <DropdownMenuItem>
+                                <User className="mr-2 h-4 w-4" />
+                                <span>My Profile</span>
+                            </DropdownMenuItem>
+                        </Link>
+                        <Link href="/dashboard/settings">
+                            <DropdownMenuItem>
+                                <Settings className="mr-2 h-4 w-4" />
+                                <span>Manage Family</span>
+                            </DropdownMenuItem>
+                        </Link>
+                        <DropdownMenuItem onSelect={handleAddMember} className="cursor-pointer">
+                            <UserPlus className="mr-2 h-4 w-4" />
+                            <span>Add Member</span>
                         </DropdownMenuItem>
-                    </Link>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
-                        <LogOut className="mr-2 h-4 w-4" />
-                        <span>Logout</span>
-                    </DropdownMenuItem>
+                        
+                        <DropdownMenuSeparator />
+                        
+                        <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+                            <LogOut className="mr-2 h-4 w-4" />
+                            <span>Logout</span>
+                        </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
