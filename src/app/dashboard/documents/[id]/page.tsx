@@ -42,7 +42,13 @@ const InfoItem = ({ label, value }: { label: string; value: string | undefined }
     );
 }
 
-type ImageType = { src: string; alt: string; width: number; height: number };
+type ImageType = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  hint?: string;
+};
 
 export default function DocumentDetailsPage() {
   const router = useRouter();
@@ -194,7 +200,7 @@ export default function DocumentDetailsPage() {
                 <div className="space-y-4">
                     <h3 className="text-lg font-semibold">Attached Images</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {documentDetails.images.map((image: any, index: number) => (
+                    {documentDetails.images.map((image: ImageType, index: number) => (
                         <button
                             key={index}
                             className="block h-full w-full overflow-hidden rounded-lg border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
