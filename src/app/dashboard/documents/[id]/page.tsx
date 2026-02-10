@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import Image from 'next/image';
 import {
   Card,
   CardContent,
@@ -23,6 +24,7 @@ import {
 } from '@/components/ui/table';
 import Link from 'next/link';
 import { ShareDialog } from '@/components/share-dialog';
+import placeholderImages from '@/lib/placeholder-images.json';
 
 // Mock data for all documents
 const allDocuments = [
@@ -56,7 +58,16 @@ const allDocuments = [
     vitalSigns: {},
     labResults: [],
     assessment: 'MRI of the left knee shows a moderate tear of the medial meniscus. No other significant abnormalities noted. The anterior cruciate ligament is intact.',
-    recommendations: 'Referral to an orthopedic specialist for consultation regarding surgical vs. non-surgical management options. Recommend RICE (Rest, Ice, Compression, Elevation) protocol in the interim.'
+    recommendations: 'Referral to an orthopedic specialist for consultation regarding surgical vs. non-surgical management options. Recommend RICE (Rest, Ice, Compression, Elevation) protocol in the interim.',
+    images: [
+      {
+        src: placeholderImages.mriScan.src,
+        width: placeholderImages.mriScan.width,
+        height: placeholderImages.mriScan.height,
+        alt: placeholderImages.mriScan.alt,
+        hint: placeholderImages.mriScan.hint,
+      },
+    ],
   },
   {
     id: 'doc3',
@@ -82,7 +93,16 @@ const allDocuments = [
     vitalSigns: {},
     labResults: [],
     assessment: 'Bitewing and panoramic X-rays reviewed. Early signs of a cavity (caries) on tooth #30 (lower right first molar). No other signs of decay or periodontal disease.',
-    recommendations: 'Schedule a filling for tooth #30. Continue regular brushing and flossing. Six-month follow-up recommended.'
+    recommendations: 'Schedule a filling for tooth #30. Continue regular brushing and flossing. Six-month follow-up recommended.',
+    images: [
+        {
+          src: placeholderImages.dentalXray.src,
+          width: placeholderImages.dentalXray.width,
+          height: placeholderImages.dentalXray.height,
+          alt: placeholderImages.dentalXray.alt,
+          hint: placeholderImages.dentalXray.hint,
+        },
+      ],
   },
   {
     id: 'doc5',
@@ -122,7 +142,7 @@ export default function DocumentDetailsPage() {
   const [isShareOpen, setShareOpen] = useState(false);
 
   const currentIndex = allDocuments.findIndex((doc) => doc.id === id);
-  const documentDetails = allDocuments[currentIndex];
+  const documentDetails = allDocuments[currentIndex] as (typeof allDocuments)[0] & { images?: any[] };
   
   const prevDoc = currentIndex > 0 ? allDocuments[currentIndex - 1] : null;
   const nextDoc = currentIndex < allDocuments.length - 1 ? allDocuments[currentIndex + 1] : null;
@@ -248,6 +268,29 @@ export default function DocumentDetailsPage() {
                 </div>
               </div>
             </div>
+
+            {documentDetails.images && documentDetails.images.length > 0 && (
+                <>
+                <Separator />
+                <div className="space-y-4">
+                    <h3 className="text-lg font-semibold">Attached Images</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {documentDetails.images.map((image: any, index: number) => (
+                        <div key={index} className="rounded-lg border overflow-hidden">
+                        <Image
+                            src={image.src}
+                            alt={image.alt}
+                            width={image.width}
+                            height={image.height}
+                            data-ai-hint={image.hint}
+                            className="w-full h-auto object-cover"
+                        />
+                        </div>
+                    ))}
+                    </div>
+                </div>
+                </>
+            )}
           </CardContent>
         </Card>
         <div className="mt-6 flex items-center justify-between">

@@ -68,5 +68,19 @@
     "height": 40,
     "alt": "Dr. David Oshodi",
     "hint": "man smiling"
+  },
+  "mriScan": {
+    "src": "https://picsum.photos/seed/mriKnee/600/400",
+    "width": 600,
+    "height": 400,
+    "alt": "MRI scan of a knee",
+    "hint": "mri scan"
+  },
+  "dentalXray": {
+    "src": "https://picsum.photos/seed/dentalXray/600/400",
+    "width": 600,
+    "height": 400,
+    "alt": "Dental X-ray",
+    "hint": "dental xray"
   }
 }
