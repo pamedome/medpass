@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/use-auth';
 import { useFirebaseAuth } from '@/firebase';
@@ -22,39 +22,80 @@ export default function VerifyPage() {
   const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
   const [marketingOptIn, setMarketingOptIn] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
+  const [canResend, setCanResend] = useState(true);
+  const [resendCooldown, setResendCooldown] = useState(0);
 
-  const [isVerified, setIsVerified] = useState(auth.currentUser?.emailVerified || false);
-
+  // Redirect if not authenticated
   useEffect(() => {
-    if (auth.currentUser?.emailVerified) {
-      setIsVerified(true);
+    if (!loading && !user) {
+      router.push('/login');
     }
-    // Periodically check email verification status
-    const interval = setInterval(async () => {
-      await auth.currentUser?.reload();
-      if (auth.currentUser?.emailVerified) {
-        setIsVerified(true);
-        clearInterval(interval);
-      }
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [auth.currentUser]);
+  }, [user, loading, router]);
 
-  const handleResend = async () => {
+  // Check email verification status
+  useEffect(() => {
+    const currentUser = auth.currentUser;
+    if (!currentUser) return;
+
+    // Set initial state
+    setIsVerified(currentUser.emailVerified);
+
+    // Poll for verification status
+    const checkVerification = async () => {
+      try {
+        await currentUser.reload();
+        const verified = auth.currentUser?.emailVerified || false;
+        if (verified && !isVerified) {
+          setIsVerified(true);
+          toast({
+            title: 'Email Verified!',
+            description: 'Your email has been successfully verified.',
+          });
+        }
+      } catch (error) {
+        console.error('Error checking verification:', error);
+      }
+    };
+
+    const interval = setInterval(checkVerification, 3000);
+    return () => clearInterval(interval);
+  }, [auth, isVerified, toast]);
+
+  const handleResend = useCallback(async () => {
+    if (!canResend) return;
+
     try {
+      setCanResend(false);
       await sendVerificationEmail();
+      
       toast({
         title: 'Verification Email Sent',
         description: 'Please check your inbox (and spam folder).',
       });
-    } catch (error: any) {
+
+      // Start 60-second cooldown
+      setResendCooldown(60);
+      const countdown = setInterval(() => {
+        setResendCooldown(prev => {
+          if (prev <= 1) {
+            clearInterval(countdown);
+            setCanResend(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } catch (error) {
+      console.error('Resend error:', error);
+      setCanResend(true);
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'Failed to send verification email. Please try again.',
+        description: error instanceof Error ? error.message : 'Failed to send verification email.',
       });
     }
-  };
+  }, [canResend, toast]);
 
   const handleFinish = async () => {
     if (!acceptedTerms || !acceptedPrivacy) {
@@ -65,7 +106,16 @@ export default function VerifyPage() {
       });
       return;
     }
-    if(!user) return;
+    
+    if (!user) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'User session not found. Please log in again.',
+      });
+      router.push('/login');
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -75,24 +125,35 @@ export default function VerifyPage() {
         marketingOptIn,
         onboardingStatus: 'complete',
       });
+      
       toast({
         title: 'Setup Complete!',
         description: 'Welcome to Medpass!',
       });
+      
       router.push('/dashboard');
-    } catch (error: any) {
+    } catch (error) {
+      console.error('Onboarding error:', error);
       toast({
         variant: 'destructive',
         title: 'Finalization Failed',
-        description: 'An error occurred. Please try again.',
+        description: error instanceof Error ? error.message : 'An error occurred. Please try again.',
       });
     } finally {
-        setIsSubmitting(false);
+      setIsSubmitting(false);
     }
   };
 
   if (loading) {
-    return <div className="flex justify-center items-center h-screen"><Loader2 className="h-8 w-8 animate-spin" /></div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null; // Will redirect via useEffect
   }
   
   return (
@@ -107,57 +168,20 @@ export default function VerifyPage() {
         <div className="rounded-lg border p-4 space-y-4">
           <h3 className="font-semibold text-lg">Email Verification</h3>
           {isVerified ? (
-             <div className="flex items-center gap-2 text-green-600">
-                <CheckCircle className="h-5 w-5" />
-                <p className="font-medium">Your email address has been verified.</p>
-             </div>
+            <div className="flex items-center gap-2 text-green-600">
+              <CheckCircle className="h-5 w-5" />
+              <p className="font-medium">Your email address has been verified.</p>
+            </div>
           ) : (
             <div className="space-y-4">
-                <div className="flex items-center gap-2 text-yellow-600">
-                    <AlertCircle className="h-5 w-5" />
-                    <p className="font-medium">Please verify your email address.</p>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                    We've sent a verification link to <strong>{user?.email}</strong>. Please check your inbox and click the link to continue.
-                </p>
-                <Button variant="outline" onClick={handleResend}>
-                    <Mail className="mr-2 h-4 w-4" />
-                    Resend verification email
-                </Button>
-            </div>
-          )}
-        </div>
-
-        <div className="space-y-4 rounded-lg border p-4">
-            <h3 className="font-semibold text-lg">Legal</h3>
-            <div className="space-y-4">
-                <div className="flex items-start space-x-3">
-                    <Checkbox id="terms" checked={acceptedTerms} onCheckedChange={(c) => setAcceptedTerms(Boolean(c))} />
-                    <label htmlFor="terms" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                    I accept the <a href="#" className="text-primary hover:underline">Terms of Service</a>.
-                    </label>
-                </div>
-                <div className="flex items-start space-x-3">
-                    <Checkbox id="privacy" checked={acceptedPrivacy} onCheckedChange={(c) => setAcceptedPrivacy(Boolean(c))} />
-                    <label htmlFor="privacy" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                    I accept the <a href="#" className="text-primary hover:underline">Privacy Policy</a>.
-                    </label>
-                </div>
-                <div className="flex items-start space-x-3">
-                    <Checkbox id="marketing" checked={marketingOptIn} onCheckedChange={(c) => setMarketingOptIn(Boolean(c))} />
-                    <label htmlFor="marketing" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                    I would like to receive marketing emails (optional).
-                    </label>
-                </div>
-            </div>
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Button onClick={handleFinish} className="w-full" disabled={!isVerified || !acceptedTerms || !acceptedPrivacy || isSubmitting}>
-           {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-           Finish Setup
-        </Button>
-      </CardFooter>
-    </Card>
-  );
-}
+              <div className="flex items-center gap-2 text-yellow-600">
+                <AlertCircle className="h-5 w-5" />
+                <p className="font-medium">Please verify your email address.</p>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                We've sent a verification link to <strong>{user?.email}</strong>. Please check your inbox and click the link to continue.
+              </p>
+              <Button 
+                variant="outline" 
+                onClick={handleResend}
+                disabled={!canResend}

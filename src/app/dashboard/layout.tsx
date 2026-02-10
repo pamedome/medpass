@@ -47,6 +47,9 @@ import { notificationsData, Notification } from '@/lib/notifications';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/use-auth';
 import placeholderImages from '@/lib/placeholder-images.json';
+import { useFirebaseAuth } from '@/firebase';
+import { signOut } from 'firebase/auth';
+import { useToast } from '@/hooks/use-toast';
 
 const menuItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -59,8 +62,7 @@ const menuItems = [
 const generalItems = [
     { href: '/dashboard/settings', icon: Settings, label: 'Settings' },
     { href: '#', icon: HelpCircle, label: 'Help' },
-    { href: '/', icon: LogOut, label: 'Logout' },
-]
+];
 
 export default function DashboardLayout({
   children,
@@ -69,9 +71,29 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const auth = useFirebaseAuth();
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = React.useState('');
   const [notifications, setNotifications] = React.useState<Notification[]>(notificationsData);
   const { user } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      toast({
+        title: 'Logged Out',
+        description: 'You have been successfully logged out.',
+      });
+      // The useAuth hook will handle redirection to /login automatically
+    } catch (error) {
+      console.error('Logout failed', error);
+      toast({
+        variant: 'destructive',
+        title: 'Logout Failed',
+        description: 'An error occurred while logging out. Please try again.',
+      });
+    }
+  };
 
   const unreadNotifications = notifications.filter(n => !n.read);
 
@@ -126,7 +148,7 @@ export default function DashboardLayout({
                     <SidebarMenuItem key={item.label}>
                         <Link href={item.href}>
                         <SidebarMenuButton
-                            isActive={item.href !== '/' && item.href !== '#' && pathname.startsWith(item.href)}
+                            isActive={item.href !== '#' && pathname.startsWith(item.href)}
                             tooltip={item.label}
                         >
                             <item.icon />
@@ -135,6 +157,12 @@ export default function DashboardLayout({
                         </Link>
                     </SidebarMenuItem>
                     ))}
+                    <SidebarMenuItem>
+                        <SidebarMenuButton onClick={handleLogout} tooltip="Logout">
+                            <LogOut />
+                            <span>Logout</span>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
                 </SidebarMenu>
             </div>
           </div>
@@ -246,12 +274,10 @@ export default function DashboardLayout({
                         </DropdownMenuItem>
                     </Link>
                     <DropdownMenuSeparator />
-                    <Link href="/">
-                        <DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
                         <LogOut className="mr-2 h-4 w-4" />
                         <span>Logout</span>
-                        </DropdownMenuItem>
-                    </Link>
+                    </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
