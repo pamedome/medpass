@@ -75,11 +75,7 @@ export default function SettingsPage() {
 
   const confirmDeleteUser = () => {
     if (userToDelete) {
-      const index = initialUsers.findIndex(u => u.id === userToDelete.id);
-      if (index > -1) {
-        initialUsers.splice(index, 1);
-      }
-      setUsers([...initialUsers]);
+      setUsers((currentUsers) => currentUsers.filter(u => u.id !== userToDelete.id));
 
       toast({
         title: 'Member Removed',
@@ -87,7 +83,7 @@ export default function SettingsPage() {
       });
 
       if (activeUser.id === userToDelete.id) {
-        const newActiveUser = initialUsers.find((u) => u.relationship === 'Primary') || initialUsers[0];
+        const newActiveUser = users.find((u) => u.relationship === 'Primary' && u.id !== userToDelete.id) || users.find(u => u.id !== userToDelete.id);
         if (newActiveUser) {
           setActiveUser(newActiveUser);
         }
@@ -115,8 +111,8 @@ export default function SettingsPage() {
                 activeUser.id === member.id && 'bg-muted'
               )}
             >
-              <div className="flex items-center gap-4">
-                <Avatar>
+              <div className="flex flex-1 items-center gap-4 overflow-hidden">
+                <Avatar className="h-12 w-12">
                   <AvatarImage
                     src={member.avatar}
                     alt={member.name}
@@ -129,11 +125,21 @@ export default function SettingsPage() {
                       .join('')}
                   </AvatarFallback>
                 </Avatar>
-                <div>
+                <div className="flex-1 overflow-hidden">
                   <p className="font-semibold">{member.name}</p>
                   <p className="text-sm text-muted-foreground">
                     {member.relationship}
                   </p>
+                  {member.dob && (
+                    <p className="text-xs text-muted-foreground">
+                      {`DOB: ${member.dob}`}
+                    </p>
+                  )}
+                  {member.email && (
+                    <p className="truncate text-xs text-muted-foreground">
+                      {member.email}
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="flex items-center gap-2">
