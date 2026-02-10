@@ -90,11 +90,25 @@
     "alt": "Dental X-ray",
     "hint": "dental xray"
   },
+  "dentalXray2": {
+    "src": "https://picsum.photos/seed/dental2/600/400",
+    "width": 600,
+    "height": 400,
+    "alt": "Dental X-ray, alternate view",
+    "hint": "dental xray"
+  },
   "ultrasoundScan": {
     "src": "https://picsum.photos/seed/ultrasound/600/400",
     "width": 600,
     "height": 400,
     "alt": "Ultrasound scan",
+    "hint": "ultrasound scan"
+  },
+  "ultrasoundScan2": {
+    "src": "https://picsum.photos/seed/ultrasound2/600/400",
+    "width": 600,
+    "height": 400,
+    "alt": "Ultrasound scan, second view",
     "hint": "ultrasound scan"
   },
   "chestXray": {
@@ -103,5 +117,26 @@
     "height": 800,
     "alt": "Chest X-ray of a child",
     "hint": "chest xray"
+  },
+  "chestXray2": {
+    "src": "https://picsum.photos/seed/chestxray2/600/800",
+    "width": 600,
+    "height": 800,
+    "alt": "Chest X-ray of a child, lateral view",
+    "hint": "chest xray"
+  },
+  "ctScan": {
+    "src": "https://picsum.photos/seed/ctscan/512/512",
+    "width": 512,
+    "height": 512,
+    "alt": "CT scan of the head",
+    "hint": "ct scan"
+  },
+  "ctScan2": {
+    "src": "https://picsum.photos/seed/ctscan2/512/512",
+    "width": 512,
+    "height": 512,
+    "alt": "CT scan of the head, axial view",
+    "hint": "ct scan"
   }
 }
