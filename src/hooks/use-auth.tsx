@@ -5,11 +5,10 @@ import React, {
   useContext,
   useEffect,
   useState,
-  useMemo,
 } from 'react';
-import { getAuth, onAuthStateChanged, User, Auth } from 'firebase/auth';
-import { getFirestore, doc, onSnapshot, Firestore } from 'firebase/firestore';
-import { app } from '@/lib/firebase-client';
+import { onAuthStateChanged, User } from 'firebase/auth';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { useFirebaseAuth, useFirestore } from '@/firebase';
 import { UserProfile } from '@/lib/types';
 import { useRouter, usePathname } from 'next/navigation';
 
@@ -17,27 +16,22 @@ interface AuthContextType {
   user: User | null;
   userProfile: UserProfile | null;
   loading: boolean;
-  auth: Auth | null;
-  db: Firestore | null;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   userProfile: null,
   loading: true,
-  auth: null,
-  db: null,
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const auth = useFirebaseAuth();
+  const db = useFirestore();
   const [user, setUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
-
-  const auth = useMemo(() => getAuth(app), []);
-  const db = useMemo(() => getFirestore(app), []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -54,11 +48,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (user) {
       const userDocRef = doc(db, 'users', user.uid);
       const unsubscribe = onSnapshot(userDocRef, (doc) => {
+        setLoading(false);
         if (doc.exists()) {
           const profileData = doc.data() as UserProfile;
           setUserProfile(profileData);
 
-          // Route guarding logic
           const isAuthRoute = pathname.startsWith('/auth/signup');
           const onboardingStatus = profileData.onboardingStatus;
           
@@ -69,23 +63,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             if (step === 'kyc') {
               redirectPath = `/auth/signup/kyc/${profileData.region || 'eu'}`;
             }
-            router.push(redirectPath);
+            if (pathname !== redirectPath) {
+              router.push(redirectPath);
+            }
           } else if (onboardingStatus === 'complete' && isAuthRoute) {
             router.push('/dashboard');
           }
 
         } else {
-          // This case might happen if Firestore doc creation fails after signup
           setUserProfile(null);
           if (!pathname.startsWith('/auth/signup')) {
             router.push('/auth/signup/account');
           }
         }
+      }, (error) => {
+        console.error("Error fetching user profile:", error);
         setLoading(false);
       });
       return () => unsubscribe();
     } else {
-        // Not logged in, redirect from protected routes
+        setLoading(false);
         const isProtectedRoute = !['/', '/login'].includes(pathname) && !pathname.startsWith('/auth/signup') && !pathname.startsWith('/emergency-access');
         if(isProtectedRoute) {
             router.push('/login');
@@ -94,7 +91,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [user, db, router, pathname]);
 
   return (
-    <AuthContext.Provider value={{ user, userProfile, loading, auth, db }}>
+    <AuthContext.Provider value={{ user, userProfile, loading }}>
       {children}
     </AuthContext.Provider>
   );

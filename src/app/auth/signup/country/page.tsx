@@ -45,7 +45,7 @@ export default function SelectCountryPage() {
         title: 'Region Saved',
         description: 'Redirecting to the next step...',
       });
-      router.push(`/auth/signup/kyc/${selectedRegion}`);
+      router.push(`/auth/signup/kyc/${selectedRegion.toLowerCase()}`);
     } catch (error: any) {
       console.error('Failed to update region:', error);
       toast({

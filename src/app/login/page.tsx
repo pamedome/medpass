@@ -27,7 +27,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { useAuth } from '@/hooks/use-auth';
+import { useFirebaseAuth } from '@/firebase'; // Updated import
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
@@ -39,7 +39,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export default function AuthPage() {
   const router = useRouter();
   const { toast } = useToast();
-  const { auth } = useAuth();
+  const auth = useFirebaseAuth(); // Updated to use new hook
 
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),

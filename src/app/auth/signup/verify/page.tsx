@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/use-auth';
+import { useFirebaseAuth } from '@/firebase';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -13,7 +14,8 @@ import { serverTimestamp } from 'firebase/firestore';
 
 export default function VerifyPage() {
   const router = useRouter();
-  const { user, userProfile, loading, auth } = useAuth();
+  const { user, loading } = useAuth();
+  const auth = useFirebaseAuth();
   const { toast } = useToast();
 
   const [acceptedTerms, setAcceptedTerms] = useState(false);
@@ -21,22 +23,22 @@ export default function VerifyPage() {
   const [marketingOptIn, setMarketingOptIn] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [isVerified, setIsVerified] = useState(user?.emailVerified || false);
+  const [isVerified, setIsVerified] = useState(auth.currentUser?.emailVerified || false);
 
   useEffect(() => {
-    if (user?.emailVerified) {
+    if (auth.currentUser?.emailVerified) {
       setIsVerified(true);
     }
     // Periodically check email verification status
     const interval = setInterval(async () => {
-      await user?.reload();
-      if (user?.emailVerified) {
+      await auth.currentUser?.reload();
+      if (auth.currentUser?.emailVerified) {
         setIsVerified(true);
         clearInterval(interval);
       }
     }, 3000);
     return () => clearInterval(interval);
-  }, [user]);
+  }, [auth.currentUser]);
 
   const handleResend = async () => {
     try {

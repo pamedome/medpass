@@ -10,11 +10,10 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from 'firebase/auth';
-import { app } from './firebase-client';
+import { initializeFirebase } from '@/firebase';
 import { UserProfile, UserRole } from './types';
 
-const db = getFirestore(app);
-const auth = getAuth(app);
+const { db, auth } = initializeFirebase();
 
 export const signUpWithEmail = async (
   email: string,
