@@ -80,13 +80,19 @@ export default function CreateAccountPage() {
         title: 'Account Created!',
         description: 'Redirecting you to the next step.',
       });
-      router.push('/auth/signup/country');
+      // The redirect is handled by the useAuth hook now
     } catch (error: any) {
       console.error(error);
+      let description = 'An unknown error occurred. Please try again.';
+      if (error.code === 'auth/email-already-in-use') {
+        description = 'An account with this email already exists. Please log in.';
+      } else if (error.message) {
+        description = error.message;
+      }
       toast({
         variant: 'destructive',
         title: 'Sign-up failed',
-        description: error.message || 'An unknown error occurred.',
+        description,
       });
     } finally {
       setIsLoading(false);
