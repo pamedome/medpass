@@ -2,10 +2,8 @@
 
 import * as React from 'react';
 import {
-  Calendar,
   Plus,
   TrendingUp,
-  Video,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -82,6 +80,20 @@ const dashboardData: { [key: number]: any } = {
         ],
         title: 'Dashboard',
         description: 'Plan, prioritize, and accomplish your tasks with ease.',
+        reminders: [
+            {
+                title: 'Cardiology Follow-up',
+                description: 'Check in with Dr. Johnson about your angina.',
+                href: '/dashboard/appointments/appt-1',
+                cta: 'View Appointment'
+            },
+            {
+                title: 'Re-test Cholesterol',
+                description: 'Follow up on your annual check-up results.',
+                href: '/dashboard/documents/doc1',
+                cta: 'View Report'
+            },
+        ],
     },
     2: { // John Doe
         statsCards: [
@@ -95,6 +107,14 @@ const dashboardData: { [key: number]: any } = {
         ],
         title: 'John\'s Dashboard',
         description: 'An overview of John\'s health records.',
+        reminders: [
+            {
+                title: 'Neurology Consultation',
+                description: 'Follow up on CT scan results for chronic headaches.',
+                href: '/dashboard/documents/doc11',
+                cta: 'View Report'
+            },
+        ],
     },
     3: { // Jimmy Doe
         statsCards: [
@@ -108,6 +128,20 @@ const dashboardData: { [key: number]: any } = {
         ],
         title: 'Jimmy\'s Dashboard',
         description: 'An overview of Jimmy\'s health records.',
+        reminders: [
+            {
+                title: 'Annual Pediatric Check-up',
+                description: 'Appointment with Dr. Emily Chen.',
+                href: '/dashboard/appointments/appt-3',
+                cta: 'View Appointment'
+            },
+            {
+                title: 'Upcoming Vaccination: HPV',
+                description: 'Scheduled for next month.',
+                href: '/dashboard/vaccinations',
+                cta: 'View Schedule'
+            },
+        ],
     },
     4: { // Jonna Doe
         statsCards: [
@@ -121,6 +155,20 @@ const dashboardData: { [key: number]: any } = {
         ],
         title: 'Jonna\'s Dashboard',
         description: 'An overview of Jonna\'s health records.',
+        reminders: [
+            {
+                title: 'Follow-up on Cough',
+                description: 'Monitor persistent cough as per chest X-ray report.',
+                href: '/dashboard/documents/doc10',
+                cta: 'View Report'
+            },
+             {
+                title: 'Pediatrician Appointment',
+                description: 'Check-up with Dr. Emily Chen.',
+                href: '/dashboard/appointments/appt-3',
+                cta: 'View Appointment'
+            },
+        ],
     }
 };
 
@@ -143,7 +191,7 @@ export default function DashboardPage() {
         };
     }, []);
 
-  const { statsCards, appointments, title, description } = data;
+  const { statsCards, appointments, title, description, reminders } = data;
 
   return (
     <div className="flex flex-1 flex-col gap-6">
@@ -199,21 +247,26 @@ export default function DashboardPage() {
         <Card>
           <CardHeader>
             <CardTitle>Reminders</CardTitle>
+            <CardDescription>Your upcoming health tasks and alerts.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="rounded-lg border p-4">
-                <h3 className="font-semibold">Meeting with Arc Company</h3>
-                <p className="text-sm text-muted-foreground">Time: 02.00 pm - 04.00 pm</p>
-                <div className="flex items-center gap-2 mt-2">
-                    <Button size="sm" className="w-full"><Video className="mr-2"/> Start Meeting</Button>
-                    <Button size="sm" variant="outline" className="w-full"><Calendar className="mr-2"/> Reschedule</Button>
+            {reminders && reminders.length > 0 ? (
+              reminders.map((reminder: any, index: number) => (
+                <div key={index} className="rounded-lg border p-4">
+                  <h3 className="font-semibold">{reminder.title}</h3>
+                  <p className="text-sm text-muted-foreground">{reminder.description}</p>
+                  {reminder.href && reminder.cta && (
+                    <Button asChild size="sm" variant="outline" className="w-full mt-2">
+                       <Link href={reminder.href}>{reminder.cta}</Link>
+                    </Button>
+                  )}
                 </div>
-            </div>
-             <div className="rounded-lg border p-4">
-                <h3 className="font-semibold">Dentist Appointment</h3>
-                <p className="text-sm text-muted-foreground">Time: Tomorrow, 10.00 am</p>
-                <Button size="sm" variant="outline" className="w-full mt-2">View Details</Button>
-            </div>
+              ))
+            ) : (
+              <div className="text-center text-muted-foreground py-8">
+                No active reminders.
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
