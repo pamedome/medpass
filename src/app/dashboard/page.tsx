@@ -249,18 +249,20 @@ export default function DashboardPage() {
             <CardTitle>Reminders</CardTitle>
             <CardDescription>Your upcoming health tasks and alerts.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-2">
             {reminders && reminders.length > 0 ? (
               reminders.map((reminder: any, index: number) => (
-                <div key={index} className="rounded-lg border p-4">
-                  <h3 className="font-semibold">{reminder.title}</h3>
-                  <p className="text-sm text-muted-foreground">{reminder.description}</p>
-                  {reminder.href && reminder.cta && (
-                    <Button asChild size="sm" variant="outline" className="w-full mt-2">
-                       <Link href={reminder.href}>{reminder.cta}</Link>
-                    </Button>
-                  )}
-                </div>
+                <Link href={reminder.href || '#'} key={index} className="block -mx-2">
+                   <div className="flex items-start rounded-md p-2 hover:bg-muted">
+                       <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 shrink-0 mt-0.5">
+                           <TrendingUp className="h-3 w-3 text-primary" />
+                       </div>
+                       <div className="ml-3 flex-1">
+                           <p className="font-semibold text-sm">{reminder.title}</p>
+                           <p className="text-sm text-muted-foreground">{reminder.description}</p>
+                       </div>
+                   </div>
+               </Link>
               ))
             ) : (
               <div className="text-center text-muted-foreground py-8">
