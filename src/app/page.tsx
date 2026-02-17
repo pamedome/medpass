@@ -179,7 +179,7 @@ export default function LandingPage() {
       <footer className="border-t">
         <div className="container flex flex-col items-center justify-between gap-4 py-6 md:flex-row">
             <p className="text-sm text-muted-foreground">
-                © {new Date().getFullYear()} Medpass. All rights reserved.
+                © 2024 Medpass. All rights reserved.
             </p>
             <nav className="flex gap-4">
                 <Link href="#" className="text-sm hover:underline">Terms of Service</Link>
