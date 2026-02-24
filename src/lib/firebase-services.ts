@@ -6,12 +6,22 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import {
-  getAuth,
-  createUserWithEmailAndPassword,
   sendEmailVerification,
 } from 'firebase/auth';
 import { initializeFirebase } from '@/firebase';
 
-// This file is intentionally left with no exports as the signup flow has been removed.
-// The functions that were here (signUpWithEmail, updateUserOnboarding, sendVerificationEmail)
-// are no longer needed.
+export const updateUserOnboarding = async (uid: string, data: object) => {
+  const { db } = initializeFirebase();
+  const userDocRef = doc(db, 'users', uid);
+  await setDoc(userDocRef, data, { merge: true });
+};
+
+export const sendVerificationEmail = async () => {
+  const { auth } = initializeFirebase();
+  const user = auth.currentUser;
+  if (user) {
+    await sendEmailVerification(user);
+  } else {
+    throw new Error('No user is currently signed in to send a verification email.');
+  }
+};

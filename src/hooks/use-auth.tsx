@@ -75,16 +75,46 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     const protectedRoutes = pathname.startsWith('/dashboard');
-    const isPublicRoute = ['/', '/login', '/auth/forgot-password'].includes(pathname) || pathname.startsWith('/emergency-access');
+    const authRoutes = pathname.startsWith('/auth') || pathname === '/login';
 
-    // If user is not logged in and is trying to access a protected route, redirect to login
+    // If user is not logged in, redirect to login if they are on a protected route
     if (!user && protectedRoutes) {
       router.push('/login');
+      return;
     }
+    
+    // If user is logged in
+    if (user) {
+      // If user profile is not loaded or does not exist, do nothing and wait
+      if (!userProfile) {
+        // This can happen briefly. Or if the user doc was deleted.
+        return;
+      }
+      
+      const onboardingComplete = userProfile.onboardingStatus === 'complete';
 
-    // If user is logged in and is on a public page like login or landing, redirect to dashboard
-    if (user && (pathname === '/login' || pathname === '/')) {
-      router.push('/dashboard');
+      if (onboardingComplete) {
+        // If onboarding is complete, redirect from auth routes to dashboard
+        if (authRoutes || pathname === '/') {
+          router.push('/dashboard');
+        }
+      } else {
+        // If onboarding is not complete, redirect to the correct onboarding step
+        let targetPath = '/auth/signup/country'; // Default start
+        switch (userProfile.onboardingStatus) {
+            case 'kyc_pending':
+                targetPath = `/auth/signup/kyc/${userProfile.region.toLowerCase()}`;
+                break;
+            case 'verify_pending':
+                targetPath = '/auth/signup/verify';
+                break;
+        }
+        
+        // Redirect if not already on the correct onboarding page
+        if (!pathname.startsWith('/auth/signup')) {
+            router.push(targetPath);
+        }
+      }
     }
     
   }, [loading, user, userProfile, pathname, router]);

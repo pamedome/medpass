@@ -185,3 +185,67 @@ export default function VerifyPage() {
                 variant="outline" 
                 onClick={handleResend}
                 disabled={!canResend}
+              >
+                {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend Email'}
+              </Button>
+            </div>
+          )}
+        </div>
+        <div className="space-y-4">
+          <h3 className="font-semibold text-lg">Terms & Conditions</h3>
+          <div className="space-y-2">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="terms"
+                checked={acceptedTerms}
+                onCheckedChange={(checked) => setAcceptedTerms(Boolean(checked))}
+              />
+              <label
+                htmlFor="terms"
+                className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                I accept the <a href="#" className="underline text-primary">Terms of Service</a>.
+              </label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="privacy"
+                checked={acceptedPrivacy}
+                onCheckedChange={(checked) => setAcceptedPrivacy(Boolean(checked))}
+              />
+              <label
+                htmlFor="privacy"
+                className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                I accept the <a href="#" className="underline text-primary">Privacy Policy</a>.
+              </label>
+            </div>
+            <div className="flex items-center space-x-2 pt-2">
+              <Checkbox
+                id="marketing"
+                checked={marketingOptIn}
+                onCheckedChange={(checked) => setMarketingOptIn(Boolean(checked))}
+              />
+              <label
+                htmlFor="marketing"
+                className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                I'd like to receive marketing communications.
+              </label>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Button
+          className="w-full"
+          onClick={handleFinish}
+          disabled={isSubmitting || !isVerified || !acceptedTerms || !acceptedPrivacy}
+        >
+          {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          Finish Setup
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
