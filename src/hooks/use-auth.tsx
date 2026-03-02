@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { doc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot, setDoc, serverTimestamp } from 'firebase/firestore';
 import { useFirebaseAuth, useFirestore } from '@/firebase';
 import { UserProfile } from '@/lib/types';
 import { useRouter, usePathname } from 'next/navigation';
@@ -35,88 +35,110 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Effect 1: Handle Firebase Auth state changes
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-      } else {
-        setUser(null);
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      if (!user) {
+        // If user logs out, clear profile and stop loading
         setUserProfile(null);
         setLoading(false);
       }
     });
-    return () => unsubscribe();
+
+    return () => unsubscribeAuth();
   }, [auth]);
 
-  // Effect 2: Handle fetching the user profile from Firestore
+  // Effect 2: Sync user profile from Firestore, creating it if it doesn't exist
   useEffect(() => {
-    if (!user) return; // No user, nothing to fetch
+    if (!user) {
+      return; // No user, no profile to sync.
+    }
 
-    setLoading(true); // We have a user, start loading the profile
+    setLoading(true);
     const userDocRef = doc(db, 'users', user.uid);
-    const unsubscribe = onSnapshot(userDocRef, (doc) => {
-      if (doc.exists()) {
-        setUserProfile(doc.data() as UserProfile);
+
+    const unsubscribeProfile = onSnapshot(userDocRef, (docSnapshot) => {
+      if (docSnapshot.exists()) {
+        const profileData = docSnapshot.data() as UserProfile;
+        // Handle legacy users who might not have onboardingStatus
+        if (!profileData.onboardingStatus) {
+          setDoc(userDocRef, { onboardingStatus: 'complete' }, { merge: true });
+          // The snapshot will re-fire with the updated data, so we don't stop loading here.
+        } else {
+          setUserProfile(profileData);
+          setLoading(false);
+        }
       } else {
-        setUserProfile(null); // Doc doesn't exist
+        // User is authenticated, but no profile document exists. Create one.
+        const newProfile: UserProfile = {
+          uid: user.uid,
+          email: user.email,
+          createdAt: serverTimestamp(),
+          onboardingStatus: 'complete', // Default to complete for simple signup
+          region: 'OTHER',
+          kyc: {},
+        };
+        setDoc(userDocRef, newProfile).catch(err => {
+          console.error("Failed to create user profile:", err);
+          setLoading(false); // Stop loading on error to prevent getting stuck
+        });
+        // The onSnapshot listener will be triggered again once the document is created.
       }
-      setLoading(false); // Done loading profile
     }, (error) => {
       console.error("Error fetching user profile:", error);
       setUserProfile(null);
       setLoading(false);
     });
-    return () => unsubscribe();
+
+    return () => unsubscribeProfile();
   }, [user, db]);
 
-  // Effect 3: Handle all routing logic
+  // Effect 3: Handle all routing logic based on auth and profile state
   useEffect(() => {
     if (loading) {
-      return; // Wait until auth and profile state are resolved
+      return; // Wait until auth state and profile are resolved
     }
 
-    const protectedRoutes = pathname.startsWith('/dashboard');
-    const authRoutes = pathname.startsWith('/auth') || pathname === '/login';
+    const isProtectedRoute = pathname.startsWith('/dashboard');
+    const isAuthRoute = pathname.startsWith('/auth') || pathname === '/login';
 
-    // If user is not logged in, redirect to login if they are on a protected route
-    if (!user && protectedRoutes) {
-      router.push('/login');
+    // Case 1: User is not logged in
+    if (!user) {
+      if (isProtectedRoute) {
+        router.push('/login');
+      }
+      return;
+    }
+
+    // Case 2: User is logged in, but profile is not yet loaded (or failed to load)
+    if (!userProfile) {
+      // Don't redirect, wait for profile.
       return;
     }
     
-    // If user is logged in
-    if (user) {
-      // If user profile is not loaded or does not exist, do nothing and wait
-      if (!userProfile) {
-        // This can happen briefly. Or if the user doc was deleted.
-        return;
-      }
-      
-      const onboardingComplete = userProfile.onboardingStatus === 'complete';
+    // Case 3: User is logged in and has a profile
+    const onboardingComplete = userProfile.onboardingStatus === 'complete';
 
-      if (onboardingComplete) {
-        // If onboarding is complete, redirect from auth routes to dashboard
-        if (authRoutes || pathname === '/') {
-          router.push('/dashboard');
-        }
-      } else {
-        // If onboarding is not complete, redirect to the correct onboarding step
-        let targetPath = '/auth/signup/country'; // Default start
-        switch (userProfile.onboardingStatus) {
-            case 'kyc_pending':
-                targetPath = `/auth/signup/kyc/${userProfile.region.toLowerCase()}`;
-                break;
-            case 'verify_pending':
-                targetPath = '/auth/signup/verify';
-                break;
-        }
-        
-        // Redirect if not already on the correct onboarding page
-        if (!pathname.startsWith('/auth/signup')) {
-            router.push(targetPath);
-        }
+    if (onboardingComplete) {
+      // If onboarding is complete, they should be in the dashboard.
+      // Redirect from auth routes or the landing page.
+      if (isAuthRoute || pathname === '/') {
+        router.push('/dashboard');
+      }
+    } else {
+      // Onboarding is NOT complete, redirect to the correct step
+      let targetPath = '/auth/signup/country'; // Default start
+      switch (userProfile.onboardingStatus) {
+        case 'kyc_pending':
+          targetPath = `/auth/signup/kyc/${userProfile.region.toLowerCase()}`;
+          break;
+        case 'verify_pending':
+          targetPath = '/auth/signup/verify';
+          break;
+      }
+      if (pathname !== targetPath) {
+        router.push(targetPath);
       }
     }
-    
   }, [loading, user, userProfile, pathname, router]);
 
   return (

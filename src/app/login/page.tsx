@@ -31,8 +31,6 @@ import { useToast } from '@/hooks/use-toast';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useFirebaseAuth } from '@/firebase';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { updateUserOnboarding } from '@/lib/firebase-services';
-import { serverTimestamp } from 'firebase/firestore';
 
 
 const loginSchema = z.object({
@@ -121,18 +119,8 @@ export default function AuthPage() {
     }
     setIsSignupLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
-      const user = userCredential.user;
-
-      // Create a user profile in Firestore
-      await updateUserOnboarding(user.uid, {
-          uid: user.uid,
-          email: user.email,
-          createdAt: serverTimestamp(),
-          onboardingStatus: 'complete', // Bypass multi-step onboarding
-          region: 'OTHER',
-          kyc: {},
-      });
+      // Just create the user. The `useAuth` hook will handle profile creation.
+      await createUserWithEmailAndPassword(auth, data.email, data.password);
 
       toast({
         title: 'Account Created',
