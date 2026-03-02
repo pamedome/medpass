@@ -98,6 +98,9 @@ export default function LandingPage() {
             <Button variant="ghost" asChild>
               <Link href="/login">Log In</Link>
             </Button>
+            <Button asChild>
+              <Link href="/signup">Sign Up</Link>
+            </Button>
           </nav>
         </div>
       </header>
@@ -115,6 +118,9 @@ export default function LandingPage() {
               Medpass is your secure, digital health companion. Easily manage documents, track your medical history, and access vital information in emergencies.
             </p>
             <div className="mt-10 flex flex-wrap justify-center gap-4">
+              <Button size="lg" asChild>
+                <Link href="/signup">Get Started</Link>
+              </Button>
               <Button size="lg" variant="outline">
                 Learn More
               </Button>
@@ -172,6 +178,11 @@ export default function LandingPage() {
                  <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
                      Sign up today and experience the peace of mind that comes with having your health information organized and accessible whenever you need it.
                  </p>
+                 <div className="mt-8">
+                    <Button size="lg" asChild>
+                        <Link href="/signup">Sign Up Now</Link>
+                    </Button>
+                 </div>
             </div>
         </section>
       </main>

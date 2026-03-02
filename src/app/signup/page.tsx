@@ -28,28 +28,34 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useFirebaseAuth } from '@/firebase';
+import { updateUserOnboarding } from '@/lib/firebase-services';
+import { serverTimestamp } from 'firebase/firestore';
 
-const loginSchema = z.object({
+const signupSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
-  password: z.string().min(1, { message: 'Password is required.' }),
+  password: z.string().min(6, { message: 'Password must be at least 6 characters long.' }),
+  confirmPassword: z.string(),
+}).refine(data => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
 });
 
-type LoginFormValues = z.infer<typeof loginSchema>;
+type SignupFormValues = z.infer<typeof signupSchema>;
 
-export default function AuthPage() {
+export default function SignupPage() {
   const router = useRouter();
   const { toast } = useToast();
   const auth = useFirebaseAuth();
   const [isLoading, setIsLoading] = useState(false);
 
-  const loginForm = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { email: '', password: '' },
+  const form = useForm<SignupFormValues>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: { email: '', password: '', confirmPassword: '' },
   });
 
-  const onLoginSubmit = async (data: LoginFormValues) => {
+  const onSignupSubmit = async (data: SignupFormValues) => {
     if (!auth) {
       toast({
         variant: 'destructive',
@@ -60,27 +66,35 @@ export default function AuthPage() {
     }
     setIsLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, data.email, data.password);
-      toast({
-        title: 'Login Successful',
-        description: 'Redirecting...',
+      const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
+      const user = userCredential.user;
+
+      // Create a user profile in Firestore
+      await updateUserOnboarding(user.uid, {
+          uid: user.uid,
+          email: user.email,
+          createdAt: serverTimestamp(),
+          onboardingStatus: 'complete', // Bypass multi-step onboarding
+          region: 'OTHER',
+          kyc: {},
       });
-      // The useAuth hook will now handle redirection based on onboarding status.
+
+      toast({
+        title: 'Account Created',
+        description: 'You are now logged in and being redirected...',
+      });
+      // The useAuth hook will handle redirection to /dashboard
     } catch (error: any) {
-      console.error('Login error:', error);
+      console.error('Signup error:', error);
       let description = 'An unknown error occurred.';
-      if (
-        error.code === 'auth/user-not-found' ||
-        error.code === 'auth/wrong-password' ||
-        error.code === 'auth/invalid-credential'
-      ) {
-        description = 'Invalid email or password.';
-      } else if (error.code === 'auth/too-many-requests') {
-        description = 'Too many attempts. Please try again later.';
+      if (error.code === 'auth/email-already-in-use') {
+        description = 'This email address is already in use.';
+      } else if (error.code === 'auth/weak-password') {
+        description = 'The password is too weak.';
       }
       toast({
         variant: 'destructive',
-        title: 'Login Failed',
+        title: 'Signup Failed',
         description,
       });
       setIsLoading(false);
@@ -103,14 +117,14 @@ export default function AuthPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl">Welcome Back</CardTitle>
-            <CardDescription>Sign in to continue to Medpass.</CardDescription>
+            <CardTitle className="text-2xl">Create an Account</CardTitle>
+            <CardDescription>Enter your details to get started.</CardDescription>
           </CardHeader>
-          <Form {...loginForm}>
-            <form onSubmit={loginForm.handleSubmit(onLoginSubmit)}>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSignupSubmit)}>
               <CardContent className="grid gap-4">
                 <FormField
-                  control={loginForm.control}
+                  control={form.control}
                   name="email"
                   render={({ field }) => (
                     <FormItem>
@@ -119,9 +133,6 @@ export default function AuthPage() {
                         <Input
                           placeholder="name@example.com"
                           type="email"
-                          autoCapitalize="none"
-                          autoComplete="email"
-                          autoCorrect="off"
                           {...field}
                         />
                       </FormControl>
@@ -130,19 +141,28 @@ export default function AuthPage() {
                   )}
                 />
                 <FormField
-                  control={loginForm.control}
+                  control={form.control}
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <div className="flex items-center">
-                        <FormLabel>Password</FormLabel>
-                        <Link
-                          href="/auth/forgot-password"
-                          className="ml-auto inline-block text-sm text-primary hover:underline"
-                        >
-                          Forgot your password?
-                        </Link>
-                      </div>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="••••••••"
+                          type="password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Confirm Password</FormLabel>
                       <FormControl>
                         <Input
                           placeholder="••••••••"
@@ -164,12 +184,12 @@ export default function AuthPage() {
                   {isLoading && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
-                  Sign In
+                  Sign Up
                 </Button>
                 <p className="text-center text-sm text-muted-foreground">
-                    Don't have an account?{' '}
-                    <Link href="/signup" className="text-primary hover:underline">
-                        Sign Up
+                    Already have an account?{' '}
+                    <Link href="/login" className="text-primary hover:underline">
+                        Log In
                     </Link>
                 </p>
               </CardFooter>

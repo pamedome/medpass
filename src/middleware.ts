@@ -17,9 +17,12 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * - logo.svg (logo file)
+     * - emergency-access (public emergency access)
+     * - login (login page)
+     * - signup (signup page)
      * - / (landing page is public)
-     * - /login (login page is public)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|logo.svg|emergency-access|login|$).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|logo.svg|emergency-access|login|signup|$).*)',
   ],
 };
