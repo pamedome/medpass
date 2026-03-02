@@ -99,7 +99,7 @@ export default function LandingPage() {
               <Link href="/login">Log In</Link>
             </Button>
             <Button asChild>
-              <Link href="/signup">Sign Up</Link>
+              <Link href="/login">Sign Up</Link>
             </Button>
           </nav>
         </div>
@@ -119,7 +119,7 @@ export default function LandingPage() {
             </p>
             <div className="mt-10 flex flex-wrap justify-center gap-4">
               <Button size="lg" asChild>
-                <Link href="/signup">Get Started</Link>
+                <Link href="/login">Get Started</Link>
               </Button>
               <Button size="lg" variant="outline">
                 Learn More
@@ -180,7 +180,7 @@ export default function LandingPage() {
                  </p>
                  <div className="mt-8">
                     <Button size="lg" asChild>
-                        <Link href="/signup">Sign Up Now</Link>
+                        <Link href="/login">Sign Up Now</Link>
                     </Button>
                  </div>
             </div>
